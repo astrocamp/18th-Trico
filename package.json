@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "esbuild frontend/scripts/app.js --bundle --outfile=static/scripts/app.js --watch",
+    "build": "esbuild frontend/scripts/app.js --bundle --outfile=static/scripts/app.js",
+    "dev": "esbuild frontend/scripts/app.js --bundle --outfile=static/scripts/app.js --watch",
     "css": "tailwindcss -i ./frontend/styles/app.css -o ./static/styles/app.css --watch"
   },
   "keywords": [],
