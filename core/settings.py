@@ -76,7 +76,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "trico",
+        "NAME": "db_trico",
         "USER": "postgres",
         "PASSWORD": "postgres",
         "HOST": "localhost",
