@@ -52,7 +52,7 @@
             for="password1"
             class="block font-medium text-gray-900 text-sm/6"
           >
-            密碼：（須包含8個數字，且含符號）
+            密碼：（須包含8個字符，不可全為數字）
           </label>
         </div>
         <div class="mt-2">
@@ -97,9 +97,11 @@
         >
           註冊會員
         </button>
-        <!-- Open the modal using ID.showModal() method -->
       </div>
     </form>
+  </div>
+  <div class="text-center">
+    {% if messages %} {%for m in messages%} {{m}}{% endfor %}{% endif %}
   </div>
 </div>
 {% endblock %}
