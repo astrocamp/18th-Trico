@@ -8,5 +8,8 @@
     <script src="{% static 'scripts/app.js'%}" type="module"></script>
     <link rel="stylesheet" href="{% static 'styles/app.css' %}" />
   </head>
-  <body></body>
+  <body>
+    {% block content %}
+    {% endblock %}
+  </body>
 </html>

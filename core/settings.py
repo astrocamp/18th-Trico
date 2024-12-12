@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "channels", # 新增 Channels 支持
+    "chats",
 ]
 
 MIDDLEWARE = [
@@ -128,3 +130,16 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# 指定 ASGI 應用程式
+ASGI_APPLICATION = "core.asgi.application"
+
+# 設定 Channels 的 Redis 後端
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",  # 使用 Redis 作為後端
+        "CONFIG":{
+            "hosts": [("127.0.0.1", 6379)], # 本地 Redis 伺服器地址
+        },
+    }
+}
