@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="{% static 'scripts/app.js'%}" type="module"></script>
-    <link rel="stylesheet" href="{% static 'styles/app.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/app.css' %}?v=1.0" />
   </head>
-  <body></body>
+  <body>
+    {% block "content" %}{% endblock %}
+  </body>
 </html>
