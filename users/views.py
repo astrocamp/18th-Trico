@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login as login_user, logout as log
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+from django.http import HttpResponse
 
 
 def register(request):
@@ -28,7 +29,7 @@ def login(request):
         )
 
         if user is not None:
-            login_user(request, user)  # 發號碼牌
+            login_user(request, user)
             return redirect("pages:home")
         else:
             messages.success(request, "登入失敗，請重新登入一次。")
@@ -40,5 +41,7 @@ def login(request):
 @login_required
 def logout(request):
     logout_user(request)
-    messages.success(request, "已登出")
-    return redirect("pages:home")
+    reponse = HttpResponse()
+    reponse["HX-Redirect"] = "/"
+    return reponse
+    # return redirect("pages:home")

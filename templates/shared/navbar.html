@@ -1,8 +1,8 @@
-<div class="navbar bg-base-100">
-  <div class="flex-1">
-    <a class="text-xl btn btn-ghost">三合trico</a>
+<div class="shadow-lg navbar bg-base-100">
+  <div class="flex-1 px-5">
+    <a class="text-xl btn btn-ghost" href="{%url 'pages:home'%}">三合trico</a>
   </div>
-  <div class="flex items-center flex-none space-x-4">
+  <div class="flex items-center flex-none px-5 space-x-4">
     {% if user.is_authenticated %}
     <!-- 鈴鐺通知 -->
     <div class="dropdown dropdown-end">
@@ -51,8 +51,15 @@
         <li>
           <a class="justify-between">個人資料</a>
         </li>
-        <li><a>Settings</a></li>
-        <li><a href="{% url 'users:logout' %}">登出</a></li>
+        <li><a>設定</a></li>
+        <li>
+          <a
+            hx-post="{% url 'users:logout' %}"
+            hx-trigger="click"
+            hx-swap="none"
+            >登出</a
+          >
+        </li>
       </ul>
     </div>
     {% else %}
