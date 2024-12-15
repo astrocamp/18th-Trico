@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>接案者</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-blue-900 font-sans">
+    <div class="container mx-auto py-10 px-[10%]">
+      <div class="flex bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- 左側為接案者介紹 -->
+        <div class="w-2/3 p-10">
+          <h1 class="text-3xl font-bold mb-4">
+            我擅長開發和部署 Django、React 和 AWS 的網站
+          </h1>
+          <div class="flex items-center mb-4">
+            <img
+              src="https://via.placeholder.com/100"
+              alt="接案者大頭貼"
+              class="w-25 h-25 rounded-box mr-6"
+            />
+            <div>
+              <p class="text-2xl font-extrabold">接案者姓名</p>
+              <div class="flex items-center text-yellow-400">
+                <span class="text-2xl"
+                  >&#9733;&#9733;&#9733;&#9733;&#9734;</span
+                >
+                <span class="text-blue-900 text-xl ml-4">4.0/5.0</span>
+              </div>
+            </div>
+          </div>
+          <!-- 接案者介紹:描述 -->
+          <p class="text-gray-700 mb-4 text-lg">
+            內文(我是一名專業的網站開發人員，擅長使用 Django 和 React
+            架構網站，並將其部署到
+            AWS。無論是網站設計還是後端功能開發，我都能提供專業的服務。)
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-s"
+              >Python</span
+            >
+            <span
+              class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-s"
+              >Django</span
+            >
+            <span
+              class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-s"
+              >React</span
+            >
+            <span
+              class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-s"
+              >HTML5</span
+            >
+            <span
+              class="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-s"
+              >CSS3</span
+            >
+            <span
+              class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-s"
+              >JavaScript</span
+            >
+            <span
+              class="px-5 py-1 bg-teal-100 text-teal-700 rounded-full text-s"
+              >Web Development</span
+            >
+          </div>
+        </div>
+
+        <!-- 右側價格我分了一般&專業方案 -->
+        <div class="w-1/3 bg-gray-50 p-6 border-l">
+          <div class="mb-4">
+            <div class="flex border-b">
+              <button
+                id="standard-tab"
+                class="flex-1 py-2 text-center font-semibold text-gray-700 border-b-2 border-blue-500"
+              >
+                一般方案
+              </button>
+              <button
+                id="premium-tab"
+                class="flex-1 py-2 text-center font-semibold text-gray-700"
+              >
+                專業方案
+              </button>
+            </div>
+          </div>
+          <div id="price-section">
+            <!-- Standard Plan -->
+            <div id="standard" class="block">
+              <p class="text-4xl font-bold text-gray-800 mb-2">$9,900</p>
+              <p class="text-gray-600 mb-4">
+                一般版：開發您的需求並在 AWS 上部署
+              </p>
+              <p class="text-sm text-red-500 mb-4">交付時間：10 天</p>
+            </div>
+            <!-- Premium Plan -->
+            <div id="premium" class="hidden">
+              <p class="text-4xl font-bold text-gray-800 mb-2">$28000</p>
+              <p class="text-gray-600 mb-4">
+                專業版：使用 React 和 Django 開發並設計網站，並部署到 AWS
+              </p>
+              <p class="text-sm text-red-500 mb-4">交付時間：30 天</p>
+            </div>
+          </div>
+          <button
+            class="w-full bg-blue-800 text-white py-2 rounded-lg text-lg font-semibold hover:bg-blue-700"
+          >
+            選擇支付方式
+          </button>
+        </div>
+      </div>
+    </div>
+    {% load static %}
+    <script src="{% static 'scripts/scripts_switchtab.js' %}"></script>
+  </body>
+</html>
