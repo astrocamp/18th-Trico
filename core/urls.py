@@ -23,5 +23,4 @@ urlpatterns = [
     path("", include("pages.urls")),
     path("", include("freelancers.urls")),
     path("users/", include("users.urls")),
-    path("order/", include("order.urls")),
 ]
