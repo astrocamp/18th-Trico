@@ -11,6 +11,7 @@ django = "^5.1.4"
 psycopg = {extras = ["binary"], version = "^3.2.3"}
 django-allauth = "^65.3.0"
 requests = "^2.32.3"
+python-dotenv = "^1.0.1"
 
 
 [build-system]
