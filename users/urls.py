@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import register, login, logout, profile, switch_client, switch_freelancer
+from .views import register, login, logout, profile,user_dashboard
 
 app_name = "users"
 
@@ -8,6 +8,5 @@ urlpatterns = [
     path("login/", login, name="login"),
     path("logout/", logout, name="logout"),
     path("profile/", profile, name="profile"),
-    path("switch_client/", switch_client, name="switch_client"),
-    path("switch_freelancer/", switch_freelancer, name="switch_freelancer"),
+    path("", user_dashboard, name="user_dashboard"),
 ]

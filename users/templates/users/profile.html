@@ -79,6 +79,23 @@
             />
           </div>
         </div>
+
+        <!-- 所在地區 -->
+        <div>
+          <label for="id_location" class="block font-medium text-gray-900 text-sm">
+            所在地區：
+          </label>
+          <div class="mt-2">
+            <input 
+              id="id_location" 
+              type="location" 
+              name="location" 
+              value="{{ user_form.location.value|default:'' }}" 
+              class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="請輸入所在地區"
+            />
+          </div>
+        </div>        
   
         <!-- Photo -->
         <div>

@@ -93,14 +93,6 @@ def profile(request):
 
     return render(request, "users/profile.html", context)
 
-
 @login_required
-def switch_client(request):
-    request.session["role"] = "client"
-    return render(request, "users/switch_client.html")
-
-
-@login_required
-def switch_freelancer(request):
-    request.session["role"] = "freelancer"
-    return render(request, "users/switch_freelancer.html")
+def user_dashboard(request):
+    return render(request, "users/freelancer_dashboard.html")

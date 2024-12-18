@@ -1,0 +1,36 @@
+<!-- prettier-ignore -->
+{% extends "shared/layout.html" %}
+{% block "content"%}
+
+<div class="max-w-6xl mx-auto flex h-[90vh] gap-4 p-4">
+  <!-- 左側導航欄 -->
+  <aside class="w-64 bg-white shadow-md flex flex-col rounded-lg overflow-hidden">
+    <div class="p-4 bg-blue-500 text-white">
+      <h1 class="text-lg font-bold">發包者主控台</h1>
+    </div>
+    <nav class="flex-grow">
+      <ul class="menu p-4 text-base-content">
+        <li><a href="{% url 'users:profile' %}" class="hover:bg-blue-100 rounded-lg">更新個人資料</a></li>
+        <li><a href="#" class="hover:bg-blue-100 rounded-lg">發包進度</a></li>
+        <li><a href="#" class="hover:bg-blue-100 rounded-lg">評價與回饋</a></li>
+        <li><a href="#" class="hover:bg-blue-100 rounded-lg">財務管理</a></li>
+      </ul>
+    </nav>
+  </aside>
+  
+  <!-- 主內容區域 -->
+  <main class="flex-grow bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">我的專案</h2>
+    <div class="space-y-4">
+      <div class="card bg-gray-100 shadow-md rounded-lg">
+        <div class="card-body p-4">
+          <h3 class="card-title text-lg font-semibold text-gray-700">專案名稱X</h3>
+          <p class="text-sm text-gray-600">狀態：<span class="text-success font-medium">已完成</span></p>
+        </div>
+      </div>
+      <!-- 可以新增更多專案 -->
+    </div>
+  </main>
+</div>
+
+{% endblock %}
