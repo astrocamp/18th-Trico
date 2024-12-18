@@ -95,4 +95,24 @@ def profile(request):
 
 @login_required
 def user_dashboard(request):
-    return render(request, "users/freelancer_dashboard.html")
+
+    profile = request.user.profile
+
+    if profile.is_freelancer:
+        return render(request, "users/freelancer.html")
+    
+    else:
+        return render(request, "users/client_dashboard.html")
+
+@login_required
+def apply_freelancer(request):
+    profile = request.user.profile
+
+    if request.POST:
+        profile.is_freelancer = True
+        profile.is_client = False
+        profile.freelancer_verified = True
+        profile.save()
+        return redirect("users:user_dashboard")
+
+    return render(request, "users/apply_freelancer.html")
