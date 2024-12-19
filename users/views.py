@@ -99,7 +99,7 @@ def user_dashboard(request):
     profile = request.user.profile
 
     if profile.is_freelancer:
-        return render(request, "users/freelancer.html")
+        return render(request, "users/freelancer_dashboard.html")
     
     else:
         return render(request, "users/client_dashboard.html")
@@ -110,9 +110,21 @@ def apply_freelancer(request):
 
     if request.POST:
         profile.is_freelancer = True
-        profile.is_client = False
         profile.freelancer_verified = True
         profile.save()
         return redirect("users:user_dashboard")
 
     return render(request, "users/apply_freelancer.html")
+
+
+@login_required
+def switch_role(request):
+    profile = request.user.profile
+    if profile.is_freelancer:
+        profile.is_freelancer = False
+        profile.save()
+    else:
+        profile.is_freelancer = True
+        profile.save()
+    
+    return redirect("users:user_dashboard")
