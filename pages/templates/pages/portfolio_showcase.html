@@ -1,62 +1,93 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>作品展示區</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-800">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>作品展示區</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <!-- 頁首 -->
+    <header class="bg-blue-500 text-white py-8 shadow-lg">
+      <div class="container mx-auto text-center">
+        <h1 class="text-4xl font-bold">作品展示區</h1>
+        <p class="text-lg mt-2">探索我們最新的設計作品</p>
+      </div>
+    </header>
 
-  <!-- 頁首 -->
-  <header class="bg-blue-500 text-white py-8 shadow-lg">
-    <div class="container mx-auto text-center">
-      <h1 class="text-4xl font-bold">作品展示區</h1>
-      <p class="text-lg mt-2">探索我們最新的設計作品</p>
+    <!-- 作品展示區 -->
+    <div class="container mx-auto py-12 px-4">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      >
+        <!-- 作品1 -->
+        <div
+          class="bg-white rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+        >
+          <img
+            src="https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Problem?%20%3C%3Apepw%3A989410572514758676%3E"
+            alt="作品 1"
+            class="w-full h-48 object-cover rounded-t-lg"
+          />
+          <div class="p-4">
+            <h3 class="text-xl font-semibold text-blue-500">作品標題 1</h3>
+            <p class="text-sm text-gray-600 mt-2">
+              這是第一個作品的描述，展示了精美的設計和創意。
+            </p>
+          </div>
+        </div>
+
+        <!-- 作品2 -->
+        <div
+          class="bg-white rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+        >
+          <img
+            src="https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Supports%20emojis!%20%F0%9F%98%8B"
+            alt="作品 2"
+            class="w-full h-48 object-cover rounded-t-lg"
+          />
+          <div class="p-4">
+            <h3 class="text-xl font-semibold text-blue-500">作品標題 2</h3>
+            <p class="text-sm text-gray-600 mt-2">
+              這是第二個作品的描述，展示了出色的技術和創意。
+            </p>
+          </div>
+        </div>
+
+        <!-- 作品3 -->
+        <div
+          class="bg-white rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+        >
+          <img
+            src="https://cdn.tatlerasia.com/tatlerasia/i/2024/12/10171235-gx5akrgwqaa9grx_cover_1331x1600.jpeg"
+            alt="作品 3"
+            class="w-full h-48 object-cover rounded-t-lg"
+          />
+          <div class="p-4">
+            <h3 class="text-xl font-semibold text-blue-500">作品標題 3</h3>
+            <p class="text-sm text-gray-600 mt-2">
+              這是第三個作品的描述，展示了出色的技術和創意。
+            </p>
+          </div>
+        </div>
+
+        <!-- 作品4 -->
+        <div
+          class="bg-white rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+        >
+          <img
+            src="https://cdn.tatlerasia.com/tatlerasia/i/2024/12/10172429-befunky-collage-40_cover_1600x900.jpg"
+            alt="作品 4"
+            class="w-full h-48 object-cover rounded-t-lg"
+          />
+          <div class="p-4">
+            <h3 class="text-xl font-semibold text-blue-500">作品標題 4</h3>
+            <p class="text-sm text-gray-600 mt-2">
+              這是第四個作品的描述，突出了創新的想法和執行。
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-  </header>
-
-  <!-- 作品展示區 -->
-  <div class="container mx-auto py-12 px-4">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
-      <!-- 作品1 -->
-      <div class="bg-white rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300">
-        <img src="https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Problem?%20%3C%3Apepw%3A989410572514758676%3E" alt="作品 1" class="w-full h-48 object-cover rounded-t-lg">
-        <div class="p-4">
-          <h3 class="text-xl font-semibold text-blue-500">作品標題 1</h3>
-          <p class="text-sm text-gray-600 mt-2">這是第一個作品的描述，展示了精美的設計和創意。</p>
-        </div>
-      </div>
-
-      <!-- 作品2 -->
-      <div class="bg-white rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300">
-        <img src="https://fakeimg.pl/440x230/282828/eae0d0/?retina=1&text=Supports%20emojis!%20%F0%9F%98%8B" alt="作品 2" class="w-full h-48 object-cover rounded-t-lg">
-        <div class="p-4">
-          <h3 class="text-xl font-semibold text-blue-500">作品標題 2</h3>
-          <p class="text-sm text-gray-600 mt-2">這是第二個作品的描述，展示了出色的技術和創意。</p>
-        </div>
-      </div>
-
-      <!-- 作品3 -->
-      <div class="bg-white rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300">
-        <img src="https://cdn.tatlerasia.com/tatlerasia/i/2024/12/10171235-gx5akrgwqaa9grx_cover_1331x1600.jpeg" alt="作品 3" class="w-full h-48 object-cover rounded-t-lg">
-        <div class="p-4">
-          <h3 class="text-xl font-semibold text-blue-500">作品標題 3</h3>
-          <p class="text-sm text-gray-600 mt-2">這是第三個作品的描述，展示了出色的技術和創意。</p>
-        </div>
-      </div>
-
-      <!-- 作品4 -->
-      <div class="bg-white rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300">
-        <img src="https://cdn.tatlerasia.com/tatlerasia/i/2024/12/10172429-befunky-collage-40_cover_1600x900.jpg" alt="作品 4" class="w-full h-48 object-cover rounded-t-lg">
-        <div class="p-4">
-          <h3 class="text-xl font-semibold text-blue-500">作品標題 4</h3>
-          <p class="text-sm text-gray-600 mt-2">這是第四個作品的描述，突出了創新的想法和執行。</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</body>
+  </body>
 </html>

@@ -37,7 +37,7 @@
     <!-- 頭像 -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-        <div class="rounded-full">
+        <div class="w-10 rounded-full">
           <img
             alt="Tailwind CSS Navbar component"
             src="{% if user.profile.photo %}{{ user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}"
@@ -49,17 +49,25 @@
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
       >
         <li>
-<<<<<<< HEAD
           <a href="{% url 'users:user_dashboard' %}" class="justify-between"
-=======
-          <a href="{% url 'users:profile' %}" class="justify-between"
->>>>>>> 8cbe19e (wip: searchpage)
             >個人資料</a
           >
         </li>
         <li><a>設定</a></li>
         <!-- 新增角色切換按鈕 -->
-        <li><a href="#">切換至業者角色</a></li>
+        <li class=" ">
+          <form action="{% url 'users:switch_client' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class=" ">切換至業者角色</button>
+          </form>
+        </li>
+        <li>
+          <form action="{% url 'users:switch_freelancer' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class=" ">切換至接案者角色</button>
+          </form>
+        </li>
+        <li></li>
         <li><a href="#">切換至接案者角色</a></li>
         <li>
           <a
