@@ -7,7 +7,16 @@ app_name = "pages"
 urlpatterns = [
     path("", home, name="home"),
     path("portfolio_showcase/", portfolio_showcase, name="portfolio_showcase"),
+<<<<<<< HEAD
     path("client/", client, name="client"),
     path("freelancer/", freelancer, name="freelancer"),
     path("searchpage/", searchpage, name="searchpage"),
+=======
+<<<<<<< HEAD
+=======
+    path("client/", client, name="client"),
+    path("freelancer/", freelancer, name="freelancer"),
+    path("searchpage/", searchpage, name="searchpage"),
+>>>>>>> 8cbe19e (wip: searchpage)
+>>>>>>> bdfd8fb (fix: rebase conflict)
 ]

@@ -22,7 +22,11 @@
     height: 150px;
     border-radius: 20px;
 }
+<<<<<<< HEAD
 .avatarInpage {
+=======
+.avatar {
+>>>>>>> bdfd8fb (fix: rebase conflict)
     width: 40px;
     border-radius: 50%;
     border: 2px;
@@ -105,6 +109,7 @@
 /* 換頁按鈕 */
 .pagination {
     display: flex;
+<<<<<<< HEAD
     gap: 8px;
   }
   
@@ -129,3 +134,29 @@
     background-color: #e9ecef; /* 禁用按鈕的背景顏色 */
     cursor: not-allowed;
   }
+=======
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.new~button {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    padding-right:16px;
+    padding-left:16px;
+}
+
+.new~button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.new~button.active {
+    font-weight: bold;
+    border: 2px solid rgb(0, 157, 255);
+}
+>>>>>>> bdfd8fb (fix: rebase conflict)
