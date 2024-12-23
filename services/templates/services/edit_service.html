@@ -6,7 +6,7 @@
     <!-- Title Field -->
     <div class="flex flex-col">
       <label for="id_title" class="text-blue-800 font-semibold mb-2"
-        >Title</label
+        >標題：</label
       >
       <input
         type="text"
@@ -23,7 +23,7 @@
     <!-- Description Field -->
     <div class="flex flex-col">
       <label for="id_description" class="text-blue-800 font-semibold mb-2"
-        >Description</label
+        >描述：</label
       >
       <textarea
         id="id_description"
@@ -37,10 +37,32 @@
       {% endif %}
     </div>
 
+    <!-- Category Field -->
+    <div class="flex flex-col">
+      <label for="id_category" class="text-blue-800 font-semibold mb-2"
+        >分類：</label
+      >
+      <select
+        id="id_category"
+        name="category"
+        class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+      >
+        <option value="" selected>請選擇</option>
+        {% for category in categories %}
+        <option value="{{ category.id }}" {% if form.category.value == category.id %} selected {% endif %} >{{ category.name }}</option>
+        {% endfor %}
+      </select>
+      {% if form.category.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.category.errors }}</p>
+      {% endif %}
+    </div>
+
+    
+
     <!-- Photo Field -->
     <div class="flex flex-col">
       <label for="id_photo" class="text-blue-800 font-semibold mb-2"
-        >Photo</label
+        >圖片：</label
       >
       <input
         type="file"

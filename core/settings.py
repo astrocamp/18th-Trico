@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "pages",
     "order",
     "services",
+    "categories",
 ]
 INSTALLED_APPS += [
     "django.contrib.sites",

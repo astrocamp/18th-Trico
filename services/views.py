@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Service
 from .forms import ServiceForm
+from .models import Category
 
 
 # 檢查當前用戶是否有權訪問指定資源
@@ -35,6 +36,8 @@ def create_service(request, id):
     if not has_permission(request, id):
         return redirect("services:error_page")
 
+    categories = Category.objects.all()
+
     if request.method == "POST":
         form = ServiceForm(request.POST, request.FILES)
         if form.is_valid():
@@ -45,7 +48,11 @@ def create_service(request, id):
     else:
         form = ServiceForm()
 
-    return render(request, "services/create_service.html", {"form": form})
+    return render(
+        request,
+        "services/create_service.html",
+        {"form": form, "categories": categories},
+    )
 
 
 @login_required
@@ -55,6 +62,8 @@ def edit_service(request, id, service_id):
 
     service = get_object_or_404(Service, id=service_id, freelancer_user=request.user)
 
+    categories = Category.objects.all()
+
     if request.method == "POST":
         form = ServiceForm(request.POST, request.FILES, instance=service)
         if form.is_valid():
@@ -63,7 +72,9 @@ def edit_service(request, id, service_id):
     else:
         form = ServiceForm(instance=service)
 
-    return render(request, "services/edit_service.html", {"form": form})
+    return render(
+        request, "services/edit_service.html", {"form": form, "categories": categories}
+    )
 
 
 @login_required

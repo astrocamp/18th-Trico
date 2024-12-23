@@ -6,7 +6,7 @@
     {% csrf_token %}
     <!-- Title Field -->
     <div class="flex flex-col space-y-2">
-      <label for="title" class="text-gray-700 font-medium">服務項目:</label>
+      <label for="title" class="text-gray-700 font-medium">服務項目：</label>
       <input
         type="text"
         id="title"
@@ -22,7 +22,7 @@
 
     <!-- Description Field -->
     <div class="flex flex-col space-y-2">
-      <label for="description" class="text-gray-700 font-medium">描述:</label>
+      <label for="description" class="text-gray-700 font-medium">描述：</label>
       <textarea
         id="description"
         name="description"
@@ -36,9 +36,28 @@
       {% endif %}
     </div>
 
+    <!-- Category Field -->
+
+    <div class="flex flex-col space-y-2">
+      <label for="category" class="text-gray-700 font-medium">分類：</label>
+      <select
+        id="category"
+        name="category"
+        class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 w-5/5"
+      >
+        <option value="" selected>請選擇</option>
+        {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+      </select>
+      {% if form.category.errors %}
+      <p class="text-red-500 text-sm">{{ form.category.errors }}</p>
+      {% endif %}
+    </div>
+
     <!-- Photo Upload Field -->
     <div class="flex flex-col space-y-2">
-      <label for="photo" class="text-gray-700 font-medium">作品</label>
+      <label for="photo" class="text-gray-700 font-medium">作品圖片</label>
       <input
         type="file"
         id="photo"

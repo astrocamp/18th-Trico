@@ -1,10 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
+from categories.models import Category
 
 
 class Service(models.Model):
     freelancer_user = models.ForeignKey(
         User,
+        on_delete=models.CASCADE,
+        related_name="services",
+        null=True,
+    )
+    category = models.ForeignKey(
+        Category,
         on_delete=models.CASCADE,
         related_name="services",
         null=True,
