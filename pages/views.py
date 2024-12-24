@@ -16,6 +16,3 @@ def client(request):
 def freelancer(request):
     return render(request, "pages/freelancer.html")
 
-
-def searchpage(request):
-    return render(request, "pages/searchpage.html")
