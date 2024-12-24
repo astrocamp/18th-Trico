@@ -4,6 +4,20 @@
 <!DOCTYPE html>
 <html lang="en">
   <body class="bg-white">
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-6 mt-8">
+      {% for service in services %}
+      <a 
+        href="{% url 'categories:service_by_category' service.category.id %}" 
+        class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-200 hover:border-blue-500"
+      >
+        <h3 class="text-lg font-semibold text-gray-800 hover:text-blue-600">{{ service.category.name }}</h3>
+      </a>
+      {% endfor %}
+    </div>
+    
+    
+    
     <!-- 搜尋後顯示 -->
     <div class="main ">
       <div

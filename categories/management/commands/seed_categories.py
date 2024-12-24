@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from categories.models import Category
 
+
 class Command(BaseCommand):
     help = "Seeds the database with categories"
 
@@ -19,13 +20,17 @@ class Command(BaseCommand):
         for category in initial_categories:
 
             result = Category.objects.get_or_create(
-                name=category["name"], created_at=category["created_at"]
+                name=category["name"], defaults={"created_at": category["created_at"]}
             )
 
             category = result[0]
             created = result[1]
 
             if created:
-                self.stdout.write(self.style.SUCCESS(f"Category '{category.name}' created"))
+                self.stdout.write(
+                    self.style.SUCCESS(f"Category '{category.name}' created")
+                )
             else:
-                self.stdout.write(self.style.WARNING(f"Category '{category.name}' already exists"))
+                self.stdout.write(
+                    self.style.WARNING(f"Category '{category.name}' already exists")
+                )

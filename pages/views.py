@@ -1,8 +1,10 @@
 from django.shortcuts import render
+from services.models import Service, Category
 
 
 def home(request):
-    return render(request, "pages/home.html")
+    services = Service.objects.all()
+    return render(request, "pages/home.html", {"services": services})
 
 
 def portfolio_showcase(request):
@@ -15,4 +17,3 @@ def client(request):
 
 def freelancer(request):
     return render(request, "pages/freelancer.html")
-
