@@ -17,6 +17,8 @@
 - poetry install：`poetry install`
 - 安裝前端專案所需的依賴套件：`npm install`
 - 啟動 Poetry 的虛擬環境：`poetry shell`
+- 遷移模型欄位：`python manage.py makemigrations`
+- 載入模型欄位：`python manage.py migrate`
 - 載入分類選項：`python manage.py seed_categories`
 - 啟動 Django 開發伺服器：`python manage.py runserver`
 
