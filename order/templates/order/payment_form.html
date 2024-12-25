@@ -1,0 +1,8 @@
+<form id="ecpay_form" method="post" action="{{ ecpay_url }}">
+  {% for key, value in params.items %}
+  <input type="hidden" name="{{ key }}" value="{{ value }}" />
+  {% endfor %}
+</form>
+<script>
+  document.getElementById("ecpay_form").submit();
+</script>
