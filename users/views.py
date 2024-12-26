@@ -6,6 +6,13 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponse
 from .forms import UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.contrib.auth import views as auth_views
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
 
 
 def register(request):
@@ -63,11 +70,14 @@ def logout(request):
     return response
     # return redirect("pages:home")
 
+
 @login_required
 def profile(request):
     if request.POST:
         user_form = UserUpdateForm(request.POST, instance=request.user)
-        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        profile_form = ProfileUpdateForm(
+            request.POST, request.FILES, instance=request.user.profile
+        )
 
         # Debug: 印出表單驗證錯誤
         if not user_form.is_valid():
@@ -86,12 +96,20 @@ def profile(request):
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
 
-    context = {
-        "user_form": user_form,
-        "profile_form": profile_form
-    }
+    context = {"user_form": user_form, "profile_form": profile_form}
 
     return render(request, "users/profile.html", context)
+
+@login_required
+def user_dashboard(request):
+
+    profile = request.user.profile
+
+    if profile.is_freelancer:
+        return render(request, "users/freelancer_dashboard.html")
+    
+    else:
+        return render(request, "users/client_dashboard.html")
 
 @login_required
 def user_dashboard(request):
@@ -117,7 +135,59 @@ def apply_freelancer(request):
     return render(request, "users/apply_freelancer.html")
 
 
-@login_required
+
+
+# 忘記密碼
+class CustomPasswordResetView(auth_views.PasswordResetView):
+    template_name = "users/password_reset.html"
+    email_template_name = "users/password_reset_email.html"
+    subject_template_name = "users/password_reset_subject.txt"  # 自定義郵件標題模板
+    success_url = "/users/password_reset_done/"
+    extra_context = {
+        "protocol": settings.PROTOCOL,
+        "domain": settings.DEFAULT_DOMAIN,
+    }
+
+    def form_valid(self, form):
+        """覆蓋郵件發送邏輯，避免重複發送"""
+        email = form.cleaned_data["email"]
+
+        for user in form.get_users(email):
+            context = {
+                "email": email,
+                "domain": settings.DEFAULT_DOMAIN,
+                "protocol": settings.PROTOCOL,
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": default_token_generator.make_token(user),
+            }
+            subject = render_to_string(self.subject_template_name, context).strip()
+            html_message = render_to_string(self.email_template_name, context)
+
+            # 發送郵件
+            email_msg = EmailMessage(
+                subject=subject,
+                body=html_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[email],
+            )
+            email_msg.content_subtype = "html"  # 設置內容類型為 HTML
+            email_msg.send()
+
+        # 不再調用的郵件發送邏輯
+        return super(auth_views.PasswordResetView, self).form_valid(form)
+
+
+class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = "users/password_reset_done.html"
+
+
+class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = "users/password_reset_confirm.html"
+    success_url = "/users/reset_done/"
+
+
+class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = "users/password_reset_complete.html"
 def switch_role(request):
     profile = request.user.profile
     if profile.is_freelancer:

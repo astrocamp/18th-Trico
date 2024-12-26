@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0004_profile_freelancer_verified_profile_is_client_and_more'),
+        ('users', '0003_alter_profile_photo'),
     ]
 
     operations = [

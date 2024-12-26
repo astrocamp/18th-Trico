@@ -1,0 +1,88 @@
+{% extends "shared/layout.html" %} {% block "content" %} {% load static %}
+
+<div class="w-3/5 mx-auto my-8 bg-blue-100 p-6 rounded-lg shadow-md">
+  <h1 class="text-3xl font-bold text-blue-700 text-center mb-6">新增服務</h1>
+  <form method="post" enctype="multipart/form-data" class="space-y-10">
+    {% csrf_token %}
+    <!-- Title Field -->
+    <div class="flex flex-col space-y-2">
+      <label for="title" class="text-gray-700 font-medium">服務項目：</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 w-5/5"
+        placeholder="範例: 我會透過我的專業幫你剪輯影片並配上字幕..."
+        value="{{ form.title.value|default_if_none:'' }}"
+      />
+      {% if form.title.errors %}
+      <p class="text-red-500 text-sm">{{ form.title.errors }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Description Field -->
+    <div class="flex flex-col space-y-2">
+      <label for="description" class="text-gray-700 font-medium">描述：</label>
+      <textarea
+        id="description"
+        name="description"
+        class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 w-5/5 h-32"
+        placeholder="請以文字描述您擅長的的技能"
+      >
+{{ form.description.value|default_if_none:'' }}</textarea>
+      {% if form.description.errors %}
+      <p class="text-red-500 text-sm">{{ form.description.errors }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Category Field -->
+    <div class="flex flex-col space-y-2">
+      <label for="category" class="text-gray-700 font-medium">分類：</label>
+      <select
+        id="category"
+        name="category"
+        class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 w-5/5"
+      >
+        <option value="" selected>請選擇</option>
+        {% for category in categories %}
+        <option value="{{ category.id }}" {% if form.category.value == category.id %} selected {% endif %}>{{ category.name }}</option>
+        {% endfor %}
+      </select>
+      {% if form.category.errors %}
+      <p class="text-red-500 text-sm">{{ form.category.errors }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Photo Upload Field -->
+    <div class="flex flex-col space-y-2">
+      <label for="photo" class="text-gray-700 font-medium">作品圖片</label>
+      <input
+        type="file"
+        id="photo"
+        name="photo"
+        class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 w-5/5"
+      />
+      {% if form.photo.errors %}
+      <p class="text-red-500 text-sm">{{ form.photo.errors }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-end mt-6 space-x-4">
+      <a
+        href="{% url 'services:freelancer_dashboard' id=request.user.id %}"
+        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition duration-300"
+      >
+        取消新增
+      </a>
+      <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+      >
+        存檔
+      </button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

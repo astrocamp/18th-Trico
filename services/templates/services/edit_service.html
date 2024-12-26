@@ -1,0 +1,111 @@
+{% extends "shared/layout.html" %} {% block "content" %}
+<div class="w-3/5 mx-auto my-8 bg-blue-100 p-6 rounded-lg shadow-m">
+  <h1 class="text-3xl font-bold text-blue-700 text-center mb-6">編輯服務</h1>
+  <form method="post" enctype="multipart/form-data" class="space-y-8">
+    {% csrf_token %}
+    <!-- Title Field -->
+    <div class="flex flex-col">
+      <label for="id_title" class="text-blue-800 font-semibold mb-2"
+        >標題：</label
+      >
+      <input
+        type="text"
+        id="id_title"
+        name="title"
+        value="{{ form.title.value }}"
+        class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+      />
+      {% if form.title.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.title.errors }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Description Field -->
+    <div class="flex flex-col">
+      <label for="id_description" class="text-blue-800 font-semibold mb-2"
+        >描述：</label
+      >
+      <textarea
+        id="id_description"
+        name="description"
+        class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+      >
+{{ form.description.value }}</textarea
+      >
+      {% if form.description.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.description.errors }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Category Field -->
+    <div class="flex flex-col">
+      <label for="id_category" class="text-blue-800 font-semibold mb-2"
+        >分類：</label
+      >
+      <select
+        id="id_category"
+        name="category"
+        class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+      >
+        <option value="" selected>請選擇</option>
+        {% for category in categories %}
+        <option value="{{ category.id }}" {% if form.category.value == category.id %} selected {% endif %} >{{ category.name }}</option>
+        {% endfor %}
+      </select>
+      {% if form.category.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.category.errors }}</p>
+      {% endif %}
+    </div>
+
+    
+
+    <!-- Photo Field -->
+    <div class="flex flex-col">
+      <label for="id_photo" class="text-blue-800 font-semibold mb-2"
+        >圖片：</label
+      >
+      <input
+        type="file"
+        id="id_photo"
+        name="photo"
+        class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+      />
+      {% if form.photo.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.photo.errors }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-end space-x-4">
+      <a
+        href="{% url 'services:freelancer_dashboard' id=request.user.id %}"
+        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition duration-300"
+      >
+        取消編輯
+      </a>
+      <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+      >
+        更新
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %} {% comment %}
+<div class="space-y-6">
+  {% for field in form %}
+  <div class="flex flex-col">
+    <label
+      for="{{ field.id_for_label }}"
+      class="text-gray-700 font-medium mb-2"
+    >
+      {{ field.label }}
+    </label>
+    {{ field }} {% if field.errors %}
+    <p class="text-red-500 text-sm mt-1">{{ field.errors }}</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endcomment %}

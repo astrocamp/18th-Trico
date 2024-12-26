@@ -29,7 +29,11 @@ SECRET_KEY = "django-insecure-z5h2!)31w&8z!twedc-t#ktq@@z1mll51vu-2e+kehaykdr^f_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "*",
+]
 
 
 # Application definition
@@ -44,6 +48,10 @@ INSTALLED_APPS = [
     "users",
     "pages",
     "order",
+    "services",
+    "categories",
+    "common",
+    "comments",
 ]
 INSTALLED_APPS += [
     "django.contrib.sites",
@@ -149,7 +157,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "zh-hant"
 
 TIME_ZONE = "Asia/Taipei"
 
@@ -164,7 +172,9 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
+    BASE_DIR / "frontend",
 ]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -223,3 +233,17 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
+# 設置gmail發送信件
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"  # django內建的郵件後端
+EMAIL_HOST = "smtp.gmail.com"  # Gmail 的 SMTP 服務器
+EMAIL_PORT = 587  # SMTP 服務器端口
+EMAIL_USE_TLS = True  # 啟用 TLS 加密
+EMAIL_USE_SSL = False  # 不使用 SSL 加密
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")  # Gmail 地址
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  # Gmail 密碼
+DEFAULT_FROM_EMAIL = "三合平台 <selinafs880504@gmail.com>"
+
+# 替換 `DEFAULT_DOMAIN` 和 `PROTOCOL` 為您的開發環境
+DEFAULT_DOMAIN = os.getenv("DEFAULT_DOMAIN")  # 本地開發使用
+PROTOCOL = os.getenv("PROTOCOL", "http")  # 開發環境使用 http，生產使用 https
