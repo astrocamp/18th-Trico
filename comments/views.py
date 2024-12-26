@@ -26,3 +26,24 @@ def delete_comment(request, comment_id):
         comment.delete()
         return redirect('services:freelancer_dashboard', id=request.user.id)
     return render(request, 'comments/delete_comment.html', {'comment': comment})
+
+
+@login_required
+def feedback_view(request):
+    # 獲取當前用戶的評論相關數據
+    comments_given = Comment.objects.filter(user=request.user).order_by(
+        "-created_at"
+    )  # 評論者
+    comments_received = Comment.objects.filter(
+        service__freelancer_user=request.user
+    ).order_by(
+        "-created_at"
+    )  # 被評論者
+    return render(
+        request,
+        "users/feedback.html",
+        {
+            "comments_given": comments_given,
+            "comments_received": comments_received,
+        },
+    )

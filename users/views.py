@@ -13,6 +13,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
+from comments.models import Comment
 
 
 def register(request):
@@ -135,8 +136,6 @@ def apply_freelancer(request):
     return render(request, "users/apply_freelancer.html")
 
 
-
-
 # 忘記密碼
 class CustomPasswordResetView(auth_views.PasswordResetView):
     template_name = "users/password_reset.html"
@@ -196,5 +195,28 @@ def switch_role(request):
     else:
         profile.is_freelancer = True
         profile.save()
-    
+
     return redirect("users:user_dashboard")
+
+
+@login_required
+def feedback_view(request):
+    profile = request.user.profile
+    if profile.is_freelancer:  # 如果是接案者
+        comments_received = Comment.objects.filter(
+            service__freelancer_user=request.user, is_deleted=False
+        ).select_related("user", "service")
+        context = {
+            "comments_received": comments_received,
+            "role": "freelancer",  # 標識用戶是接案者
+        }
+    else:  # 如果是業者
+        comments_given = Comment.objects.filter(
+            user=request.user, is_deleted=False
+        ).select_related("service", "service__freelancer_user")
+        context = {
+            "comments_given": comments_given,
+            "role": "client",  # 標識用戶是業者
+        }
+
+    return render(request, "users/feedback.html", context)

@@ -11,6 +11,7 @@ from .views import (
     user_dashboard,
     apply_freelancer,
     switch_role,
+    feedback_view,
 )
 
 app_name = "users"
@@ -39,6 +40,6 @@ urlpatterns = [
     ),
     path("", user_dashboard, name="user_dashboard"),
     path("apply", apply_freelancer, name="apply_freelancer"),
-    path("switch_role", switch_role, name="switch_role")
+    path("switch_role", switch_role, name="switch_role"),
+    path("feedback/", feedback_view, name="feedback"),
 ]
-
