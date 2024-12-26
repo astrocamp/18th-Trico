@@ -1,5 +1,6 @@
 # orders/models.py
 from django.db import models
+import uuid
 
 
 class Order(models.Model):
@@ -26,6 +27,15 @@ class Order(models.Model):
         ],
         default="CreditCard",
     )  # 付款方式
+    merchant_trade_no = models.CharField(
+        max_length=30, unique=True, null=True, blank=True
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.merchant_trade_no:
+            # 自動生成 MerchantTradeNo
+            self.merchant_trade_no = f"ORDER{uuid.uuid4().hex[:12].upper()}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Order {self.id}"
+        return f"Order {self.merchant_trade_no}"

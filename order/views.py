@@ -47,7 +47,7 @@ def create_order(request):
     # 綠界金流參數
     params = {
         "MerchantID": MERCHANT_ID,
-        "MerchantTradeNo": f"ORDER{order.id}",  # 訂單號碼
+        "MerchantTradeNo": order.merchant_trade_no,  # 訂單號碼
         "MerchantTradeDate": datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
         "PaymentType": "aio",
         "TotalAmount": int(order.total_price),
