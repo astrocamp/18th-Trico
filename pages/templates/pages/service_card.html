@@ -1,4 +1,4 @@
-<a href="" target="_blank" class="block">
+<a href="{% url 'services:service_detail' service.freelancer_user.id service.id %}" class="block">
   <div class="item bg-white rounded-lg shadow-lg overflow-hidden border border-gray-300 hover:shadow-xl transition-transform duration-300 hover:scale-105">
     <img
       class="w-full h-48 object-cover"
@@ -8,9 +8,9 @@
     <div class="p-4">
       <div class="flex items-center mb-3">
         <img
-          class="avatarInpage w-10 h-10 rounded-full border border-gray-300"
+          class="avatarInpage w-10 h-10 rounded-full border border-gray-300  shadow-sm transition duration-300 hover:scale-110"
           src="{% if service.freelancer_user.profile.photo %}{{ service.freelancer_user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}"
-          alt="User Avatar"
+          alt="User Avatar " 
         />
         <p class="ml-3 text-sm font-semibold text-gray-700">{{ service.freelancer_user.username }}</p>
       </div>

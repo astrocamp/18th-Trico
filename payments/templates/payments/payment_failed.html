@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>交易失敗</title>
+    {% comment %}
+    <p>Order ID: {{ id }}</p>
+    {% endcomment %}
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-blue-900 flex items-center justify-center min-h-screen">
+    <div
+      class="bg-white shadow-lg rounded-lg p-10 max-w-md text-center flex flex-col items-center"
+    >
+      <div class="flex items-center mb-4">
+        <h1 class="text-3xl font-bold text-gray-800">交易失敗</h1>
+      </div>
+
+      <p class="text-gray-600 mb-6">很抱歉，您的交易無法完成，請稍後再試。</p>
+      <div>
+        <svg
+          class="w-8 h-8 text-red-500 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </div>
+      <br />
+      <div class="flex space-x-16">
+        <a
+          href="購物車連結"
+          class="inline-block bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full focus:outline-none shadow-md font-semibold"
+        >
+          ← 回購物車
+        </a>
+        <a
+          href="首頁連結"
+          class="inline-block bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full focus:outline-none shadow-md font-semibold"
+        >
+          回首頁
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

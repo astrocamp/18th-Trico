@@ -45,6 +45,9 @@
 
   <div class="flex items-center justify-end flex-none px-5 space-x-4">
     {% if user.is_authenticated %}
+     <h1>{{ user.username }} 歡迎回來!!!~~</h1> {% else %}  <h1>歡迎來到我們的網站!</h1>
+     {% endif %}
+     {% if user.is_authenticated %}
     <!-- 鈴鐺通知 -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
@@ -94,8 +97,7 @@
         </li>
         <li><a>設定</a></li>
         <!-- 新增角色切換按鈕 -->
-        <li><a href="#">切換至業者角色</a></li>
-        <li><a href="#">切換至接案者角色</a></li>
+
         <li>
           <a
             hx-post="{% url 'users:logout' %}"
