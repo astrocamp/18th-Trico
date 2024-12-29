@@ -1,11 +1,34 @@
 const esbuild = require('esbuild');
-const vuePlugin = require('esbuild-plugin-vue');
+const vue = require('esbuild-plugin-vue3');
 
-esbuild.build({
-  entryPoints: ['./src/main.js'], // 你的入口文件
+// 檢查是否有 --watch 參數
+const isWatch = process.argv.includes('--watch');
+
+// 建立基本配置
+const buildOptions = {
+  entryPoints: ['./frontend/scripts/app.js'],
   bundle: true,
-  outfile: './dist/bundle.js', // 打包輸出的文件
-  plugins: [vuePlugin()], // 添加 Vue 插件
-  loader: { '.js': 'jsx' }, // 如果有用到 JSX，可以加上這行
-  define: { 'process.env.NODE_ENV': '"production"' }, // 確保 Vue 以生產模式運行
-}).catch(() => process.exit(1));
+  outfile: './static/scripts/app.js',
+  plugins: [vue()],
+  loader: { '.js': 'jsx' },
+  define: { 'process.env.NODE_ENV': '"production"' }
+};
+
+// 根據是否為 watch 模式選擇不同的建構方法
+if (isWatch) {
+  // watch 模式
+  esbuild
+    .context(buildOptions)
+    .then(context => {
+      // 開始 watch
+      context.watch();
+      console.log('Watching for changes...');
+    })
+    .catch(() => process.exit(1));
+} else {
+  // 一般建構模式
+  esbuild
+    .build(buildOptions)
+    .then(() => console.log('Build complete'))
+    .catch(() => process.exit(1));
+}
