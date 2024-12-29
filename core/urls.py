@@ -15,9 +15,13 @@ urlpatterns = [
     path("services/", include("services.urls")),
     path("categories/", include("categories.urls")),
     path("comments/", include("comments.urls")),
-    re_path(r"^(?!admin|users|accounts|order|services|categories|comments/).*", vue404_page),
+    path("api/", include("common.urls")),
 ]
 
 handler404 = custom_404
+
+urlpatterns += [
+    re_path(r"^(?!admin|users|accounts|order|services|categories|comments|api|/).*", vue404_page),
+]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
