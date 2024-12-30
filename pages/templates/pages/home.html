@@ -1,9 +1,7 @@
 {% extends "shared/layout.html" %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-  <body class="bg-white">
+ <div class="bg-white">
 
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-6 mt-8">
       {% for category in categories %}
@@ -286,7 +284,7 @@
         });
       });
     </script>
-  </body>
+</div>
 
   <!-- 分頁按鈕 -->
   <div class="pagination justify-center pb-2">
@@ -304,5 +302,4 @@
     <a class="new" href="?page={{ page_obj.next_page_number }}">→</a>
     {% endif %}
   </div>
-</html>
 {% endblock %}
