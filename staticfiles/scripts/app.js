@@ -10393,16 +10393,10 @@ Component that was made reactive: `,
     initDev();
   }
 
-  // sfc-script:C:\Users\User\Desktop\18th-Trico\frontend\scripts\App.vue?type=script
-  var App_default = {
-    data() {
-      return {
-        message: "Hello from Vue 3 with Esbuild!xxx"
-      };
-    }
-  };
+  // sfc-script:C:\Users\NormalUser\Desktop\18th-Trico\frontend\scripts\App.vue?type=script
+  var App_default = {};
 
-  // sfc-template:C:\Users\User\Desktop\18th-Trico\frontend\scripts\App.vue?type=template
+  // sfc-template:C:\Users\NormalUser\Desktop\18th-Trico\frontend\scripts\App.vue?type=template
   var _hoisted_1 = { id: "app" };
   function render(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_router_view = resolveComponent("router-view");
@@ -14971,7 +14965,7 @@ ${JSON.stringify(newTargetLocation, null, 2)}
     mergeConfig: mergeConfig2
   } = axios_default;
 
-  // sfc-script:C:\Users\User\Desktop\18th-Trico\frontend\scripts\components\NotFoundPage.vue?type=script
+  // sfc-script:C:\Users\NormalUser\Desktop\18th-Trico\frontend\scripts\components\NotFoundPage.vue?type=script
   var NotFoundPage_default = {
     name: "NotFoundPage",
     setup() {
@@ -14999,7 +14993,7 @@ ${JSON.stringify(newTargetLocation, null, 2)}
     }
   };
 
-  // sfc-template:C:\Users\User\Desktop\18th-Trico\frontend\scripts\components\NotFoundPage.vue?type=template
+  // sfc-template:C:\Users\NormalUser\Desktop\18th-Trico\frontend\scripts\components\NotFoundPage.vue?type=template
   var _hoisted_12 = { class: "flex items-center justify-center min-h-screen bg-gray-100" };
   var _hoisted_2 = { class: "text-center" };
   var _hoisted_3 = { class: "text-6xl font-bold mb-4 text-gray-800" };
