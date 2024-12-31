@@ -1,4 +1,4 @@
-<div class="flex justify-between shadow-lg navbar bg-base-100 bg-white">
+<div class="flex justify-between bg-white shadow-lg navbar bg-base-100">
   <div class="flex px-5">
     <a class="text-xl btn btn-ghost" href="{%url 'pages:home'%}">三合trico </a>
     {% if user.is_authenticated %}
@@ -9,24 +9,24 @@
   <!--判斷是否為登入與註冊頁-->
   <!-- prettier-ignore -->
   {% if request.resolver_match.view_name != 'users:login' and request.resolver_match.view_name != 'users:register' %}
-  <div class="flex basis-2/4 items-center justify-center">
+  <div class="flex items-center justify-center basis-2/4">
     <div class="relative flex items-center w-full max-w-xl">
       <input
         type="text"
         placeholder="請輸入關鍵字..."
-        class="w-full pl-10 pr-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-100"
+        class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-100"
       />
       <button
-        class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-r-lg hover:bg-sky-700"
+        class="px-4 py-2 font-semibold text-white bg-blue-500 rounded-r-lg hover:bg-sky-700"
       >
         Search
       </button>
       <div
-        class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+        class="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
+          class="w-5 h-5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -45,10 +45,11 @@
 
   <div class="flex items-center justify-end flex-none px-5 space-x-4">
     {% if user.is_authenticated %}
-     <h1>{{ user.username }} 歡迎回來!!!~~</h1> {% else %}  <h1>歡迎來到我們的網站!</h1>
-     {% endif %}
-     {% if user.is_authenticated %}
-    <!-- 鈴鐺通知 -->
+    <h1>{{ user.username }} 歡迎回來!!!~~</h1>
+    {% else %}
+    <h1>歡迎來到我們的網站!</h1>
+    {% endif %} {% if user.is_authenticated %}
+    <!--TODO: 鈴鐺通知 -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
         <div class="indicator">
@@ -78,7 +79,7 @@
         </div>
       </div>
     </div>
-    <!-- 頭像 -->
+    <!--TODO: 頭像要改 -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
         <div class="rounded-full">
@@ -93,7 +94,9 @@
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
       >
         <li>
-          <a href="{% url 'users:user_dashboard' %}" class="justify-between">個人資料</a>
+          <a href="{% url 'users:user_dashboard' %}" class="justify-between"
+            >個人資料</a
+          >
         </li>
         <li><a>設定</a></li>
         <!-- 新增角色切換按鈕 -->
@@ -108,10 +111,10 @@
         </li>
       </ul>
     </div>
-    
+
     {% else %}
     <div class="flex justify-center space-x-8">
-      <ul class="list-none flex space-x-8">
+      <ul class="flex space-x-8 list-none">
         <li><a href="{% url 'users:login' %}" class="text-lg">登入</a></li>
         <li><a href="{% url 'users:register' %}" class="text-lg">註冊</a></li>
       </ul>

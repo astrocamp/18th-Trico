@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import home, portfolio_showcase
-from .views import home, client, freelancer
+from .views import home, portfolio_showcase, client, freelancer
 
 app_name = "pages"
 

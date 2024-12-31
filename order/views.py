@@ -14,11 +14,8 @@ HASH_IV = "EkRm7iFT261dpevs"
 ECPAY_URL = "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
 
 
-# 生成 CheckMacValue
-
-
+# 按照綠界的規範處理參數
 def generate_check_mac_value(params, hash_key, hash_iv):
-    # 按照綠界的規範處理參數
     sorted_params = sorted(params.items())
     raw_str = "&".join([f"{key}={value}" for key, value in sorted_params])
     raw_str = f"HashKey={hash_key}&{raw_str}&HashIV={hash_iv}"
@@ -33,9 +30,8 @@ def generate_check_mac_value(params, hash_key, hash_iv):
 def create_order(request):
     client_user_id = request.user.id
     service_id = request.GET.get("service_id", 1)  # 預設為 1
-    total_price = 1000.0  # 測試金額
+    total_price = 1000.0  # TODO:測試金額
 
-    # 建立訂單
     order = Order.objects.create(
         client_user_id=client_user_id,
         service_id=service_id,
@@ -47,14 +43,14 @@ def create_order(request):
     # 綠界金流參數
     params = {
         "MerchantID": MERCHANT_ID,
-        "MerchantTradeNo": order.merchant_trade_no,  # 訂單號碼
+        "MerchantTradeNo": order.merchant_trade_no,
         "MerchantTradeDate": datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
         "PaymentType": "aio",
         "TotalAmount": int(order.total_price),
         "TradeDesc": "Payment for Order",
         "ItemName": f"Order {order.id}",
-        "ReturnURL": "http://127.0.0.1:8000/order/return/",  # 部署要換
-        "OrderResultURL": "http://127.0.0.1:8000/order/result/",  # 部署要換
+        "ReturnURL": "http://127.0.0.1:8000/order/return/",  # TODO:部署要換
+        "OrderResultURL": "http://127.0.0.1:8000/order/result/",  # TODO:部署要換
         "ChoosePayment": "Credit",
     }
     params["CheckMacValue"] = generate_check_mac_value(params, HASH_KEY, HASH_IV)
@@ -71,9 +67,7 @@ def ecpay_return(request):
         data = request.POST.dict()
         check_mac = data.pop("CheckMacValue", None)
 
-        # 驗證 CheckMacValue
         if check_mac == generate_check_mac_value(data, HASH_KEY, HASH_IV):
-            # 更新訂單狀態
             merchant_trade_no = data.get("MerchantTradeNo")
             order_id = int(merchant_trade_no.replace("ORDER", ""))
             order = get_object_or_404(Order, id=order_id)

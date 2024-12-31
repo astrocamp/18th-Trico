@@ -21,7 +21,6 @@ urlpatterns = [
     path("login/", login, name="login"),
     path("logout/", logout, name="logout"),
     path("profile/", profile, name="profile"),
-    # 忘記密碼相關
     path("password_reset/", CustomPasswordResetView.as_view(), name="password_reset"),
     path(
         "password_reset_done/",

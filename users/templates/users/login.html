@@ -7,7 +7,6 @@
 <div class="flex flex-col justify-center min-h-full px-6 py-12 lg:px-8">
   <div class="max-w-lg px-20 py-10 mx-auto bg-white border rounded-md">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <!---<img class="w-auto h-10 mx-auto" src="" alt="trico" />--->
       <h2
         class="mt-10 font-bold tracking-tight text-center text-gray-900 text-2xl/9"
       >
@@ -93,15 +92,17 @@
         >
         <!-- Google 登入按鈕 -->
         <a
-         href="{% provider_login_url 'google' %}"
-         class="ml-2 flex items-center px-4 py-2 font-medium text-blue-500 transition border border-blue-500 rounded-md cursor-pointer hover:bg-blue-100">
-         <img
-          src="{% static 'images/google.png' %}"
-          alt="Google Logo"
-          class="w-5 h-5 mr-2"/>
-        Google 登入</a>
+          href="{% provider_login_url 'google' %}"
+          class="flex items-center px-4 py-2 ml-2 font-medium text-blue-500 transition border border-blue-500 rounded-md cursor-pointer hover:bg-blue-100"
+        >
+          <img
+            src="{% static 'images/google.png' %}"
+            alt="Google Logo"
+            class="w-5 h-5 mr-2"
+          />
+          Google 登入</a
+        >
       </div>
-
 
       <p class="mt-10 text-center text-gray-500 text-sm/6">
         還沒有會員？也可以使用
@@ -114,7 +115,6 @@
       </p>
     </div>
   </div>
-
 </div>
 
 {% endblock %}
