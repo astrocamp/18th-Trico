@@ -194,21 +194,21 @@ def switch_role(request):
 @login_required
 def feedback_view(request):
     profile = request.user.profile
-    if profile.is_freelancer:  # 如果是接案者
+    if profile.is_freelancer: 
         comments_received = Comment.objects.filter(
             service__freelancer_user=request.user, is_deleted=False
         ).select_related("user", "service")
         context = {
             "comments_received": comments_received,
-            "role": "freelancer",  # 標識用戶是接案者
+            "role": "freelancer",  
         }
-    else:  # 如果是業者
+    else:  
         comments_given = Comment.objects.filter(
             user=request.user, is_deleted=False
         ).select_related("service", "service__freelancer_user")
         context = {
             "comments_given": comments_given,
-            "role": "client",  # 標識用戶是業者
+            "role": "client",  
         }
 
     return render(request, "users/feedback.html", context)

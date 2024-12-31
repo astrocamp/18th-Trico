@@ -2,20 +2,6 @@
     padding: 0;
     margin: 0;
 }
-/* 斷點 */
-@media screen and (max-width: 1399px) {
-    .visualBox
-}
-
-@media screen and (max-width: 1199px) {
-    .visualBox
-}
-@media screen and (max-width: 991px) {
-    .visualBox
-}
-.visualBox{
-    
-}
 
 .taskeradvertise {
     width: 250px;

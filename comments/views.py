@@ -30,15 +30,14 @@ def delete_comment(request, comment_id):
 
 @login_required
 def feedback_view(request):
-    # 獲取當前用戶的評論相關數據
     comments_given = Comment.objects.filter(user=request.user).order_by(
         "-created_at"
-    )  # 評論者
+    )  
     comments_received = Comment.objects.filter(
         service__freelancer_user=request.user
     ).order_by(
         "-created_at"
-    )  # 被評論者
+    )  
     return render(
         request,
         "users/feedback.html",
