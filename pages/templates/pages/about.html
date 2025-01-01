@@ -1,0 +1,121 @@
+{% extends "shared/layout.html" %}
+{% load static %}
+{% block content %}
+    <style>
+        .team-photo {
+            width: 8rem;
+            height: 8rem;
+            border-radius: 9999px;
+            object-fit: cover;
+            border: 4px solid #bfdbfe;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .team-photo:hover {
+            transform: rotate(5deg) scale(1.1); 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in {
+            animation: fade-in 1s ease-out;
+        }
+        .fade-in:nth-child(1) { animation-delay: 0s; }
+        .fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in:nth-child(3) { animation-delay: 0.4s; }
+        .fade-in:nth-child(4) { animation-delay: 0.6s; }
+        .fade-in:nth-child(5) { animation-delay: 0.8s; }
+
+        .team-card {
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .team-card:hover {
+            transform: scale(1.05); 
+            background-color: #dbeafe; 
+        }
+    </style>
+<div class="bg-gradient-to-b from-blue-100 to-blue-50 text-gray-200">
+
+    <header class="bg-blue-600 text-white py-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl font-extrabold">關於我們</h1>
+            <p class="mt-2 text-lg">三合的故事：連結的力量</p>
+        </div>
+    </header>
+
+    <section class="max-w-4xl mx-auto py-10 px-4">
+        <h2 class="text-2xl font-bold text-blue-200">三合的故事</h2>
+        <p class="mt-4 text-lg leading-7">
+            在這個瞬息萬變的世界裡，靈感和機會無處不在，但它們常常因為距離、溝通的障礙而錯失良機。
+            三合（Trico）誕生於這樣一個信念：
+            <strong>每一份合作都可以創造改變，每一次連結都能成就不可能的夢想。</strong>
+        </p>
+        <p class="mt-4">
+            三合的名字，來源於「洽」這個字，寓意著連結與合作。我們相信，真正的價值誕生於「三方合力」的過程中——
+            接案者的創意、業者的需求以及平台的橋樑作用。三合的存在，不僅僅是提供一個交易的場所，更是建立信任、實現共贏的舞台。
+        </p>
+    </section>
+
+    <section class="bg-white py-10">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-2xl font-bold text-blue-700 text-center">我們的團隊</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+                <!-- 成員 1 -->
+                <div class="bg-blue-100 p-6 rounded-lg text-center shadow-md fade-in team-card">
+                    <img src="/static/images/member1.png" alt="邱佳瑜" class="team-photo mx-auto">
+                    <h3 class="mt-4 text-lg font-semibold text-blue-700">邱佳瑜</h3>
+                    <p class="text-sm text-gray-600">工程師</p>
+                </div>
+                <!-- 成員 2 -->
+                <div class="bg-blue-100 p-6 rounded-lg text-center shadow-md fade-in team-card">
+                    <img src="/static/images/member2.png" alt="徐培鈞" class="team-photo mx-auto">
+                    <h3 class="mt-4 text-lg font-semibold text-blue-700">徐培鈞</h3>
+                    <p class="text-sm text-gray-600">工程師</p>
+                </div>
+                <!-- 成員 3 -->
+                <div class="bg-blue-100 p-6 rounded-lg text-center shadow-md fade-in team-card">
+                    <img src="/static/images/member3.jpg" alt="賴冠廷" class="team-photo mx-auto">
+                    <h3 class="mt-4 text-lg font-semibold text-blue-700">賴冠廷</h3>
+                    <p class="text-sm text-gray-600">工程師</p>
+                </div>
+                <!-- 成員 4 -->
+                <div class="bg-blue-100 p-6 rounded-lg text-center shadow-md fade-in team-card">
+                    <img src="/static/images/member4.jpg" alt="廖璟傑" class="team-photo mx-auto">
+                    <h3 class="mt-4 text-lg font-semibold text-blue-700">廖璟傑</h3>
+                    <p class="text-sm text-gray-600">工程師</p>
+                </div>
+                <!-- 成員 5 -->
+                <div class="bg-blue-100 p-6 rounded-lg text-center shadow-md fade-in team-card">
+                    <img src="/static/images/member5.jpg" alt="陳庭婕" class="team-photo mx-auto">
+                    <h3 class="mt-4 text-lg font-semibold text-blue-700">陳庭婕</h3>
+                    <p class="text-sm text-gray-600">工程師</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-blue-100 py-10">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-2xl font-bold text-blue-700">我們的使命</h2>
+            <p class="mt-4 text-lg leading-7">
+                三合致力於讓每一位接案者找到屬於自己的舞台，讓每一位業者找到值得信賴的合作夥伴。
+                無論是創造驚艷的設計、開發先進的技術，還是執行一場完美的活動，我們希望成為這段旅程中不可或缺的助力。
+            </p>
+        </div>
+    </section>
+
+    <footer class="bg-blue-600 text-white py-6 text-center">
+        <p class="text-lg">加入三合，成為我們故事的一部分，一起書寫屬於未來的篇章。</p>
+    </footer>
+</div>
+
+{% endblock %}

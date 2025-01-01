@@ -17,3 +17,6 @@ def client(request):
 
 def freelancer(request):
     return render(request, "pages/freelancer.html")
+
+def about_page(request):
+    return render(request, "pages/about.html")
