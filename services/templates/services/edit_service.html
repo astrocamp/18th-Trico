@@ -1,111 +1,258 @@
 {% extends "shared/layout.html" %} {% block content %}
-<div class="w-3/5 mx-auto my-8 bg-blue-100 p-6 rounded-lg shadow-m">
+<div class="w-3/5 mx-auto my-8 bg-blue-100 p-6 rounded-lg shadow-md">
   <h1 class="text-3xl font-bold text-blue-700 text-center mb-6">編輯服務</h1>
-  <form method="post" enctype="multipart/form-data" class="space-y-8">
+  <form method="post" enctype="multipart/form-data" class="space-y-10">
     {% csrf_token %}
+
     <!-- Title Field -->
-    <div class="flex flex-col">
-      <label for="id_title" class="text-blue-800 font-semibold mb-2"
-        >標題：</label
-      >
+    <div class="flex flex-col space-y-2">
+      <label for="title" class="text-gray-700 font-medium">服務項目：</label>
       <input
         type="text"
-        id="id_title"
+        id="title"
         name="title"
-        value="{{ form.title.value }}"
-        class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+        class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 w-full"
+        placeholder="範例: 我會透過我的專業幫你剪輯影片並配上字幕..."
+        value="{{ form.title.value|default_if_none:'' }}"
       />
       {% if form.title.errors %}
-      <p class="text-red-500 text-sm mt-1">{{ form.title.errors }}</p>
+      <p class="text-red-500 text-sm">*請填寫您的服務項目名稱</p>
       {% endif %}
     </div>
 
     <!-- Description Field -->
-    <div class="flex flex-col">
-      <label for="id_description" class="text-blue-800 font-semibold mb-2"
-        >描述：</label
-      >
+    <div class="flex flex-col space-y-2">
+      <label for="description" class="text-gray-700 font-medium">描述：</label>
       <textarea
-        id="id_description"
+        id="description"
         name="description"
-        class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
-      >
-{{ form.description.value }}</textarea
-      >
+        class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 w-full h-32"
+        placeholder="請以文字描述您擅長的技能"
+      >{{ form.description.value|default_if_none:'' }}</textarea>
       {% if form.description.errors %}
-      <p class="text-red-500 text-sm mt-1">{{ form.description.errors }}</p>
+      <p class="text-red-500 text-sm">*請描述您的服務內容</p>
       {% endif %}
     </div>
 
     <!-- Category Field -->
-    <div class="flex flex-col">
-      <label for="id_category" class="text-blue-800 font-semibold mb-2"
-        >分類：</label
-      >
-      <select
-        id="id_category"
-        name="category"
-        class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
-      >
-        <option value="" selected>請選擇</option>
+    <div class="flex flex-col space-y-2">
+      <label for="category" class="text-gray-700 font-medium">分類：</label>
+      <div class="flex flex-wrap gap-2">
         {% for category in categories %}
-        <option value="{{ category.id }}" {% if form.category.value == category.id %} selected {% endif %} >{{ category.name }}</option>
+        <label class="cursor-pointer">
+          <input
+            type="checkbox"
+            name="category"
+            value="{{ category.id }}"
+            class="hidden peer"
+            {% if category in form.instance.category.all %}checked{% endif %}
+          />
+          <span
+            class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 peer-checked:bg-blue-600 peer-checked:text-white"
+            >{{ category.name }}</span
+          >
+        </label>
         {% endfor %}
-      </select>
+      </div>
       {% if form.category.errors %}
-      <p class="text-red-500 text-sm mt-1">{{ form.category.errors }}</p>
+      <p class="text-red-500 text-sm">*請選擇您的服務分類(可複選)</p>
       {% endif %}
     </div>
 
-    
-
-    <!-- Photo Field -->
-    <div class="flex flex-col">
-      <label for="id_photo" class="text-blue-800 font-semibold mb-2"
-        >圖片：</label
-      >
+    <!-- Photo Upload Field -->
+    <div class="flex flex-col space-y-2">
+      <label for="photo" class="text-gray-700 font-medium">作品圖片</label>
       <input
         type="file"
-        id="id_photo"
+        id="photo"
         name="photo"
-        class="appearance-none bg-white border border-gray-300 rounded-md px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+        class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 w-full"
       />
       {% if form.photo.errors %}
-      <p class="text-red-500 text-sm mt-1">{{ form.photo.errors }}</p>
+      <p class="text-red-500 text-sm">*請上傳正確圖片格式</p>
       {% endif %}
     </div>
 
-    <!-- Buttons -->
-    <div class="flex justify-end space-x-4">
-      <a
-        href="{% url 'services:freelancer_dashboard' id=request.user.id %}"
-        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition duration-300"
-      >
-        取消編輯
-      </a>
-      <button
-        type="submit"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
-      >
-        更新
-      </button>
-    </div>
-  </form>
-</div>
-{% endblock %} {% comment %}
-<div class="space-y-6">
-  {% for field in form %}
-  <div class="flex flex-col">
-    <label
-      for="{{ field.id_for_label }}"
-      class="text-gray-700 font-medium mb-2"
-    >
-      {{ field.label }}
-    </label>
-    {{ field }} {% if field.errors %}
-    <p class="text-red-500 text-sm mt-1">{{ field.errors }}</p>
-    {% endif %}
-  </div>
-  {% endfor %}
-</div>
-{% endcomment %}
+    <div class="flex">
+      <!-- Standard Plan Fields --> 
+      <div class="m-2 pt-4 p-4 bg-gray-300 rounded-md w-1/2 space-y-2"> 
+       <h2 class="text-lg font-semibold text-gray-700 mb-4">一般方案</h2> 
+ 
+       <div class="flex flex-col space-y-2"> 
+         <label for="standard_title" class="text-gray-700 font-medium">名稱：</label> 
+         <input 
+           type="text" 
+           id="standard_title" 
+           name="standard_title" 
+           class="bg-white text-gray-800 border border-gray-300 rounded-md p-2" 
+           placeholder="一般方案名稱" 
+           value="{{ form.standard_title.value|default_if_none:'' }}" 
+         /> 
+         {% if form.standard_title.errors %}
+         <p class="text-red-500 text-sm">*請填寫一般方案名稱</p>
+         {% endif %}
+       </div> 
+ 
+       <div class="flex flex-col space-y-2"> 
+         <label for="standard_description" class="text-gray-700 font-medium">描述：</label> 
+         <textarea 
+           id="standard_description" 
+           name="standard_description" 
+           class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 h-20" 
+           placeholder="一般方案描述" 
+         >{{ form.standard_description.value|default_if_none:'' }}</textarea> 
+         {% if form.standard_description.errors %}
+         <p class="text-red-500 text-sm">*請填寫一般方案描述</p>
+         {% endif %}
+       </div> 
+ 
+       <div class="flex flex-col space-y-2"> 
+         <label for="standard_price" class="text-gray-700 font-medium">價格：</label> 
+         <input 
+           type="number" 
+           id="standard_price" 
+           name="standard_price" 
+           class="bg-white text-gray-800 border border-gray-300 rounded-md p-2" 
+           placeholder="一般方案價格" 
+           value="{{ form.standard_price.value|default_if_none:'' }}" 
+         /> 
+         {% if form.standard_price.errors %}
+         <p class="text-red-500 text-sm">*請填寫一般方案價格</p>
+         {% endif %}
+       </div> 
+ 
+       <div class="flex flex-col space-y-2"> 
+         <label for="standard_delivery_time" class="text-gray-700 font-medium">交付時間 (天)：</label> 
+         <input 
+           type="number" 
+           id="standard_delivery_time" 
+           name="standard_delivery_time" 
+           class="bg-white text-gray-800 border border-gray-300 rounded-md p-2" 
+           placeholder="交付時間" 
+           value="{{ form.standard_delivery_time.value|default_if_none:'' }}" 
+         /> 
+         {% if form.standard_delivery_time.errors %}
+         <p class="text-red-500 text-sm">*請填寫交付時間</p>
+         {% endif %}
+       </div> 
+     </div> 
+ 
+ 
+ 
+     <!-- Premium Plan Fields --> 
+     <div class="m-2 pt-4 bg-gray-300 p-4 rounded-md w-1/2 {% if form.premium_title.value %}block{% else %}hidden{% endif %} space-y-2" id="premium-plan-container"> 
+       <h2 class="text-lg font-semibold text-gray-700 mb-4">專業方案</h2> 
+ 
+       <div class="flex flex-col space-y-2"> 
+         <label for="premium_title" class="text-gray-700 font-medium">名稱：</label> 
+         <input 
+           type="text" 
+           name="premium_title" 
+           class="bg-white text-gray-800 border border-gray-300 rounded-md p-2" 
+           placeholder="專業方案名稱" 
+           value="{{ form.premium_title.value|default_if_none:'' }}"
+         /> 
+         {% if form.premium_title.errors %}
+         <p class="text-red-500 text-sm">*請填寫專業方案名稱</p>
+         {% endif %}
+       </div> 
+ 
+       <div class="flex flex-col space-y-2"> 
+         <label for="premium_description" class="text-gray-700 font-medium">描述：</label> 
+         <textarea 
+           name="premium_description" 
+           class="bg-white text-gray-800 border border-gray-300 rounded-md p-2 h-20" 
+           placeholder="專業方案描述">{{ form.premium_description.value|default_if_none:'' }}</textarea> 
+         {% if form.premium_description.errors %}
+         <p class="text-red-500 text-sm">*請填寫專業方案描述</p>
+         {% endif %}
+       </div> 
+ 
+       <div class="flex flex-col space-y-2"> 
+         <label for="premium_price" class="text-gray-700 font-medium">價格：</label> 
+         <input 
+           type="number" 
+           name="premium_price" 
+           class="bg-white text-gray-800 border border-gray-300 rounded-md p-2" 
+           placeholder="專業方案價格" 
+           value="{{ form.premium_price.value|default_if_none:'' }}"
+         /> 
+         {% if form.premium_price.errors %}
+         <p class="text-red-500 text-sm">*請填寫專業方案價格</p>
+         {% endif %}
+       </div> 
+ 
+       <div class="flex flex-col space-y-2"> 
+         <label for="premium_delivery_time" class="text-gray-700 font-medium">交付時間 (天)：</label> 
+         <input 
+           type="number" 
+           name="premium_delivery_time" 
+           class="bg-white text-gray-800 border border-gray-300 rounded-md p-2" 
+           placeholder="交付時間" 
+           value="{{ form.premium_delivery_time.value|default_if_none:'' }}"
+         /> 
+         {% if form.premium_delivery_time.errors %}
+         <p class="text-red-500 text-sm">*請填寫交付時間</p>
+         {% endif %}
+       </div> 
+     </div> 
+   </div> 
+  <!-- Buttons --> 
+  <!-- Button to Add/Remove Premium Plan --> 
+  <div class="flex justify-start mt-6 space-x-4"> 
+    <button 
+      type="button" 
+      id="toggle-premium-plan-btn" 
+      class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300">新增專業方案</button> 
+  </div> 
+  <div class="flex justify-end mt-6 space-x-4"> 
+    <a 
+      href="{% url 'services:freelancer_dashboard' id=request.user.id %}" 
+      class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition"> 
+      取消編輯 
+    </a> 
+    <button 
+      type="submit" 
+      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"> 
+      更新 
+    </button> 
+  </div> 
+</form> 
+</div> 
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("toggle-premium-plan-btn");
+    const premiumContainer = document.getElementById("premium-plan-container");
+  
+    // Update button text based on the initial state
+    if (!premiumContainer.classList.contains("hidden")) {
+      toggleBtn.textContent = "收回專業方案";
+    }
+  
+    toggleBtn.addEventListener("click", function () {
+      if (premiumContainer.classList.contains("hidden")) {
+        premiumContainer.classList.remove("hidden");
+        toggleBtn.textContent = "收回專業方案";
+      } else {
+        premiumContainer.classList.add("hidden");
+        toggleBtn.textContent = "新增專業方案";
+  
+        // Clear premium plan fields
+        const premiumFields = premiumContainer.querySelectorAll("input, textarea");
+        premiumFields.forEach((field) => {
+          field.value = "";
+        });
+      }
+    });
+  });
+  </script>
+
+{% endblock %}
+{% comment %} {% load static %}
+<script src="{% static 'scripts/toggling_premium_plan.js' %}"></script> {% endcomment %}
+
+
+

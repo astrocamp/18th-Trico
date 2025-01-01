@@ -27,7 +27,6 @@ def delete_comment(request, comment_id):
         return redirect('services:freelancer_dashboard', id=request.user.id)
     return render(request, 'comments/delete_comment.html', {'comment': comment})
 
-
 @login_required
 def feedback_view(request):
     comments_given = Comment.objects.filter(user=request.user).order_by(
@@ -46,3 +45,16 @@ def feedback_view(request):
             "comments_received": comments_received,
         },
     )
+
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+    service_id = comment.service.id
+    if request.method == "POST":
+        comment.is_deleted = True
+        comment.save()
+        return redirect(
+            "services:service_detail", id=request.user.id, service_id=service_id
+        )
+    return render(request, "comments/delete_comment.html", {"comment": comment})

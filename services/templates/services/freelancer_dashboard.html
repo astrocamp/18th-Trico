@@ -1,6 +1,5 @@
 {% extends "shared/layout.html" %} 
 {% block content %} 
-{% load static %}
 
 <div class="w-4/5 mx-auto my-8 bg-blue-100 p-6 rounded-lg shadow-md">
   <!-- 按鈕區域 -->
@@ -40,14 +39,24 @@
       <div
         class="service-card bg-white rounded-lg shadow-md overflow-hidden flex flex-col justify-between"
       >
-        <img
+        <a href="{% url 'services:service_detail' service.freelancer_user.id service.id %}">
+          <img
           class="w-full h-48 object-cover"
           src="{% if service.photo %}{{ service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}"
           alt="Service Photo"
         />
+        </a>
         <div class="p-4 flex-grow">
-          <h2 class="text-m font-bold text-blue-800">{{ service.title }}</h2>
-          <p class="text-gray-600 mt-2">{{ service.description }}</p>
+          <h2 class="text-m font-bold text-blue-800 truncate">{{ service.title }}</h2>
+          <!-- 限制描述為兩行 -->
+          <p
+            class="text-gray-600 mt-2 text-sm overflow-hidden"
+            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;"
+          >
+            {{ service.description }}
+          </p>
+          <p class="mt-2 text-sm font-semibold text-blue-600">price from $ {{service.standard_price}}</p>
+
         </div>
         <div class="p-4 border-t border-gray-200">
           <div class="mt-2 flex-auto space-x-4 justify-end management-buttons hidden">
@@ -99,25 +108,6 @@
           >
             新增評論
           </a>
-          <!-- 卡牌底部 -->
-          <div class="p-4 border-t border-gray-200">
-            <div class="mt-2 flex-auto space-x-4 justify-end management-buttons hidden">
-              <!-- 編輯按鈕 -->
-              <a
-                class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-3 rounded transition duration-300"
-                href="{% url 'services:edit_service' id=request.user.id service_id=service.id %}"
-              >
-                編輯
-              </a>
-              <!-- 刪除按鈕 -->
-              <a
-                class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded transition duration-300"
-                href="{% url 'services:delete_service' id=request.user.id service_id=service.id %}"
-              >
-                刪除
-              </a>
-            </div>
-          </div>
         </div>
       </div>
       {% endfor %}
@@ -127,8 +117,22 @@
     </p>
     {% endif %}
   </div>
-
-  <script src="{% static 'scripts/toggling_buttons.js' %}"></script>
+  
+  {% load static %}
+  <script>
+    document
+  .getElementById("toggle-management-btn")
+  .addEventListener("click", function () {
+    const managementButtons = document.querySelectorAll(".management-buttons");
+    managementButtons.forEach((buttonGroup) => {
+      if (buttonGroup.classList.contains("hidden")) {
+        buttonGroup.classList.remove("hidden");
+      } else {
+        buttonGroup.classList.add("hidden");
+      }
+    });
+  });
+  </script>
 </div>
 
 {% endblock %}

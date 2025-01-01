@@ -55,6 +55,10 @@ def login(request):
         )
         if user:
             login_user(request, user)
+            # next是用來在登入後跳轉到指定URL的參數
+            next_url = request.GET.get("next")  
+            if next_url: 
+                return redirect(next_url) 
             return redirect("pages:home")
         else:
             messages.error(request, "登入失敗，請重新登入一次。")

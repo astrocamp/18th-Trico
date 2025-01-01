@@ -10394,13 +10394,7 @@ Component that was made reactive: `,
   }
 
   // sfc-script:C:\Users\User\Desktop\18th-Trico\frontend\scripts\App.vue?type=script
-  var App_default = {
-    data() {
-      return {
-        message: "Hello from Vue 3 with Esbuild!xxx"
-      };
-    }
-  };
+  var App_default = {};
 
   // sfc-template:C:\Users\User\Desktop\18th-Trico\frontend\scripts\App.vue?type=template
   var _hoisted_1 = { id: "app" };
