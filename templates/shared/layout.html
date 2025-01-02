@@ -7,12 +7,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>三合</title>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
     <script src="{% static 'scripts/app.js'%}" type="module"></script>
     <link rel="stylesheet" href="{% static 'styles/app.css' %}" />
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     {% include "shared/navbar.html" %}
     <main>{% block content %}{% endblock %}</main>
+    <footer class="flex items-center justify-center py-4 bg-gray-100">
+      <p class="text-sm text-gray-500">&copy; 三合</p>
+    </footer>
   </body>
 </html>

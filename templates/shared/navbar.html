@@ -1,6 +1,9 @@
+{% load static %}
 <div class="flex justify-between bg-white shadow-lg navbar bg-base-100">
   <div class="flex px-5">
-    <a class="text-xl btn btn-ghost" href="{%url 'pages:home'%}">三合trico </a>
+    <a class="btn btn-ghost" href="{% url 'pages:home' %}">
+      <img src="{% static 'images/logo.png' %}" alt="三合" class="h-10 w-25" />
+    </a>
     {% if user.is_authenticated %}
     <span class="hidden">ID:{{ user.id }}</span>
     {% endif %}

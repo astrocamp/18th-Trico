@@ -1,151 +1,181 @@
-{% extends "shared/layout.html" %}
-{% block content %}
-
-{% if messages %}
-    <div class="mb-4">
-        {% for message in messages %}
-            {% if message.tags == 'success' %}
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    {{ message }}
-                </div>
-            {% elif message.tags == 'error' %}
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    {{ message }}
-                </div>
-            {% else %}
-                <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
-                    {{ message }}
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+{% extends "shared/layout.html" %} {% block content %} {% if messages %}
+<div class="mb-4">
+  {% for message in messages %} {% if message.tags == 'success' %}
+  <div
+    class="relative px-4 py-3 text-green-700 bg-green-100 border border-green-400 rounded"
+    role="alert"
+  >
+    {{ message }}
+  </div>
+  {% elif message.tags == 'error' %}
+  <div
+    class="relative px-4 py-3 text-red-700 bg-red-100 border border-red-400 rounded"
+    role="alert"
+  >
+    {{ message }}
+  </div>
+  {% else %}
+  <div
+    class="relative px-4 py-3 text-blue-700 bg-blue-100 border border-blue-400 rounded"
+    role="alert"
+  >
+    {{ message }}
+  </div>
+  {% endif %} {% endfor %}
+</div>
 {% endif %}
 
 <div class="flex flex-col justify-center min-h-full px-6 py-12 lg:px-8">
-    <div class="max-w-md px-10 py-10 mx-auto bg-white border rounded-md shadow-md">
-      <h2 class="mb-6 text-2xl font-bold tracking-tight text-center text-gray-900">
-        更新個人資料
-      </h2>
-      <form method="post" enctype="multipart/form-data" class="space-y-6">
-        {% csrf_token %}
-        
-        <!-- First Name -->
-        <div>
-          <label for="id_first_name" class="block font-medium text-gray-900 text-sm">
-            名字：
-          </label>
-          <div class="mt-2">
-            <input 
-              id="id_first_name" 
-              type="text" 
-              name="first_name" 
-              value="{{ user_form.firstname.value|default:'' }}" 
-              class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="請輸入名字"
-            />
-          </div>
-        </div>
-  
-        <!-- Last Name -->
-        <div>
-          <label for="id_last_name" class="block font-medium text-gray-900 text-sm">
-            姓氏：
-          </label>
-          <div class="mt-2">
-            <input 
-              id="id_last_name" 
-              type="text" 
-              name="last_name" 
-              value="{{ user_form.lastname.value|default:'' }}" 
-              class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="請輸入姓氏"
-            />
-          </div>
-        </div>
-  
-        <!-- Email -->
-        <div>
-          <label for="id_email" class="block font-medium text-gray-900 text-sm">
-            電子郵件：
-          </label>
-          <div class="mt-2">
-            <input 
-              id="id_email" 
-              type="email" 
-              name="email" 
-              value="{{ user_form.email.value|default:'' }}" 
-              class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="請輸入電子郵件"
-            />
-          </div>
-        </div>
-
-        <!-- 所在地區 -->
-        <div>
-          <label for="id_location" class="block font-medium text-gray-900 text-sm">
-            所在地區：
-          </label>
-          <div class="mt-2">
-            <input 
-              id="id_location" 
-              type="location" 
-              name="location" 
-              value="{{ user_form.location.value|default:'' }}" 
-              class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="請輸入所在地區"
-            />
-          </div>
-        </div>        
-  
-        <!-- Photo -->
-        <div>
-            <label for="id_photo" class="block font-medium text-gray-900 text-sm">
-              上傳頭像：
-            </label>
-            <div class="mt-2">
-              <input 
-                id="id_photo" 
-                type="file" 
-                name="photo" 
-                class="file-input file-input-bordered file-input-primary w-full border-gray-300 rounded-md bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              />
-            </div>
-            {% if profile_form.photo.errors %}
-              <p class="mt-1 text-sm text-red-500">{{ profile_form.photo.errors.0 }}</p>
-            {% endif %}
-          </div>
-  
-        <!-- Bio -->
-        <div>
-          <label for="id_bio" class="block font-medium text-gray-900 text-sm">
-            個人簡介：
-          </label>
-          <div class="mt-2">
-            <textarea 
-              id="id_bio" 
-              name="bio" 
-              class="textarea textarea-bordered w-full h-28"
-              placeholder="請輸入個人簡介">{{ profile_form.bio.value|default:'' }}</textarea>
-          </div>
-          {% if profile_form.bio.errors %}
-            <p class="mt-1 text-sm text-red-500">{{ profile_form.bio.errors.0 }}</p>
-          {% endif %}
-        </div>
-  
-        <!-- Submit Button -->
-        <div>
-          <button 
-            type="submit" 
-            class="flex justify-center w-full px-3 py-1.5 text-sm font-semibold text-white bg-blue-500 rounded-md shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
-          >
-            更新
-          </button>
-        </div>
-      </form>
+  <div
+    class="max-w-md px-10 py-10 mx-auto bg-white border rounded-md shadow-md"
+  >
+    <div class="mb-6">
+      <a
+        href="{% url 'pages:home' %}"
+        class="flex items-center text-blue-500 hover:underline"
+      >
+        ← 返回首頁
+      </a>
     </div>
+    <h2
+      class="mb-6 text-2xl font-bold tracking-tight text-center text-gray-900"
+    >
+      更新個人資料
+    </h2>
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- First Name -->
+      <div>
+        <label
+          for="id_first_name"
+          class="block text-sm font-medium text-gray-900"
+        >
+          名字：
+        </label>
+        <div class="mt-2">
+          <input
+            id="id_first_name"
+            type="text"
+            name="first_name"
+            value="{{ user_form.firstname.value|default:'' }}"
+            class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="請輸入名字"
+          />
+        </div>
+      </div>
+
+      <!-- Last Name -->
+      <div>
+        <label
+          for="id_last_name"
+          class="block text-sm font-medium text-gray-900"
+        >
+          姓氏：
+        </label>
+        <div class="mt-2">
+          <input
+            id="id_last_name"
+            type="text"
+            name="last_name"
+            value="{{ user_form.lastname.value|default:'' }}"
+            class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="請輸入姓氏"
+          />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="id_email" class="block text-sm font-medium text-gray-900">
+          電子郵件：
+        </label>
+        <div class="mt-2">
+          <input
+            id="id_email"
+            type="email"
+            name="email"
+            value="{{ user_form.email.value|default:'' }}"
+            class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="請輸入電子郵件"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- 所在地區 -->
+      <div>
+        <label
+          for="id_location"
+          class="block text-sm font-medium text-gray-900"
+        >
+          所在地區：
+        </label>
+        <div class="mt-2">
+          <input
+            id="id_location"
+            type="location"
+            name="location"
+            value="{{ user_form.location.value|default:'' }}"
+            class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="請輸入所在地區"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Photo -->
+      <div>
+        <label for="id_photo" class="block text-sm font-medium text-gray-900">
+          上傳頭像：
+        </label>
+        <div class="mt-2">
+          <input
+            id="id_photo"
+            type="file"
+            name="photo"
+            class="w-full text-gray-700 bg-white border-gray-300 rounded-md file-input file-input-bordered file-input-primary focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
+        {% if profile_form.photo.errors %}
+        <p class="mt-1 text-sm text-red-500">
+          {{ profile_form.photo.errors.0 }}
+        </p>
+        {% endif %}
+      </div>
+
+      <!-- Bio -->
+      <div>
+        <label for="id_bio" class="block text-sm font-medium text-gray-900">
+          個人簡介：
+        </label>
+        <div class="mt-2">
+          <textarea
+            id="id_bio"
+            name="bio"
+            class="w-full textarea textarea-bordered h-28"
+            placeholder="請輸入個人簡介"
+            required
+          >
+{{ profile_form.bio.value|default:'' }}</textarea
+          >
+        </div>
+        {% if profile_form.bio.errors %}
+        <p class="mt-1 text-sm text-red-500">{{ profile_form.bio.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Submit Button -->
+      <div>
+        <button
+          type="submit"
+          class="flex justify-center w-full px-3 py-1.5 text-sm font-semibold text-white bg-blue-500 rounded-md shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
+        >
+          更新
+        </button>
+      </div>
+    </form>
   </div>
-  
-
-
+</div>
 
 {% endblock %}

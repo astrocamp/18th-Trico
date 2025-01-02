@@ -11,11 +11,13 @@
   <body>
     <header>
       <div class="shadow-lg navbar bg-base-100">
-        <div class="flex-1 px-5">
-          <a class="text-xl btn btn-ghost" href="{%url 'pages:home'%}"
-            >三合trico</a
-          >
-        </div>
+        <a class="btn btn-ghost" href="{% url 'pages:home' %}">
+          <img
+            src="{% static 'images/logo.png' %}"
+            alt="三合"
+            class="h-10 w-25"
+          />
+        </a>
       </div>
     </header>
     <main>{% block content %} {% endblock %}</main>
