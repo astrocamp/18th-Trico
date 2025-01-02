@@ -58,6 +58,32 @@
           <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-s">JavaScript</span>
           <span class="px-5 py-1 bg-teal-100 text-teal-700 rounded-full text-s">Web Development</span>
         </div>
+        
+        <div class="mt-6">
+          <h2 class="text-lg font-semibold mb-2">分享此服務</h2>
+          <div class="flex space-x-4">
+            <a
+              href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+              target="_blank"
+              class="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 24 24">
+                <path
+                  d="M22.675 0H1.325C.595 0 0 .6 0 1.35v21.3C0 23.4.595 24 1.325 24h11.49v-9.294H9.691v-3.622h3.123V8.41c0-3.1 1.895-4.788 4.662-4.788 1.325 0 2.462.099 2.793.143v3.24l-1.918.001c-1.504 0-1.795.716-1.795 1.763v2.31h3.587l-.467 3.622h-3.12V24h6.11c.73 0 1.325-.6 1.325-1.35V1.35C24 .6 23.405 0 22.675 0z" />
+              </svg>
+            </a>
+
+            <a
+              href="https://line.me/R/msg/text/?{{ request.build_absolute_uri }}"
+              target="_blank"
+              class="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600">
+              <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
+                <title>LINE</title>
+                <path
+                  d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314" />
+              </svg>
+            </a>
+          </div>
+        </div>
       </div>
 
       <!-- 右側價格一般&專業方案 -->
