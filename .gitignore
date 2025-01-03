@@ -7,4 +7,4 @@ static/scripts/app.js
 static/styles/app.css
 .vscode/
 media/
-staticfiles/
+staticfiles
