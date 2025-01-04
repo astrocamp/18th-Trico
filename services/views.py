@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Service
+from .models import Service, Like
 from .forms import ServiceForm
 from .models import Category
 from comments.models import Comment
 from comments.forms import CommentForm
+from django.http import JsonResponse
 
 
 def has_permission(request, id):
@@ -59,7 +60,6 @@ def create_service(request, id):
     )
 
 
-
 @login_required
 def edit_service(request, id, service_id):
     if not has_permission(request, id):
@@ -85,7 +85,6 @@ def edit_service(request, id, service_id):
     )
 
 
-
 @login_required
 def delete_service(request, id, service_id):
     if not has_permission(request, id):
@@ -108,8 +107,6 @@ def error_page(request):
         "services/error_page.html",
         {"message": "You do not have permission to view this page."},
     )
-
-
 
 
 def service_detail(request, id, service_id):
@@ -137,5 +134,34 @@ def service_detail(request, id, service_id):
             "service": service,
             "comments": comments,
             "form": form,
+        },
+    )
+
+
+@login_required
+def toggle_like(request, service_id):
+    service = get_object_or_404(Service, id=service_id)
+    like, created = Like.objects.get_or_create(user=request.user, service=service)
+
+    if not created:
+        like.delete()
+        is_liked = False
+    else:
+        is_liked = True
+
+    return JsonResponse({"is_liked": is_liked})
+
+
+@login_required
+def service_detail(request, id, service_id):
+    service = get_object_or_404(Service, id=service_id)
+    is_liked = Like.objects.filter(user=request.user, service=service).exists()
+
+    return render(
+        request,
+        "services/service_detail.html",
+        {
+            "service": service,
+            "is_liked": is_liked,
         },
     )

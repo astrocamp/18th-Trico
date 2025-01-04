@@ -14,6 +14,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from comments.models import Comment
+from services.models import Like
 
 
 def register(request):
@@ -213,6 +214,33 @@ def feedback_view(request):
         context = {
             "comments_given": comments_given,
             "role": "client",  
+        }
+
+    return render(request, "users/feedback.html", context)
+
+
+@login_required
+def feedback_view(request):
+    profile = request.user.profile
+    if profile.is_freelancer:
+        comments_received = Comment.objects.filter(
+            service__freelancer_user=request.user, is_deleted=False
+        ).select_related("user", "service")
+        likes_received = Like.objects.filter(service__freelancer_user=request.user)
+        context = {
+            "comments_received": comments_received,
+            "likes_received": likes_received,
+            "role": "freelancer",
+        }
+    else:
+        comments_given = Comment.objects.filter(
+            user=request.user, is_deleted=False
+        ).select_related("service", "service__freelancer_user")
+        likes_given = Like.objects.filter(user=request.user)
+        context = {
+            "comments_given": comments_given,
+            "likes_given": likes_given,
+            "role": "client",
         }
 
     return render(request, "users/feedback.html", context)
