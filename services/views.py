@@ -115,6 +115,7 @@ def service_detail(request, id, service_id):
         "-created_at"
     )
     form = CommentForm()
+    is_liked = Like.objects.filter(user=request.user, service=service).exists()
 
     if request.method == "POST":
         form = CommentForm(request.POST)
@@ -134,9 +135,9 @@ def service_detail(request, id, service_id):
             "service": service,
             "comments": comments,
             "form": form,
+            "is_liked": is_liked,
         },
     )
-
 
 @login_required
 def toggle_like(request, service_id):
@@ -150,18 +151,3 @@ def toggle_like(request, service_id):
         is_liked = True
 
     return JsonResponse({"is_liked": is_liked})
-
-
-@login_required
-def service_detail(request, id, service_id):
-    service = get_object_or_404(Service, id=service_id)
-    is_liked = Like.objects.filter(user=request.user, service=service).exists()
-
-    return render(
-        request,
-        "services/service_detail.html",
-        {
-            "service": service,
-            "is_liked": is_liked,
-        },
-    )
