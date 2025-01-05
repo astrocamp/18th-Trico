@@ -10393,10 +10393,10 @@ Component that was made reactive: `,
     initDev();
   }
 
-  // sfc-script:C:\Users\User\Desktop\18th-Trico\frontend\scripts\App.vue?type=script
+  // sfc-script:/Users/liaojingjie/Desktop/18th-Trico/frontend/scripts/App.vue?type=script
   var App_default = {};
 
-  // sfc-template:C:\Users\User\Desktop\18th-Trico\frontend\scripts\App.vue?type=template
+  // sfc-template:/Users/liaojingjie/Desktop/18th-Trico/frontend/scripts/App.vue?type=template
   var _hoisted_1 = { id: "app" };
   function render(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_router_view = resolveComponent("router-view");
@@ -10407,7 +10407,7 @@ Component that was made reactive: `,
 
   // frontend/scripts/App.vue
   App_default.render = render;
-  App_default.__file = "frontend\\scripts\\App.vue";
+  App_default.__file = "frontend/scripts/App.vue";
   var App_default2 = App_default;
 
   // node_modules/vue-router/dist/vue-router.mjs
@@ -14965,7 +14965,7 @@ ${JSON.stringify(newTargetLocation, null, 2)}
     mergeConfig: mergeConfig2
   } = axios_default;
 
-  // sfc-script:C:\Users\User\Desktop\18th-Trico\frontend\scripts\components\NotFoundPage.vue?type=script
+  // sfc-script:/Users/liaojingjie/Desktop/18th-Trico/frontend/scripts/components/NotFoundPage.vue?type=script
   var NotFoundPage_default = {
     name: "NotFoundPage",
     setup() {
@@ -14993,7 +14993,7 @@ ${JSON.stringify(newTargetLocation, null, 2)}
     }
   };
 
-  // sfc-template:C:\Users\User\Desktop\18th-Trico\frontend\scripts\components\NotFoundPage.vue?type=template
+  // sfc-template:/Users/liaojingjie/Desktop/18th-Trico/frontend/scripts/components/NotFoundPage.vue?type=template
   var _hoisted_12 = { class: "flex items-center justify-center min-h-screen bg-gray-100" };
   var _hoisted_2 = { class: "text-center" };
   var _hoisted_3 = { class: "text-6xl font-bold mb-4 text-gray-800" };
@@ -15037,7 +15037,7 @@ ${JSON.stringify(newTargetLocation, null, 2)}
 
   // frontend/scripts/components/NotFoundPage.vue
   NotFoundPage_default.render = render2;
-  NotFoundPage_default.__file = "frontend\\scripts\\components\\NotFoundPage.vue";
+  NotFoundPage_default.__file = "frontend/scripts/components/NotFoundPage.vue";
   var NotFoundPage_default2 = NotFoundPage_default;
 
   // frontend/scripts/router.js

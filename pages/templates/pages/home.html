@@ -3,20 +3,20 @@
 {% block content %}
  <body class="bg-white">
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-6 mt-8">
+    <div class="flex flex-wrap justify-center gap-2 p-6">
       {% for category in categories %}
       <a 
         href="{% url 'categories:service_by_category' category.id %}" 
-        class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-200 hover:border-blue-500"
+        class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-300 hover:bg-blue-100 hover:text-gray-300"
       >
-        <h3 class="text-lg font-semibold text-gray-800 hover:text-blue-600">{{ category.name }}</h3>
+        <h3 class="w-32 text-sm font-light text-gray-800">{{ category.name }}</h3>
       </a>
       {% endfor %}
     </div>
 
     <!-- 最近新增 -->
     <div class="main overflow-hidden flex flex-col justify-between bg-white"> 
-      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg shadow-lg">
+      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg">
         <div class="flex flex-col items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-800 text-center">最近新增</h1>
         </div>
@@ -43,7 +43,7 @@
 
     <!-- 您可能會感興趣 -->
     <div class="main overflow-hidden flex flex-col justify-between bg-white"> 
-      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg shadow-lg">
+      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg">
         <div class="flex flex-col items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-800 text-center">你可能感興趣</h1>
         </div>
@@ -70,7 +70,7 @@
 
     <!-- 評分最高 -->
     <div class="main overflow-hidden flex flex-col justify-between bg-white"> 
-      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg shadow-lg">
+      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg">
         <div class="flex flex-col items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-800 text-center">評分最高</h1>
         </div>
@@ -152,7 +152,7 @@
 
     <!-- 推薦接案者區 -->
     <div class="flex justify-center py-3 gap-12">
-      <div class="border-solid border-2 border-gray-200 rounded-2xl p-2">
+      <div class="border-solid border-1 border-gray-200 rounded-2xl p-2">
         <div class="flex gap-10">
           <a href="" target="_blank">
             <div class="item">
@@ -206,7 +206,7 @@
           </a>
         </div>
      </div>
-     <div class="border-solid border-2 border-gray-200 rounded-2xl p-2">
+     <div class="border-solid border-1 border-gray-200 rounded-2xl p-2">
       <div class="flex gap-10">
         <a href="" target="_blank">
           <div class="item">
