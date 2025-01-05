@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-z5h2!)31w&8z!twedc-t#ktq@@z1mll51vu-2e+kehaykdr^f_"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_htmx",
     "users",
     "pages",
     "order",
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     "categories",
     "common",
     "comments",
+    "rtchat",
 
 ]
 INSTALLED_APPS += [
