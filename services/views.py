@@ -128,12 +128,12 @@ def service_detail(request, id, service_id):
 
     for group in grouped_ratings:
         stars_count[group["rating"]] = group["count"]
-    
+
     try:
         comment = Comment.objects.get(service=service, user=request.user)
     except Comment.DoesNotExist:
         comment = None
-    
+
     form = CommentForm(request.POST or None ,instance=comment)
     is_liked = Like.objects.filter(user=request.user, service=service).exists()
 
@@ -150,7 +150,7 @@ def service_detail(request, id, service_id):
             return redirect(
                 "services:service_detail", id=request.user.id, service_id=service_id
             )
-        
+
     if comment and comment.is_deleted:
         comment = None
         form = CommentForm()
@@ -170,15 +170,18 @@ def service_detail(request, id, service_id):
         },
     )
 
+
 @login_required
 def toggle_like(request, service_id):
     service = get_object_or_404(Service, id=service_id)
-    like, created = Like.objects.get_or_create(user=request.user, service=service)
+    is_liked = False
 
-    if not created:
-        like.delete()
-        is_liked = False
+    if Like.objects.filter(user=request.user, service=service).exists():
+        # 如果已經點過愛心，則取消
+        Like.objects.filter(user=request.user, service=service).delete()
     else:
+        # 未點過愛心，則新增
+        Like.objects.create(user=request.user, service=service)
         is_liked = True
 
     return JsonResponse({"is_liked": is_liked})

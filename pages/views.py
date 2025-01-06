@@ -1,13 +1,23 @@
+from django.db.models import Avg
 from django.shortcuts import render
-from services.models import Service, Category
-from django.db import models
+from services.models import Service, Like, Category
 
 
 def home(request):
     categories = Category.objects.prefetch_related("services")
     services = Service.objects.order_by("-created_at").annotate(
-        average_rating=models.Avg("comments__rating")
+        average_rating=Avg("comments__rating")
     )[:4]
+
+    # 判斷每個服務是否已被當前用戶點擊愛心
+    for service in services:
+        if request.user.is_authenticated:
+            service.is_liked = Like.objects.filter(
+                user=request.user, service=service
+            ).exists()
+        else:
+            service.is_liked = False
+
     placeholders = max(0, 4 - services.count())
     return render(
         request,
