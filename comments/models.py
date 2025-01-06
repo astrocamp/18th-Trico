@@ -4,7 +4,7 @@ from services.models import Service
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Comment(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="comment")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment")
     service = models.ForeignKey(
         Service, on_delete=models.CASCADE, related_name="comments"
     )
@@ -19,7 +19,14 @@ class Comment(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
-    is_deleted = models.BooleanField(default=False)  
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "service"], name="unique_comment"
+            )
+        ]  
 
     def __str__(self):
         return self.content[:20]
