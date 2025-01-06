@@ -7,7 +7,7 @@
       {% for category in categories %}
       <a 
         href="{% url 'categories:service_by_category' category.id %}" 
-        class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-300 hover:bg-blue-100 hover:text-gray-300"
+        class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-300 hover:bg-gradient-to-l hover:from-pink-500 hover:to-purple-500"
       >
         <h3 class="w-32 text-sm font-light text-gray-800">{{ category.name }}</h3>
       </a>
