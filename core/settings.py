@@ -21,6 +21,12 @@ ALLOWED_HOSTS = [
     "*",
 ]
 
+# CSRF 安全設定
+CSRF_TRUSTED_ORIGINS = [
+    'https://trico.zeabur.app',  # ✅ 確保 https 開頭
+    'http://127.0.0.1:8000',     # 本地測試
+]
+
 
 # Application definition
 
