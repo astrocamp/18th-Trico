@@ -16,7 +16,7 @@
   "scripts": {
     "build": "node build.js",
     "dev": "node build.js --watch",
-    "css": "npx tailwindcss -i ./frontend/styles/app.css -o ./static/styles/app.css --watch"
+    "css": "npx tailwindcss -i ./frontend/styles/app.css -o ./static/styles/app.css"
   },
   "keywords": [],
   "author": "",
