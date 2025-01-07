@@ -113,6 +113,7 @@ def error_page(request):
     )
 
 
+@login_required
 def service_detail(request, id, service_id):
     service = get_object_or_404(Service, id=service_id)
     comments = Comment.objects.filter(service=service, is_deleted=False).order_by(
@@ -173,12 +174,16 @@ def service_detail(request, id, service_id):
 
 @login_required
 def toggle_like(request, service_id):
+    # 確保服務存在
     service = get_object_or_404(Service, id=service_id)
-    is_liked = False
 
-    if Like.objects.filter(user=request.user, service=service).exists():
+    # 檢查用戶是否已經點過愛心
+    existing_like = Like.objects.filter(user=request.user, service=service).first()
+
+    if existing_like:
         # 如果已經點過愛心，則取消
-        Like.objects.filter(user=request.user, service=service).delete()
+        existing_like.delete()
+        is_liked = False
     else:
         # 未點過愛心，則新增
         Like.objects.create(user=request.user, service=service)
