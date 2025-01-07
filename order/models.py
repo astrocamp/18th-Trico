@@ -16,7 +16,9 @@ class Order(models.Model):
     PAYMENT_METHOD_CHOICES = [
         ("credit_card", "Credit Card"),
         ("atm", "ATM"),
-        ("linepay", "Linepay"),
+        ("linepay", "Line Pay"),
+        ("googlepay", "Google Pay"),
+        ("barcode", "Barcode"),
     ]
 
     PLAN_CHOICES = [

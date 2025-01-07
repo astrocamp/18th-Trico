@@ -1,7 +1,7 @@
 {% extends "shared/layout.html" %} 
 {% block content %} 
 <body class="font-sans bg-blue-900">
-<div class="bg-blue-900 font-sans" data-page="switching_tab_payment">
+<div class="font-sans bg-blue-900" data-page="switching_tab_payment">
   <div class="container mx-auto py-10 px-[10%]">
     <!-- 回上一頁按鈕 -->
     <div class="mb-4">
@@ -18,11 +18,11 @@
       <div class="w-1/2">
         <h1 class="mb-6 text-2xl font-bold text-gray-800">選擇支付方式</h1>
 
-        <form method="GET" action="{% url 'order:create_order' %}">
+        <form method="POST" action="{% url 'order:create_order' %}">
           {% csrf_token %}
           <!-- 隱藏的服務 ID -->
           <input type="hidden" name="service_id" value="{{ service.id }}">
-      
+          <input type="hidden" name="plan" value="{{ selected_plan }}">
           <!-- 方案選擇 -->
           <div class="mb-6">
               <label for="plan" class="block mb-2 font-medium text-gray-900">方案</label>
@@ -45,13 +45,16 @@
           <div class="mb-6">
               <label for="payment-method" class="block mb-2 font-medium text-gray-900">支付方式</label>
               <select
-                  id="payment-method"
+                  id="payment_method"
                   name="payment_method"
                   class="w-full p-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                   <option value="" disabled selected>請選擇</option>
-                  <option value="credit-card">信用卡</option>
-                  <option value="linepay">LINE Pay</option>
+                  <option value="credit_card">信用卡(20萬以下)</option>
+                  <option value="atm">ATM 轉帳(5萬以下)</option>
+                  <option value="linepay">Line Pay</option>
+                  {% comment %} <option value="googlepay">Google Pay</option> {% endcomment %}
+                  <option value="barcode">超商條碼(2萬以下)</option>
               </select>
           </div>
       
