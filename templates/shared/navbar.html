@@ -36,34 +36,49 @@
     {% endif %} {% if user.is_authenticated %}
     <!--TODO: 鈴鐺通知 -->
     <div class="dropdown dropdown-end">
-      <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-        <div class="indicator">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-            />
-          </svg>
-          <span class="badge badge-sm indicator-item"></span>
-        </div>
-      </div>
-      <div
-        tabindex="0"
-        class="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-52 shadow"
-      >
-        <div class="card-body">
-          <span class="text-lg font-bold">沒有訊息</span>
-        </div>
-      </div>
+  <!-- 鈴鐺圖示 -->
+  <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+    <div class="indicator">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-800 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+        </svg>
+        {% if unread_notifications %}
+        <span class="badge badge-sm indicator-item bg-red-500 text-white">
+          {{ unread_notifications|length }}
+        </span>
+        {% endif %}
     </div>
+  </div>
+
+  <!-- 通知下拉框 -->
+  <div class="dropdown-content card card-compact bg-white dark:bg-gray-800 shadow-lg w-96 lg:w-[28rem]">
+    <div class="card-body">
+      <!-- 標題 -->
+      <span class="font-bold text-lg text-gray-800 dark:text-gray-200">未讀通知：</span>
+      <ul class="divide-y divide-gray-300 dark:divide-gray-700">
+        {% if unread_notifications %}
+          {% for notification in unread_notifications %}
+          <li class="py-3">
+            <a href="{{ notification.get_target_url }}" 
+               class="block text-gray-800 dark:text-gray-200 hover:text-blue-500 hover:dark:text-blue-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md px-2 py-2 transition"
+               onclick="markAsRead(event, {{ notification.id }}, '{{ notification.get_target_url }}')">
+              <div class="flex justify-between items-center">
+                <span>
+                  <span class="font-medium">{{ notification.actor.username }}</span>
+                  {{ notification.verb }}
+                </span>
+                <small class="text-gray-500 dark:text-gray-400">{{ notification.timestamp|date:"Y-m-d H:i" }}</small>
+              </div>
+            </a>
+          </li>
+          {% endfor %}
+        {% else %}
+          <span class="text-gray-500 dark:text-gray-400">暫無通知</span>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
     <!--TODO: 頭像要改 -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">

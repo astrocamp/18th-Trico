@@ -19,6 +19,7 @@ urlpatterns = [
     path("api/", include("common.urls")),
     path("contact/", include("contact.urls")),
     path("search/", include("search.urls")),
+    path("notification/", include("notification.urls")),
 ]
 
 handler404 = custom_404

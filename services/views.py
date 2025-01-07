@@ -8,6 +8,7 @@ from comments.forms import CommentForm
 from django.db import models
 import json
 from django.http import JsonResponse
+from notification.utils import send_notification
 
 
 def has_permission(request, id):
@@ -148,6 +149,15 @@ def service_detail(request, id, service_id):
             comment.is_deleted = False
             comment.deleted_at = None
             comment.save()
+            # 發送通知
+        if service.freelancer_user != request.user:  # 不通知自己
+            send_notification(
+                actor=request.user,
+                recipient=service.freelancer_user,
+                verb="評論了您的服務",
+                description=f"{request.user.username} 評論了您的服務 {service.title}",
+                target_service=service,
+            )
             return redirect(
                 "services:service_detail", id=request.user.id, service_id=service_id
             )
@@ -188,5 +198,14 @@ def toggle_like(request, service_id):
         # 未點過愛心，則新增
         Like.objects.create(user=request.user, service=service)
         is_liked = True
+        # 發送通知
+        if service.freelancer_user != request.user:  # 不通知自己
+            send_notification(
+                actor=request.user,
+                recipient=service.freelancer_user,
+                verb="點讚了您的服務",
+                description=f"{request.user.username} 點讚了您的服務 {service.title}",
+                target_service=service,
+            )
 
     return JsonResponse({"is_liked": is_liked})

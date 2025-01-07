@@ -1,6 +1,7 @@
 from django.db.models import Avg
 from django.shortcuts import render
 from services.models import Service, Like, Category
+from notification.models import Notification
 
 
 def home(request):
@@ -19,6 +20,14 @@ def home(request):
             service.is_liked = False
 
     placeholders = max(0, 4 - services.count())
+
+    # 未讀通知列表
+    unread_notifications = []
+    if request.user.is_authenticated:
+        unread_notifications = Notification.objects.filter(
+            recipient=request.user, unread=True
+        ).order_by("-timestamp")
+
     return render(
         request,
         "pages/home.html",
@@ -26,9 +35,9 @@ def home(request):
             "services": services,
             "categories": categories,
             "placeholders": range(placeholders),
+            "unread_notifications": unread_notifications,  # 傳遞未讀通知到模板
         },
     )
-
 
 def portfolio_showcase(request):
     return render(request, "pages/portfolio_showcase.html")
