@@ -1,14 +1,11 @@
 {% extends "shared/layout.html" %}
 {% load static %}
 {% block content %}
+<!-- prettier-ignore -->
  <body class="bg-white">
-
     <div class="flex flex-wrap justify-center gap-2 p-6">
       {% for category in categories %}
-      <a 
-        href="{% url 'categories:service_by_category' category.id %}" 
-        class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-300 hover:bg-gradient-to-l hover:from-pink-500 hover:to-purple-500"
-      >
+      <a href="{% url 'categories:service_by_category' category.id %}" class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-300 hover:bg-gray-100">
         <h3 class="w-32 text-sm font-light text-gray-800">{{ category.name }}</h3>
       </a>
       {% endfor %}
@@ -20,7 +17,7 @@
         <div class="flex flex-col items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-800 text-center">最近新增</h1>
         </div>
-        <div class="services grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {% for service in services %}
           {% include "pages/service_card.html" %}
           {% empty %}
@@ -29,7 +26,7 @@
     
           <!-- 顯示填充卡牌 -->
           {% for _ in placeholders %}
-          <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-xl transition duration-300">
+          <div class="bg-white p-6 border border-gray-200 transition duration-300">
             <div class="animate-pulse">
               <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
               <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
@@ -47,7 +44,8 @@
         <div class="flex flex-col items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-800 text-center">你可能感興趣</h1>
         </div>
-        <div class="services grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          
           {% for service in services %}
           {% include "pages/service_card.html" %}
           {% empty %}
@@ -74,7 +72,7 @@
         <div class="flex flex-col items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-800 text-center">評分最高</h1>
         </div>
-        <div class="services grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {% for service in services %}
           {% include "pages/service_card.html" %}
           {% empty %}
@@ -150,140 +148,30 @@
       }
     </script>
 
-    <!-- 推薦接案者區 -->
-    <div class="flex justify-center py-3 gap-12">
-      <div class="border-solid border-1 border-gray-200 rounded-2xl p-2">
+    <!-- 接案者廣告區 -->
+    <!-- prettier-ignore -->
+    <div class="py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 justify-center py-3 gap-12">
+      <div class="border-solid border border-gray-300 rounded-2xl p-4">
         <div class="flex gap-10">
-          <a href="" target="_blank">
-            <div class="item">
-              <div class="flex justify-between items-center">
-                <img class="logosize" src="{% static 'images/logo-1.jpg' %}" alt="" />
-                <p class="text-4xl font-bold pl-1 py-7 text-right">Pizza宵夜聯盟</p>
-                <!-- 愛心組件 -->
-                <div class="flex">
-                  <div class="flex">
-                    <!-- 按鈕容器 -->
-                      <div class="heartframe border-solid border-2 border-gray-200 rounded-2xl pl-1.5 pt-1">
-                        <button id="heartButton" data-active="false" type="button" class="rounded-full transition duration-300 hover:scale-110"> 
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 30 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="w-10 h-10 text-gray-400 transition-colors"
-                      >
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                      </svg>
-                    </div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="flex gap-5">
-                <img
-                  class="recommendcaser"
-                  src="{% static 'images/work1.jpg' %}"
-                  alt=""
-                />
-                <ul class="listtype">
-                  <li class="max-w-[170px]">
-                    Now this is a story all about how, my life gotflipped-turned
-                    upside down
-                  </li>
-                  <li class="max-w-[170px]">
-                    And I'd like to take a minute just sit right there
-                  </li>
-                  <li class="max-w-[170px]">
-                    I'll tell you how I became the prince 
-                  </li>
-                </ul>
-              </div>
-              <p class="text-left">from US$999</p>
-            </div>
-          </a>
-        </div>
-     </div>
-     <div class="border-solid border-1 border-gray-200 rounded-2xl p-2">
-      <div class="flex gap-10">
-        <a href="" target="_blank">
           <div class="item">
-            <div class="flex justify-between items-center">
-              <img class="logosize" src="{% static 'images/logo-2.png' %}" alt="" />
-              <p class="text-4xl font-bold pl-1 py-7 text-right">肯德基炸雞聯盟</p>
-              <!-- 愛心組件 -->
-              <div class="flex">
-                <div class="flex">
-                  <!-- 按鈕容器 -->
-                    <div class="heartframe border-solid border-2 border-gray-200 rounded-2xl pl-1.5 pt-1">
-                      <button id="heartButton" data-active="false" type="button" class="rounded-full transition duration-300 hover:scale-110"> 
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 30 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="w-10 h-10 text-gray-400 transition-colors"
-                    >
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                    </svg>
-                  </div>
-                  </button>
-                </div>
-              </div>
+            <div class="flex item-bottom">
+              <img class="w-1/4 p-2 rounded-lg" src="{% static 'images/logo-1.jpg' %}" alt="" />
+              <p class="text-xl text-gray-800 font-bold pl-1">企業級網站架設</p>
             </div>
-            <div class="flex gap-5">
-              <img
-                class="recommendcaser"
-                src="{% static 'images/work2.png' %}"
-                alt=""
-              />
-              <ul class="listtype">
-                <li class="max-w-[170px]">
-                  Now this is a story all about how, my life gotflipped-turned
-                  upside down
-                </li>
-                <li class="max-w-[170px]">
-                  And I'd like to take a minute just sit right there
-                </li>
-                <li class="max-w-[170px]">
-                  I'll tell you how I became the prince 
-                </li>
+            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 justify-center py-4 sm:gap-6">
+              <img class="rounded-lg" src="{% static 'images/work1.jpg' %}" alt=""/>
+              <ul class="">
+                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding...that ererything cannot replace it</li>
+                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding...that ererything cannot replace it</li>
+                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding...that ererything cannot replace it</li>
               </ul>
             </div>
-            <p class="text-left">from US$999</p>
           </div>
-        </a>
+        </div>
       </div>
-      </div>
-
     </div>
-     <!-- 愛心js -->
-    <script>
-      // 取得按鈕元素
-      document.querySelectorAll(".heartframe button").forEach((button) => {
-        button.addEventListener("click", (event) => {
-          event.preventDefault(); // 防止預設行為
-          const isActive = button.getAttribute("data-active") === "true";
 
-          // 更新按鈕的狀態屬性
-          button.setAttribute("data-active", !isActive);
-
-          // 切換樣式
-          if (isActive) {
-            button.querySelector("svg").classList.remove("text-red-500");
-            button.querySelector("svg").classList.add("text-gray-400");
-          } else {
-            button.querySelector("svg").classList.remove("text-gray-400");
-            button.querySelector("svg").classList.add("text-red-500");
-          }
-        });
-      });
-    </script>
   </body>
 
   <!-- 分頁按鈕 -->

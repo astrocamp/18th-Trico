@@ -1,6 +1,6 @@
 {% load static %}
 <div class="flex bg-white navbar border-b border-gray-300">
-  <div class="flex-1 h-16 items-center px-5">
+  <div class="flex-1 h-16 items-center sm:px-5">
     <a class="btn btn-ghost" href="{% url 'pages:home' %}">
       <img src="{% static 'images/logo.png' %}" alt="三合" class="h-10 w-25" />
     </a>
@@ -12,21 +12,12 @@
   <!--判斷是否為登入與註冊頁-->
   <!-- prettier-ignore -->
   {% if request.resolver_match.view_name != 'users:login' and request.resolver_match.view_name != 'users:register' %}
+  <!-- prettier-ignore -->
   <div class="shrink-0 h-16 w-32 justify-center items-center basis-2/4">
     <div class="relative flex items-center w-full max-w-xl">
-      <input
-        type="text"
-        placeholder="請輸入關鍵字..."
-        class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-100"
-      />
-      <button
-        class="px-4 py-2 font-semibold text-white bg-blue-500 rounded-r-lg hover:bg-blue-700"
-      >
-        Search
-      </button>
-      <div
-        class="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
-      >
+      <input type="text" placeholder="請輸入關鍵字..." class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-100"/>
+      <button class="px-4 py-2 font-semibold text-white bg-blue-500 rounded-r-lg hover:bg-blue-700">Search</button>
+      <div class="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="w-5 h-5"
@@ -46,12 +37,14 @@
   </div>
   {% endif %}
 
-  <div class="flex-1 h-16 justify-end items-center px-5">
-    {% if user.is_authenticated %}
-    <h1>{{ user.username }} 歡迎回來!!!~~</h1>
-    {% else %}
-    <h1>歡迎來到我們的網站!</h1>
-    {% endif %} {% if user.is_authenticated %}
+  <div class="flex-1 h-16 justify-end items-center sm:px-5">
+    <div class="hidden sm:block">
+      {% if user.is_authenticated %}
+      <h1>{{ user.username }} 歡迎回來!!!~~</h1>
+      {% else %}
+      <h1>歡迎來到我們的網站!</h1>
+      {% endif %} {% if user.is_authenticated %}
+    </div>
     <!--TODO: 鈴鐺通知 -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
@@ -82,34 +75,23 @@
         </div>
       </div>
     </div>
+
     <!--TODO: 頭像要改 -->
+    <!-- prettier-ignore -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
         <div class="rounded-full">
-          <img
-            alt="Tailwind CSS Navbar component"
-            src="{% if user.profile.photo %}{{ user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}"
-          />
+          <img alt="Tailwind CSS Navbar component" src="{% if user.profile.photo %}{{ user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}"/>
         </div>
       </div>
-      <ul
-        tabindex="0"
-        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-      >
+      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
         <li>
-          <a href="{% url 'users:user_dashboard' %}" class="justify-between"
-            >個人資料</a
-          >
+          <a href="{% url 'users:user_dashboard' %}" class="justify-between">個人資料</a>
         </li>
         <li><a>設定</a></li>
         <li><a href="{% url 'pages:about' %}">關於我們</a></li>
         <li>
-          <a
-            hx-post="{% url 'users:logout' %}"
-            hx-trigger="click"
-            hx-swap="none"
-            >登出</a
-          >
+          <a hx-post="{% url 'users:logout' %}" hx-trigger="click" hx-swap="none">登出</a>
         </li>
       </ul>
     </div>

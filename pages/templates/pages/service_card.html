@@ -1,17 +1,10 @@
-<a href="{% url 'services:service_detail' service.freelancer_user.id service.id %}" class="block">
-  <div class="item bg-white rounded-lg shadow-lg overflow-hidden border border-gray-300 hover:shadow-xl transition-transform duration-300 hover:scale-105">
-    <img
-      class="w-full h-48 object-cover"
-      src="{% if service.photo %}{{ service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}"
-      alt="Service Photo"
-    />
+<!-- prettier-ignore -->
+<a href="{% url 'services:service_detail' service.freelancer_user.id service.id %}"class="block">
+  <div class="item overflow-hidden transition-transform duration-300 hover:scale-105">
+    <img class="w-full rounded-lg h-48 object-cover" src="{% if service.photo %}{{ service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}" alt="Service Photo"/>
     <div class="p-4">
       <div class="flex items-center mb-3">
-        <img
-          class="avatarInpage w-10 h-10 rounded-full border border-gray-300  shadow-sm transition duration-300 hover:scale-110"
-          src="{% if service.freelancer_user.profile.photo %}{{ service.freelancer_user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}"
-          alt="User Avatar " 
-        />
+        <img class="avatarInpage w-10 h-10 rounded-full border border-gray-300 transition duration-300 hover:scale-110" src="{% if service.freelancer_user.profile.photo %}{{ service.freelancer_user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}" alt="User Avatar "/>
         <p class="ml-3 text-sm font-semibold text-gray-700">{{ service.freelancer_user.username }}</p>
       </div>
       <p class="text-gray-800 font-medium truncate" title="{{ service.title }}">{{ service.title }}</p>
@@ -21,7 +14,7 @@
         </div>
         <p class="ml-2 text-sm text-gray-500">(4.8)</p>
       </div>
-      <p class="mt-2 text-sm font-semibold text-blue-600">price from $ {{service.standard_price}}</p>
+      <p class="mt-2 text-sm font-semibold text-gray-800">from ${{service.standard_price}}</p>
     </div>
   </div>
 </a>
