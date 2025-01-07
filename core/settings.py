@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -21,7 +21,6 @@ ALLOWED_HOSTS = [
     "*",
 ]
 
-# CSRF 安全設定
 CSRF_TRUSTED_ORIGINS = [
     'https://trico.zeabur.app',  
     'http://127.0.0.1:8000',
