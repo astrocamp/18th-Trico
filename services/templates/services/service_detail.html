@@ -2,7 +2,7 @@
 {% block content %}
 <script>
   function markNotificationAsReadAndNavigate(event, notificationId, targetUrl) {
-    event.preventDefault(); // 阻止默認跳轉，先標記為已讀
+    event.preventDefault(); 
     const url = `/notification/mark-as-read/${notificationId}/`;
     fetch(url, {
       method: "POST",
@@ -14,7 +14,7 @@
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          // 更新徽章數量
+       
           const badges = document.querySelectorAll(".indicator-item");
           badges.forEach((badge) => {
             if (data.unread_count > 0) {
@@ -24,7 +24,7 @@
             }
           });
 
-          // 移除已點擊的通知
+         
           const notificationElement = event.target.closest("li");
           if (notificationElement) {
             notificationElement.remove();
