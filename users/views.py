@@ -15,6 +15,8 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from comments.models import Comment
 from services.models import Like
+from django.http import JsonResponse, HttpResponse
+from notification.models import Notification
 
 
 def register(request):
@@ -252,3 +254,17 @@ def feedback_view(request):
         }
 
     return render(request, "users/feedback.html", context)
+
+
+def mark_as_read_and_redirect(request, notification_id):
+    if request.user.is_authenticated:
+        notification = get_object_or_404(
+            Notification, id=notification_id, recipient=request.user
+        )
+        notification.unread = False
+        notification.save()
+
+        # 返回 HX-Redirect 頭到通知的目標 URL
+        return HttpResponse("", headers={"HX-Redirect": notification.get_target_url()})
+
+    return JsonResponse({"status": "unauthorized"}, status=401)

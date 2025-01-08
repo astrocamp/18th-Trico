@@ -26,12 +26,12 @@ class Notification(models.Model):
         return f"{self.actor} {self.verb} -> {self.recipient}"
 
     def get_target_url(self):
-        """
-        返回通知指向的目標服務的 URL
-        """
-        if self.target_service:
-            return reverse(
-                "services:service_detail",
-                kwargs={"id": self.recipient.id, "service_id": self.target_service.id},
-            )
+      if self.unread:  # 如果是未讀通知
+        self.unread = False
+        self.save()  # 標記為已讀
+      if self.target_service:
+        return reverse(
+            "services:service_detail",
+            kwargs={"id": self.recipient.id, "service_id": self.target_service.id},
+        )
         return "#"

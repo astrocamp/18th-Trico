@@ -9,6 +9,7 @@ from django.db import models
 import json
 from django.http import JsonResponse
 from notification.utils import send_notification
+from notification.models import Notification
 
 
 def has_permission(request, id):
@@ -116,6 +117,7 @@ def error_page(request):
 
 @login_required
 def service_detail(request, id, service_id):
+    # 獲取服務詳情（原有邏輯）
     service = get_object_or_404(Service, id=service_id)
     comments = Comment.objects.filter(service=service, is_deleted=False).order_by(
         "-created_at"
@@ -136,11 +138,16 @@ def service_detail(request, id, service_id):
     except Comment.DoesNotExist:
         comment = None
 
-    form = CommentForm(request.POST or None ,instance=comment)
+    form = CommentForm(request.POST or None, instance=comment)
     is_liked = Like.objects.filter(user=request.user, service=service).exists()
 
+    # 獲取未讀通知
+    unread_notifications = Notification.objects.filter(
+        recipient=request.user, unread=True
+    )
+
     if request.method == "POST":
-        form = CommentForm(request.POST, instance = comment)
+        form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.user = request.user
@@ -149,15 +156,16 @@ def service_detail(request, id, service_id):
             comment.is_deleted = False
             comment.deleted_at = None
             comment.save()
+
             # 發送通知
-        if service.freelancer_user != request.user:  # 不通知自己
-            send_notification(
-                actor=request.user,
-                recipient=service.freelancer_user,
-                verb="評論了您的服務",
-                description=f"{request.user.username} 評論了您的服務 {service.title}",
-                target_service=service,
-            )
+            if service.freelancer_user != request.user:  # 不通知自己
+                send_notification(
+                    actor=request.user,
+                    recipient=service.freelancer_user,
+                    verb="評論了您的服務",
+                    description=f"{request.user.username} 評論了您的服務 {service.title}",
+                    target_service=service,
+                )
             return redirect(
                 "services:service_detail", id=request.user.id, service_id=service_id
             )
@@ -178,6 +186,7 @@ def service_detail(request, id, service_id):
             "total_reviews": total_reviews,
             "average_rating": average_rating,
             "is_liked": is_liked,
+            "unread_notifications": unread_notifications,  # 傳遞未讀通知到模板
         },
     )
 

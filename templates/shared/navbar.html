@@ -37,38 +37,36 @@
     <!--TODO: 鈴鐺通知 -->
     <div class="dropdown dropdown-end">
   <!-- 鈴鐺圖示 -->
-  <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+  <label tabindex="0" class="btn btn-ghost btn-circle">
     <div class="indicator">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-800 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-        </svg>
-        {% if unread_notifications %}
-        <span class="badge badge-sm indicator-item bg-red-500 text-white">
-          {{ unread_notifications|length }}
-        </span>
-        {% endif %}
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+      </svg>
+      <span hx-get="{% url 'notification:unread_notifications_count' %}" 
+            hx-trigger="load, every 5s" 
+            hx-swap="outerHTML" 
+            class="badge badge-sm indicator-item bg-red-500 text-white">
+        {{ unread_notifications|length }}
+      </span>
     </div>
-  </div>
+  </label>
 
-  <!-- 通知下拉框 -->
-  <div class="dropdown-content card card-compact bg-white dark:bg-gray-800 shadow-lg w-96 lg:w-[28rem]">
+  <!-- 通知下拉列表 -->
+  <div tabindex="0" class="dropdown-content card card-compact bg-white dark:bg-gray-800 shadow-lg w-96 py-4 px-6">
     <div class="card-body">
-      <!-- 標題 -->
       <span class="font-bold text-lg text-gray-800 dark:text-gray-200">未讀通知：</span>
       <ul class="divide-y divide-gray-300 dark:divide-gray-700">
         {% if unread_notifications %}
           {% for notification in unread_notifications %}
-          <li class="py-3">
-            <a href="{{ notification.get_target_url }}" 
-               class="block text-gray-800 dark:text-gray-200 hover:text-blue-500 hover:dark:text-blue-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md px-2 py-2 transition"
-               onclick="markAsRead(event, {{ notification.id }}, '{{ notification.get_target_url }}')">
-              <div class="flex justify-between items-center">
-                <span>
-                  <span class="font-medium">{{ notification.actor.username }}</span>
-                  {{ notification.verb }}
-                </span>
-                <small class="text-gray-500 dark:text-gray-400">{{ notification.timestamp|date:"Y-m-d H:i" }}</small>
+          <li class="py-4">
+            <a href="{% url 'notification:mark_as_read_and_redirect' notification.id %}" 
+               class="block text-gray-800 dark:text-gray-200 hover:text-blue-500 hover:dark:text-blue-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md px-4 py-3 transition">
+              <div>
+                <span class="font-medium">{{ notification.actor.username }}</span> {{ notification.verb }}
               </div>
+              <small class="block mt-2 text-gray-500 dark:text-gray-400">
+                {{ notification.timestamp|date:"Y-m-d H:i" }}
+              </small>
             </a>
           </li>
           {% endfor %}
@@ -79,6 +77,59 @@
     </div>
   </div>
 </div>
+    <script>
+  function markNotificationAsReadAndNavigate(event, notificationId, targetUrl) {
+    event.preventDefault(); // 阻止默認跳轉，先標記為已讀
+    const url = `/notification/mark-as-read/${notificationId}/`;
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          // 更新徽章數量
+          const badges = document.querySelectorAll(".indicator-item");
+          badges.forEach((badge) => {
+            if (data.unread_count > 0) {
+              badge.textContent = data.unread_count;
+            } else {
+              badge.remove();
+            }
+          });
+
+          // 移除已點擊的通知
+          const notificationElement = event.target.closest("li");
+          if (notificationElement) {
+            notificationElement.remove();
+          }
+
+          // 如果通知列表清空，顯示 "暫無通知"
+          const notificationsList = document.querySelector(".card-body ul");
+          if (notificationsList && notificationsList.children.length === 0) {
+            notificationsList.innerHTML =
+              "<span class='text-gray-500'>暫無通知</span>";
+          }
+
+          // 跳轉到目標 URL
+          window.location.href = targetUrl;
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // 即使標記失敗，也跳轉到目標 URL
+        window.location.href = targetUrl;
+      });
+  }
+
+  // 初次載入時同步更新通知數量
+  document.addEventListener("DOMContentLoaded", () => {
+    updateNotificationBadge();
+  });
+</script>
     <!--TODO: 頭像要改 -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
