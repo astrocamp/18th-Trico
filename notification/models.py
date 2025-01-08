@@ -10,8 +10,8 @@ class Notification(models.Model):
     actor = models.ForeignKey(
         "auth.User", on_delete=models.CASCADE, related_name="actor_notifications"
     )
-    verb = models.CharField(max_length=255)  # 動作描述，例如 "點贊"
-    description = models.TextField(null=True, blank=True)  # 通知描述
+    verb = models.CharField(max_length=255)  
+    description = models.TextField(null=True, blank=True) 
     target_service = models.ForeignKey(
         Service,
         on_delete=models.CASCADE,
@@ -19,16 +19,16 @@ class Notification(models.Model):
         blank=True,
         related_name="notifications",
     )
-    unread = models.BooleanField(default=True)  # 是否為未讀通知
-    timestamp = models.DateTimeField(auto_now_add=True)  # 通知的時間
+    unread = models.BooleanField(default=True)  
+    timestamp = models.DateTimeField(auto_now_add=True)  
 
     def __str__(self):
         return f"{self.actor} {self.verb} -> {self.recipient}"
 
     def get_target_url(self):
-      if self.unread:  # 如果是未讀通知
+      if self.unread:  
         self.unread = False
-        self.save()  # 標記為已讀
+        self.save()  
       if self.target_service:
         return reverse(
             "services:service_detail",
