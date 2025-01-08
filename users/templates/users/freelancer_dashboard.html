@@ -2,23 +2,16 @@
 {% extends "shared/layout.html" %}
 {% block content %}
 
-<div class="max-w-6xl mx-auto flex h-[90vh] gap-4 p-4">
+<!-- prettier-ignore -->
+<div class="flex flex-col md:flex-row lg:max-w-[1200px] mx-auto h-[80vh] bg-white gap-4 p-4">
   <!-- 左側導航欄 -->
-  <aside
-    class="w-64 bg-white shadow-md flex flex-col rounded-lg overflow-hidden"
-  >
+  <aside class="w-full sm:w-64 bg-blue-50 border border-1 hover:shadow-md flex flex-col rounded-lg overflow-hidden">
     <div class="p-4 bg-blue-500 text-white">
       <h1 class="text-lg font-bold">接案者主控台</h1>
     </div>
     <nav class="flex-grow">
       <ul class="menu p-4 text-base-content">
-        <li>
-          <a
-            href="{% url 'users:profile' %}"
-            class="hover:bg-blue-100 rounded-lg"
-            >更新個人資料</a
-          >
-        </li>
+        <li><a href="{% url 'users:profile' %}" class="hover:bg-blue-100 rounded-lg">更新個人資料</a></li>
         <li><a href="{% url 'services:freelancer_dashboard' user.id %}" class="hover:bg-blue-100 rounded-lg">個人服務管理(新增/修改)</a></li>
         <li><a href="#" class="hover:bg-blue-100 rounded-lg">發包進度</a></li>
         <li><a href="{% url 'users:feedback' %}" class="hover:bg-blue-100 rounded-lg">評價與回饋</a></li>
@@ -27,29 +20,20 @@
     </nav>
     <!-- 轉換成業者按鈕 -->
     {% if user.profile.freelancer_verified %}
-    <div class="p-4 border-t">
-      <a
-        href="{% url 'users:switch_role' %}"
-        class="block w-full text-center bg-yellow-500 text-white font-semibold py-2 rounded-lg hover:bg-yellow-600 shadow-md"
-      >
-        轉換成為業者
-      </a>
+    <div class="p-4">
+      <a href="{% url 'users:switch_role' %}" class="block w-full text-center bg-teal-300 text-white font-semibold py-2 rounded-lg hover:bg-teal-500 ">轉換成為業者</a>
     </div>
     {% endif %}
   </aside>
 
   <!-- 主內容區域 -->
-  <main class="flex-grow bg-white shadow-md rounded-lg p-6">
+  <main class="flex-1 bg-blue-50 border border-1 flex-grow hover:shadow-md rounded-lg p-6 hidden md:block">
     <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">我的專案</h2>
     <div class="space-y-4">
-      <div class="card bg-gray-100 shadow-md rounded-lg">
+      <div class="card border border-1 bg-gray-100 hover:shadow-md rounded-lg">
         <div class="card-body p-4">
-          <h3 class="card-title text-lg font-semibold text-gray-700">
-            專案名稱X
-          </h3>
-          <p class="text-sm text-gray-600">
-            狀態：<span class="text-success font-medium">已完成</span>
-          </p>
+          <h3 class="card-title text-lg font-semibold text-gray-700">專案名稱X</h3>
+          <p class="text-md text-gray-600">狀態：<span class="bg-teal-300 rounded-lg font-medium p-1 text-teal-600">已完成</span></p>
         </div>
       </div>
       <!-- 可以新增更多專案 -->
