@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as login_user, logout as logout_user
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -14,6 +14,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from comments.models import Comment
+from django.contrib.auth.models import User 
 
 
 def register(request):
@@ -216,3 +217,10 @@ def feedback_view(request):
         }
 
     return render(request, "users/feedback.html", context)
+
+
+
+# 個人首頁
+def profile_by_username(request, username):
+    user = get_object_or_404(User, username=username)  
+    return render(request, "users/profile_by_username.html", {"user": user})

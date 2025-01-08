@@ -110,7 +110,7 @@ def error_page(request):
     )
 
 
-
+from django.shortcuts import get_object_or_404, redirect, render
 
 def service_detail(request, id, service_id):
     service = get_object_or_404(Service, id=service_id)
@@ -135,7 +135,9 @@ def service_detail(request, id, service_id):
         "services/service_detail.html",
         {
             "service": service,
+            "freelancer": service.freelancer_user,
             "comments": comments,
             "form": form,
         },
     )
+
