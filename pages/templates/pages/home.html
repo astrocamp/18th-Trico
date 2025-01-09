@@ -21,12 +21,13 @@
           <h2 class="text-2xl font-bold text-gray-800 text-center">最近新增</h1>
         </div>
         <div class="services grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {% for service in services %}
-          {% include "pages/service_card.html" %}
-          {% empty %}
-          <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
-          {% endfor %}
-    
+          {% if services %}
+            {% for service in services %}
+                {% include "pages/service_card.html" %}
+            {% endfor %}
+          {% else %}
+              <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
+          {% endif %}
           <!-- 顯示填充卡牌 -->
           {% for _ in placeholders %}
           <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-xl transition duration-300">
@@ -48,11 +49,13 @@
           <h2 class="text-2xl font-bold text-gray-800 text-center">你可能感興趣</h1>
         </div>
         <div class="services grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {% for service in services %}
-          {% include "pages/service_card.html" %}
-          {% empty %}
-          <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
-          {% endfor %}
+          {% if services %}
+            {% for service in services %}
+                {% include "pages/service_card.html" %}
+            {% endfor %}
+          {% else %}
+              <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
+          {% endif %}
     
           <!-- 顯示填充卡牌 -->
           {% for _ in placeholders %}
@@ -75,11 +78,13 @@
           <h2 class="text-2xl font-bold text-gray-800 text-center">評分最高</h1>
         </div>
         <div class="services grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {% for service in services %}
-          {% include "pages/service_card.html" %}
-          {% empty %}
-          <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
-          {% endfor %}
+          {% if services %}
+            {% for service in services %}
+                {% include "pages/service_card.html" %}
+            {% endfor %}
+          {% else %}
+              <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
+          {% endif %}
     
           <!-- 顯示填充卡牌 -->
           {% for _ in placeholders %}
@@ -284,7 +289,7 @@
         });
       });
     </script>
-</div>
+  </div>
 
   <!-- 分頁按鈕 -->
   <div class="pagination justify-center pb-2">
@@ -302,6 +307,7 @@
     <a class="new" href="?page={{ page_obj.next_page_number }}">→</a>
     {% endif %}
   </div>
+
   <script>
     document.querySelectorAll("[id^='toggle-like-btn-']").forEach((button) => {
         button.addEventListener("click", function (event) {
@@ -331,6 +337,6 @@
                 .catch((error) => console.error("Error:", error));
         });
     });
-</script>
+  </script>
 
 {% endblock %}
