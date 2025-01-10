@@ -1,5 +1,6 @@
 export function init() {
   document.addEventListener('DOMContentLoaded', function () {
+
     const standardTab = document.getElementById('standard-tab')
     const premiumTab = document.getElementById('premium-tab')
     const standardSection = document.getElementById('standard')

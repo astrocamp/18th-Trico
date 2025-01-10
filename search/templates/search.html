@@ -1,0 +1,77 @@
+{% extends "shared/layout.html" %}
+{% block content %}
+<div class="main flex flex-col justify-center items-center min-h-screen bg-gray-100 p-6">
+  <div class="search-results w-full max-w-4xl bg-white shadow-lg rounded-lg p-8">
+      {% if query %}
+      <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6">
+          搜尋結果：<span class="text-blue-500 font-bold">{{ query }}</span>
+      </h2>
+      {% if results %}
+      <p class="text-lg text-gray-600 text-center mb-4">
+          找到 {{ results|length }} 筆相關結果：
+      </p>
+      <ul class="results-list space-y-6">
+        {% for result in results %}
+        <li class="result-item bg-gray-50 p-6 rounded-lg border hover:shadow-md transition">
+            <a href="{% url 'service_detail' pk=result.id %}" class="text-xl font-bold text-blue-600 hover:underline">
+                {{ result.title }}
+            </a>
+            <p class="text-sm text-gray-500 mt-2">發佈日期：{{ result.created_at|date:"Y-m-d" }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="no-results text-center mt-8">
+          <p class="text-lg text-gray-700 font-medium mb-4">
+              很抱歉，沒有找到與「<span class="text-red-500 font-semibold">{{ query }}</span>」相關的結果。
+          </p>
+          <p class="text-gray-600 mb-4">您可以嘗試以下方法：</p>
+          <ul class="text-left inline-block space-y-2">
+              <li class="text-gray-600"><span class="font-semibold">✔️</span> 檢查關鍵字拼寫是否正確</li>
+              <li class="text-gray-600"><span class="font-semibold">✔️</span> 嘗試使用其他關鍵字</li>
+              <li class="text-gray-600"><span class="font-semibold">✔️</span> 縮短或簡化您的搜尋條件</li>
+          </ul>
+      </div>
+      {% endif %}
+      {% else %}
+      <p class="text-center text-gray-600 mt-6">請輸入搜尋關鍵字以查看結果。</p>
+      {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+
+<!-- <div class="search-results">
+  {% if query %}
+  <h2>搜尋結果：<span class="query-highlight">{{ query }}</span></h2>
+  {% if results %}
+  <p>找到 {{ results|length }} 筆相關結果：</p>
+  <ul class="results-list">
+    {% for search in results %}
+    <li class="result-item">
+      <a href="{{ search.get_absolute_url }}" class="result-title"
+        >{{ search.title }}</a
+      >
+      <span class="result-date"
+        >發布日期：{{ search.created_at|date:"Y-m-d" }}</span
+      >
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="no-results">
+    <p>
+      很抱歉，沒有找到與「<span class="query-highlight">{{ query }}</span
+      >」相關的結果。
+    </p>
+    <p>您可以嘗試以下方法：</p>
+    <ul>
+      <li>檢查關鍵字拼寫是否正確</li>
+      <li>嘗試使用其他關鍵字</li>
+      <li>縮短或簡化您的搜尋條件</li>
+    </ul>
+  </div>
+  {% endif %} {% else %}
+  <p>請輸入搜尋關鍵字以查看結果。</p>
+  {% endif %}
+</div> -->

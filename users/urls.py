@@ -13,6 +13,7 @@ from .views import (
     switch_role,
     feedback_view,
     information,
+    mark_as_read_and_redirect,
 )
 
 app_name = "users"
@@ -44,4 +45,9 @@ urlpatterns = [
     path("apply", apply_freelancer, name="apply_freelancer"),
     path("switch_role", switch_role, name="switch_role"),
     path("feedback/", feedback_view, name="feedback"),
+    path(
+        "notification/mark-as-read-and-redirect/<int:notification_id>/",
+        mark_as_read_and_redirect,
+        name="mark_as_read_and_redirect",
+    ),
 ]

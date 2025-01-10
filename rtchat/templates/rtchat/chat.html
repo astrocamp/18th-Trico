@@ -10,15 +10,22 @@
             <div id="online-icon" class="gray-dot absolute top-2 left-2"></div>
             <a href="{% url "users:information" other_user.username %}">
                 <div class="flex items-center gap-2 p-4 sticky top-0 z-10">
-                    <img class="w-10 h-10 rounded-full object-cover" 
-                    src="{{ other_user.profile.photo.url}}"
-                    alt="{{ other_user.username }}"/>
+                    {% if other_user.profile.photo %}
+                        <img class="w-10 h-10 rounded-full object-cover" 
+                             src="{{ other_user.profile.photo.url }}"
+                             alt="{{ other_user.username }}"/>
+                    {% else %}
+                        <!-- 默認頭像 -->
+                        <img class="w-10 h-10 rounded-full object-cover" 
+                             src="/static/images/default-avatar.png"
+                             alt="{{ other_user.username }}"/>
+                    {% endif %}
                     <div>
                         <span class="font-bold text-white">{{ other_user.username }}</span>
                         {% if other_user.profile.displayname %}
-                        <span clas="text-gray-400">
+                        <span class="text-gray-400">
                             @
-                            {% if other_user.profile.displayname  %}
+                            {% if other_user.profile.displayname %}
                                 {{ message.author.profile.displayname }}
                             {% else %}
                                 {{ other_user.username }}

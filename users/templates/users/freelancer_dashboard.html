@@ -5,24 +5,36 @@
 <div class="max-w-6xl mx-auto flex h-[90vh] gap-4 p-4">
   <!-- 左側導航欄 -->
   <aside
-    class="w-64 bg-white shadow-md flex flex-col rounded-lg overflow-hidden"
+    class="flex flex-col w-64 overflow-hidden bg-white rounded-lg shadow-md"
   >
-    <div class="p-4 bg-blue-500 text-white">
+    <div class="p-4 text-white bg-blue-500">
       <h1 class="text-lg font-bold">接案者主控台</h1>
     </div>
     <nav class="flex-grow">
-      <ul class="menu p-4 text-base-content">
+      <ul class="p-4 menu text-base-content">
         <li>
           <a
             href="{% url 'users:profile' %}"
-            class="hover:bg-blue-100 rounded-lg"
+            class="rounded-lg hover:bg-blue-100"
             >更新個人資料</a
           >
         </li>
-        <li><a href="{% url 'services:freelancer_dashboard' user.id %}" class="hover:bg-blue-100 rounded-lg">個人服務管理(新增/修改)</a></li>
-        <li><a href="#" class="hover:bg-blue-100 rounded-lg">發包進度</a></li>
-        <li><a href="{% url 'users:feedback' %}" class="hover:bg-blue-100 rounded-lg">評價與回饋</a></li>
-        <li><a href="#" class="hover:bg-blue-100 rounded-lg">財務管理</a></li>
+        <li>
+          <a
+            href="{% url 'services:freelancer_dashboard' user.id %}"
+            class="rounded-lg hover:bg-blue-100"
+            >個人服務管理(新增/修改)</a
+          >
+        </li>
+        <li><a href="#" class="rounded-lg hover:bg-blue-100">發包進度</a></li>
+        <li>
+          <a
+            href="{% url 'users:feedback' %}"
+            class="rounded-lg hover:bg-blue-100"
+            >評價與回饋</a
+          >
+        </li>
+        <li><a href="#" class="rounded-lg hover:bg-blue-100">財務管理</a></li>
       </ul>
     </nav>
     <!-- 轉換成業者按鈕 -->
@@ -30,7 +42,7 @@
     <div class="p-4 border-t">
       <a
         href="{% url 'users:switch_role' %}"
-        class="block w-full text-center bg-yellow-500 text-white font-semibold py-2 rounded-lg hover:bg-yellow-600 shadow-md"
+        class="block w-full py-2 font-semibold text-center text-white bg-yellow-500 rounded-lg shadow-md hover:bg-yellow-600"
       >
         轉換成為業者
       </a>
@@ -39,16 +51,23 @@
   </aside>
 
   <!-- 主內容區域 -->
-  <main class="flex-grow bg-white shadow-md rounded-lg p-6">
-    <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">我的專案</h2>
+  <main class="flex-grow p-6 bg-white rounded-lg shadow-md">
+    <h2 class="pb-2 mb-6 text-xl font-bold text-gray-800 border-b">
+      接案者個人資料
+    </h2>
     <div class="space-y-4">
-      <div class="card bg-gray-100 shadow-md rounded-lg">
-        <div class="card-body p-4">
-          <h3 class="card-title text-lg font-semibold text-gray-700">
-            專案名稱X
+      <div class="bg-gray-100 rounded-lg shadow-md card">
+        <div class="p-4 card-body">
+          <h3 class="text-lg font-semibold text-gray-700 card-title">
+            我的資料
           </h3>
           <p class="text-sm text-gray-600">
-            狀態：<span class="text-success font-medium">已完成</span>
+            姓氏：<span class="font-medium">{{user.first_name}}</span><br />
+            名字：<span class="font-medium">{{user.last_name}}</span><br />
+            用戶名稱：<span class="font-medium">{{user.username}}</span><br />
+            所在地：<span class="font-medium">{{profile.location}}</span><br />
+            信箱：<span class="font-medium">{{user.email}}</span><br />
+            個人簡介：<span class="font-medium">{{profile.bio}}</span><br />
           </p>
         </div>
       </div>

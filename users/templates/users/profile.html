@@ -31,10 +31,10 @@
   >
     <div class="mb-6">
       <a
-        href="{% url 'pages:home' %}"
+        href="{% url 'users:user_dashboard' %}"
         class="flex items-center text-blue-500 hover:underline"
       >
-        ← 返回首頁
+        ← 返回
       </a>
     </div>
     <h2
@@ -51,7 +51,7 @@
           for="id_first_name"
           class="block text-sm font-medium text-gray-900"
         >
-          名字：
+          姓氏：
         </label>
         <div class="mt-2">
           <input
@@ -60,7 +60,7 @@
             name="first_name"
             value="{{ user_form.firstname.value|default:'' }}"
             class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="請輸入名字"
+            placeholder="請輸入姓氏"
           />
         </div>
       </div>
@@ -71,7 +71,7 @@
           for="id_last_name"
           class="block text-sm font-medium text-gray-900"
         >
-          姓氏：
+          名字：
         </label>
         <div class="mt-2">
           <input
@@ -80,7 +80,7 @@
             name="last_name"
             value="{{ user_form.lastname.value|default:'' }}"
             class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="請輸入姓氏"
+            placeholder="請輸入名字"
           />
         </div>
       </div>
@@ -116,7 +116,7 @@
             id="id_location"
             type="location"
             name="location"
-            value="{{ user_form.location.value|default:'' }}"
+            value="{{ profile_form.location.value|default:'' }}"
             class="block w-full px-3 py-1.5 bg-white border border-gray-300 rounded-md text-base text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="請輸入所在地區"
             required

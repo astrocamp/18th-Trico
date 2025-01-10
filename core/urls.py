@@ -5,7 +5,7 @@ from common.views import custom_404
 from django.conf.urls.static import static
 from .views import vue404_page
 from django.urls import re_path
-from . import views
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -19,6 +19,9 @@ urlpatterns = [
     path("api/", include("common.urls")),
     path("chat/", include("rtchat.urls")),
 
+    path("contact/", include("contact.urls")),
+    path("search/", include("search.urls")),
+    path("notification/", include("notification.urls")),
 ]
 
 handler404 = custom_404

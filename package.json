@@ -16,13 +16,14 @@
   "scripts": {
     "build": "node build.js",
     "dev": "node build.js --watch",
-    "css": "npx tailwindcss -i ./frontend/styles/app.css -o ./static/styles/app.css --watch"
+    "css": "npx tailwindcss -i ./frontend/styles/app.css -o ./static/styles/app.css"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "alpinejs": "^3.14.8",
     "axios": "^1.7.9",
     "htmx.org": "^2.0.3",
     "vue": "^3.5.13",

@@ -26,10 +26,10 @@
         </p>
         <div class="flex justify-end mt-4">
           <a
-            href="#"
+            href="{% url 'services:service_detail' service.freelancer_user.id service.id %}"
             class="badge badge-outline text-gray-600 group-hover:bg-gray-200 hover:text-primary"
           >
-            More Details
+            了解更多
           </a>
         </div>
       </div>

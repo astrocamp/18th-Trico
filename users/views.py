@@ -14,7 +14,9 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from comments.models import Comment
-from django.contrib.auth.models import User 
+from services.models import Like
+from django.http import JsonResponse, HttpResponse
+from notification.models import Notification
 
 
 def register(request):
@@ -57,9 +59,9 @@ def login(request):
         if user:
             login_user(request, user)
             # next是用來在登入後跳轉到指定URL的參數
-            next_url = request.GET.get("next")  
-            if next_url: 
-                return redirect(next_url) 
+            next_url = request.GET.get("next")
+            if next_url:
+                return redirect(next_url)
             return redirect("pages:home")
         else:
             messages.error(request, "登入失敗，請重新登入一次。")
@@ -110,12 +112,20 @@ def profile(request):
 def user_dashboard(request):
 
     profile = request.user.profile
+    user = request.user
 
     if profile.is_freelancer:
-        return render(request, "users/freelancer_dashboard.html")
+        return render(
+            request,
+            "users/freelancer_dashboard.html",
+            {"profile": profile, "user": user},
+        )
 
     else:
-        return render(request, "users/client_dashboard.html")
+
+        return render(
+            request, "users/client_dashboard.html", {"profile": profile, "user": user}
+        )
 
 
 @login_required
@@ -199,21 +209,21 @@ def switch_role(request):
 @login_required
 def feedback_view(request):
     profile = request.user.profile
-    if profile.is_freelancer: 
+    if profile.is_freelancer:
         comments_received = Comment.objects.filter(
             service__freelancer_user=request.user, is_deleted=False
         ).select_related("user", "service")
         context = {
             "comments_received": comments_received,
-            "role": "freelancer",  
+            "role": "freelancer",
         }
-    else:  
+    else:
         comments_given = Comment.objects.filter(
             user=request.user, is_deleted=False
         ).select_related("service", "service__freelancer_user")
         context = {
             "comments_given": comments_given,
-            "role": "client",  
+            "role": "client",
         }
 
     return render(request, "users/feedback.html", context)
@@ -234,5 +244,45 @@ def profile_view(request, username=None):
         try:
             profile = request.user.profile
         except:
-            return redirect_to_login(request.get_full_path())
-    return render(request, 'a_users/profile.html', {'profile':profile})
+            return redirect("users:login")
+    return render(request, 'users/profile.html', {'profile':profile})
+
+@login_required
+def feedback_view(request):
+    profile = request.user.profile
+    if profile.is_freelancer:
+        comments_received = Comment.objects.filter(
+            service__freelancer_user=request.user, is_deleted=False
+        ).select_related("user", "service")
+        likes_received = Like.objects.filter(service__freelancer_user=request.user)
+        context = {
+            "comments_received": comments_received,
+            "likes_received": likes_received,
+            "role": "freelancer",
+        }
+    else:
+        comments_given = Comment.objects.filter(
+            user=request.user, is_deleted=False
+        ).select_related("service", "service__freelancer_user")
+        likes_given = Like.objects.filter(user=request.user)
+        context = {
+            "comments_given": comments_given,
+            "likes_given": likes_given,
+            "role": "client",
+        }
+
+    return render(request, "users/feedback.html", context)
+
+
+def mark_as_read_and_redirect(request, notification_id):
+    if request.user.is_authenticated:
+        notification = get_object_or_404(
+            Notification, id=notification_id, recipient=request.user
+        )
+        notification.unread = False
+        notification.save()
+
+        # 返回 HX-Redirect 頭到通知的目標 URL
+        return HttpResponse("", headers={"HX-Redirect": notification.get_target_url()})
+
+    return JsonResponse({"status": "unauthorized"}, status=401)

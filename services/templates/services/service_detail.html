@@ -1,7 +1,58 @@
 {% extends "shared/layout.html" %}
 {% block content %}
+<script>
+  function markNotificationAsReadAndNavigate(event, notificationId, targetUrl) {
+    event.preventDefault(); 
+    const url = `/notification/mark-as-read/${notificationId}/`;
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+       
+          const badges = document.querySelectorAll(".indicator-item");
+          badges.forEach((badge) => {
+            if (data.unread_count > 0) {
+              badge.textContent = data.unread_count;
+            } else {
+              badge.remove();
+            }
+          });
 
+         
+          const notificationElement = event.target.closest("li");
+          if (notificationElement) {
+            notificationElement.remove();
+          }
 
+          // 如果通知列表清空，顯示 "暫無通知"
+          const notificationsList = document.querySelector(".card-body ul");
+          if (notificationsList && notificationsList.children.length === 0) {
+            notificationsList.innerHTML =
+              "<span class='text-gray-500'>暫無通知</span>";
+          }
+
+          // 跳轉到目標 URL
+          window.location.href = targetUrl;
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // 即使標記失敗，也跳轉到目標 URL
+        window.location.href = targetUrl;
+      });
+  }
+
+  // 初次載入時同步更新通知數量
+  document.addEventListener("DOMContentLoaded", () => {
+    updateNotificationBadge();
+  });
+</script>
 <div class="bg-blue-900 font-sans" data-page="switching_tab">
   <div class="container mx-auto py-10 px-[10%]">
     <!-- 回上一頁按鈕 -->
@@ -14,7 +65,7 @@
       </a>
     </div>
 
-    <div class="flex bg-white rounded-lg shadow-lg overflow-hidden p-6">
+    <div class="flex bg-white rounded-lg shadow-lg overflow-hidden p-6 gap-x-8">
       <!-- 左側為接案者介紹 -->
       <div class="w-2/3">
         <div class="flex items-center mb-6">
@@ -38,10 +89,26 @@
           {% endif %}
             <a href=""></a>
             <div class="flex items-center text-yellow-400">
-              <span class="text-lg">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
-              <span class="text-gray-700 text-base ml-2">4.0/5.0</span>
- 
             </div>
+            <div id="like-button" class="flex items-center mt-4">
+    <button
+        id="toggle-like-btn"
+        class="px-4 py-2 rounded-lg shadow transition"
+        data-service-id="{{ service.id }}"
+    >
+        {% if is_liked %}
+        <img id="like-icon" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%231C274C' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>"
+            alt="Liked"
+            class="w-8 h-8"
+        >
+        {% else %}
+        <img id="like-icon" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%231C274C' stroke-width='2' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>"
+            alt="Not Liked"
+            class="w-8 h-8"
+        >
+        {% endif %}
+    </button>
+</div>
           </div>
         </div>
 
@@ -97,6 +164,69 @@
             </a>
           </div>
         </div>
+        
+        <!-- ✅ 使用 Alpine.js 正確渲染星級分佈 -->
+        <div class="bg-white rounded-lg shadow-xl p-6 mt-8 border border-gray-200" 
+        x-data="{ 
+          averageRating: {{ average_rating|default:'null' }}, 
+          totalReviews: {{ total_reviews|default:0 }},
+          starsCount: {{ stars_count|default:'{}' }},
+          calculatePercentage(count, total) {
+              if (!total || !count) return 0;
+              const percentage = (count / total) * 100;
+              return percentage.toFixed(1);
+          },
+          formatRating(rating) {
+              return rating ? parseFloat(rating).toFixed(1) : '0.0';
+          }
+        }">
+
+            <!-- ⭐ 標題 -->
+            <h2 class="text-2xl font-bold mb-4">評分摘要</h2>
+
+            <!-- ⭐ 平均分數 -->
+            <div class="flex items-center mb-4">
+              <span 
+              class="font-bold" 
+              x-text="averageRating.toFixed(1)"
+              style="font-size: 64px;"
+              >0.0</span>
+              <div class="ml-4">
+                  <!-- 渲染星星 -->
+                  <div class="flex text-yellow-400 text-3xl">
+                      <template x-for="n in 5">
+                          <span x-text="n <= Math.round(averageRating) ? '★' : '☆'"></span>
+                      </template>
+                  </div>
+                  <p class="text-gray-600" x-text="`${totalReviews} 則評論`"></p>
+              </div>
+            </div>
+
+            <!-- ⭐ 評分分佈 (調整進度條寬度和對齊) -->
+            <template x-for="i in 5" :key="i">
+              <div class="flex items-center mb-2">
+                  <!-- 星級文字 -->
+                  <span class="text-lg font-semibold w-6 text-right" x-text="6-i"></span>
+                  <span class="text-yellow-400 text-2xl ml-2">★</span>
+
+                  <!-- 進度條 -->
+                  <div class="flex-grow mx-4">
+                    <div class="w-full bg-gray-200 h-4 rounded-lg overflow-hidden">
+                        <div 
+                            class="transition-all duration-300" 
+                            :style="`
+                                width: ${calculatePercentage(starsCount[6-i] || 0, totalReviews)}%; 
+                                height: 16px; 
+                                background-color: #FBBF24;
+                            `"
+                        ></div>
+                    </div>
+                </div>
+              </div>
+            </template>
+        </div>
+
+
       </div>
 
       <!-- 右側價格一般&專業方案 -->
@@ -156,39 +286,151 @@
 
       <!-- 顯示留言 -->
       {% for comment in comments %}
-      <div class="border-b pb-4 mb-4">
-        <p class="text-gray-800"><strong>{{ comment.user.username }}</strong></p>
-        <p class="text-gray-600">{{ comment.content }}</p>
-        <p class="text-sm text-gray-400">{{ comment.created_at|date:"Y-m-d H:i" }}</p>
-        {% if comment.user == user %}
-        <!-- 刪除留言按鈕 -->
-        <form method="POST" action="{% url 'comments:delete_comment' comment.id %}">
-          {% csrf_token %}
-          <button type="submit" class="text-red-500 text-sm">刪除</button>
-        </form>
-        {% endif %}
+      <div class="border-b pb-4 mb-4" x-data="{ isEditing: false, rating: {{ comment.rating|default:0 }}, content: '{{ comment.content|default:"" }}' }">
+          <!-- 用戶名稱 -->
+          <p class="text-gray-800"><strong>{{ comment.user.username }}</strong></p>
+          
+          <!-- 顯示留言與星星評分 (當不在編輯狀態下) -->
+          <template x-if="!isEditing">
+              <div>
+                  <!-- 星星評分 -->
+                  <div class="flex space-x-2 items-center mt-2">
+                      <template x-for="n in 5">
+                          <span 
+                              class="text-3xl"
+                              :class="n <= rating ? 'text-yellow-400' : 'text-gray-400'">
+                              ★
+                          </span>
+                      </template>
+                      <span class="text-sm text-gray-500 ml-2" x-text="rating > 0 ? `(${rating}/5)` : '未提供評分'"></span>
+                  </div>
+                  <!-- 留言內容 -->
+                  <p class="text-gray-600 mt-2" x-text="content"></p>
+              </div>
+          </template>
+          
+          <!-- 編輯表單 (僅在點擊編輯時顯示) -->
+          <template x-if="isEditing">
+              <form method="POST" class="mt-4">
+                  {% csrf_token %}
+                  <!-- 星星評分 -->
+                  <div class="flex space-x-2 cursor-pointer">
+                      <template x-for="n in 5">
+                          <button 
+                              type="button"
+                              class="star text-3xl focus:outline-none"
+                              :class="n <= rating ? 'text-yellow-400' : 'text-gray-400'"
+                              @click="rating = n"
+                          >
+                              ★
+                          </button>
+                      </template>
+                  </div>
+                  <input type="hidden" name="rating" x-model="rating">
+
+                  <!-- 留言內容 -->
+                  <div class="mb-4">
+                      <label for="content" class="block text-gray-700 font-medium mb-2">留言內容：</label>
+                      <textarea
+                          name="content"
+                          x-model="content"
+                          class="w-full h-20 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                          placeholder="請輸入您的留言內容"
+                      ></textarea>
+                  </div>
+                  <!-- 保存與取消按鈕 -->
+                  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                      保存
+                  </button>
+                  <button type="button" @click="isEditing = false" class="text-gray-600 px-4 py-2">
+                      取消
+                  </button>
+              </form>
+          </template>
+          
+          <!-- 編輯與刪除按鈕 -->
+          {% if comment.user == user %}
+          <div class="mt-2 flex space-x-4" x-show="!isEditing">
+              <button @click="isEditing = true" class="text-blue-500 text-sm">編輯</button>
+              <form method="POST" action="{% url 'comments:delete_comment' comment.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="text-red-500 text-sm">刪除</button>
+              </form>
+          </div>
+          {% endif %}
       </div>
       {% empty %}
       <p class="text-gray-500">目前沒有留言，成為第一個留言者吧！</p>
       {% endfor %}
 
-      <!-- 新增留言表單 -->
-      <form method="POST" class="mt-6">
-        {% csrf_token %}
-        <div class="mb-4">
-          <label for="content" class="block text-gray-700 font-medium mb-2">留言內容：</label>
-          <textarea
-            id="content"
-            name="content"
-            class="w-full h-20 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-            placeholder="請輸入您的留言內容"
-          ></textarea>
-        </div>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-          新增留言
-        </button>
+      <!-- 新增留言表單 (僅在沒有留言時顯示) -->
+      {% if not comment or comment.is_deleted %}
+      <form method="POST" class="mt-6" x-data="{ rating: 0, content: '' }">
+          {% csrf_token %}
+          <!-- 星星評分 -->
+          <div class="flex space-x-2 cursor-pointer">
+              <template x-for="n in 5">
+                  <button 
+                      type="button"
+                      class="star text-3xl focus:outline-none"
+                      :class="n <= rating ? 'text-yellow-400' : 'text-gray-400'"
+                      @click="rating = n"
+                  >
+                      ★
+                  </button>
+              </template>
+          </div>
+          <input type="hidden" name="rating" x-model="rating">
+
+          <!-- 留言內容 -->
+          <div class="mb-4">
+              <label for="content" class="block text-gray-700 font-medium mb-2">留言內容：</label>
+              <textarea
+                  name="content"
+                  x-model="content"
+                  class="w-full h-20 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  placeholder="請輸入您的留言內容"
+              ></textarea>
+          </div>
+
+          <!-- 提交按鈕 -->
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+              提交留言
+          </button>
       </form>
+      {% endif %}
+
     </div>
   </div>
 </div>
+<script>
+    document.getElementById("toggle-like-btn").addEventListener("click", function () {
+        const serviceId = this.getAttribute("data-service-id");
+        const url = `/services/like/${serviceId}/`;
+        const likeButton = this;
+        const likeIcon = document.getElementById("like-icon");
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.is_liked) {
+                    likeIcon.setAttribute(
+                        "src",
+                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%231C274C' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>"
+                    );
+                } else {
+                    likeIcon.setAttribute(
+                        "src",
+                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%231C274C' stroke-width='2' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>"
+                    );
+                }
+            })
+            .catch((error) => console.error("Error:", error));
+    });
+</script>
 {% endblock %}

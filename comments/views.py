@@ -20,14 +20,6 @@ def add_comment(request, service_id):
     return render(request, 'comments/add_comment.html', {'form': form, 'service': service})
 
 @login_required
-def delete_comment(request, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id, user=request.user)
-    if request.method == 'POST':
-        comment.delete()
-        return redirect('services:freelancer_dashboard', id=request.user.id)
-    return render(request, 'comments/delete_comment.html', {'comment': comment})
-
-@login_required
 def feedback_view(request):
     comments_given = Comment.objects.filter(user=request.user).order_by(
         "-created_at"

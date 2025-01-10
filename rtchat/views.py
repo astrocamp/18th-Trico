@@ -11,7 +11,7 @@ from urllib.parse import unquote
 @login_required
 def chat_view(request, chatroom_name='public-chat'):
     chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
-    chat_messages = chat_group.chat_messages.all()[:30]
+    chat_messages = chat_group.chat_messages.all().select_related('author')[:30]
     form = ChatmessageCreateForm()
     
     other_user = None

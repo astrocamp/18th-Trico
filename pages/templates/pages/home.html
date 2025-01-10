@@ -1,35 +1,33 @@
 {% extends "shared/layout.html" %}
 {% load static %}
 {% block content %}
- <div class="bg-white">
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-6 mt-8">
-      {% for category in categories %}
-      <a 
-        href="{% url 'categories:service_by_category' category.id %}" 
-        class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-200 hover:border-blue-500"
-      >
-        <h3 class="text-lg font-semibold text-gray-800 hover:text-blue-600">{{ category.name }}</h3>
-      </a>
-      {% endfor %}
-    </div>
+ <div class="bg-white">
+  <div class="flex flex-wrap justify-center gap-2 p-6">
+    {% for category in categories %}
+    <a href="{% url 'categories:service_by_category' category.id %}" class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-300 hover:bg-gray-100">
+      <h3 class="w-24 sm:w-32 text-xs sm:text-sm font-light text-gray-800">{{ category.name }}</h3>
+    </a>
+    {% endfor %}
+  </div>
 
     <!-- 最近新增 -->
     <div class="main overflow-hidden flex flex-col justify-between bg-white"> 
-      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg shadow-lg">
+      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg hover:shadow-lg">
         <div class="flex flex-col items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-800 text-center">最近新增</h1>
         </div>
-        <div class="services grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {% for service in services %}
-          {% include "pages/service_card.html" %}
-          {% empty %}
-          <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
-          {% endfor %}
-    
+        <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {% if services %}
+            {% for service in services %}
+                {% include "pages/service_card.html" %}
+            {% endfor %}
+          {% else %}
+              <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
+          {% endif %}
           <!-- 顯示填充卡牌 -->
           {% for _ in placeholders %}
-          <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-xl transition duration-300">
+          <div class="bg-white p-6 border border-gray-200 transition duration-300">
             <div class="animate-pulse">
               <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
               <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
@@ -43,20 +41,22 @@
 
     <!-- 您可能會感興趣 -->
     <div class="main overflow-hidden flex flex-col justify-between bg-white"> 
-      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg shadow-lg">
+      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg hover:shadow-lg">
         <div class="flex flex-col items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-800 text-center">你可能感興趣</h1>
         </div>
-        <div class="services grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {% for service in services %}
-          {% include "pages/service_card.html" %}
-          {% empty %}
-          <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
-          {% endfor %}
+        <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {% if services %}
+            {% for service in services %}
+                {% include "pages/service_card.html" %}
+            {% endfor %}
+          {% else %}
+              <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
+          {% endif %}
     
           <!-- 顯示填充卡牌 -->
           {% for _ in placeholders %}
-          <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-xl transition duration-300">
+          <div class="bg-white p-6 border border-gray-200 transition duration-300">
             <div class="animate-pulse">
               <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
               <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
@@ -70,20 +70,22 @@
 
     <!-- 評分最高 -->
     <div class="main overflow-hidden flex flex-col justify-between bg-white"> 
-      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg shadow-lg">
+      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg hover:shadow-lg">
         <div class="flex flex-col items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-800 text-center">評分最高</h1>
         </div>
-        <div class="services grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {% for service in services %}
-          {% include "pages/service_card.html" %}
-          {% empty %}
-          <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
-          {% endfor %}
+        <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {% if services %}
+            {% for service in services %}
+                {% include "pages/service_card.html" %}
+            {% endfor %}
+          {% else %}
+              <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
+          {% endif %}
     
           <!-- 顯示填充卡牌 -->
           {% for _ in placeholders %}
-          <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-xl transition duration-300">
+          <div class="bg-white p-6 border border-gray-200 transition duration-300">
             <div class="animate-pulse">
               <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
               <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
@@ -150,144 +152,50 @@
       }
     </script>
 
-    <!-- 推薦接案者區 -->
-    <div class="flex justify-center py-3 gap-12">
-      <div class="border-solid border-2 border-gray-200 rounded-2xl p-2">
-        <div class="flex gap-10">
-          <a href="" target="_blank">
-            <div class="item">
-              <div class="flex justify-between items-center">
-                <img class="logosize" src="{% static 'images/logo-1.jpg' %}" alt="" />
-                <p class="text-4xl font-bold pl-1 py-7 text-right">Pizza宵夜聯盟</p>
-                <!-- 愛心組件 -->
-                <div class="flex">
-                  <div class="flex">
-                    <!-- 按鈕容器 -->
-                      <div class="heartframe border-solid border-2 border-gray-200 rounded-2xl pl-1.5 pt-1">
-                        <button id="heartButton" data-active="false" type="button" class="rounded-full transition duration-300 hover:scale-110"> 
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 30 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="w-10 h-10 text-gray-400 transition-colors"
-                      >
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                      </svg>
-                    </div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="flex gap-5">
-                <img
-                  class="recommendcaser"
-                  src="{% static 'images/work1.jpg' %}"
-                  alt=""
-                />
-                <ul class="listtype">
-                  <li class="max-w-[170px]">
-                    Now this is a story all about how, my life gotflipped-turned
-                    upside down
-                  </li>
-                  <li class="max-w-[170px]">
-                    And I'd like to take a minute just sit right there
-                  </li>
-                  <li class="max-w-[170px]">
-                    I'll tell you how I became the prince 
-                  </li>
-                </ul>
-              </div>
-              <p class="text-left">from US$999</p>
+    <!-- 接案者廣告區 -->
+    <!-- prettier-ignore -->
+    <div class="py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg">
+      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 justify-center py-3 gap-12">
+        <div class="border-solid border border-gray-300 rounded-2xl p-4">
+          <div class="">
+            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+              <img class="sm:w-1/3 rounded-lg" src="{% static 'images/logo-1.jpg' %}" alt="" />
+              <div class="sm:text-xl text-gray-800 font-bold self-end pl-1 sm:pl-3">企業級網站架設</div>
+              <div></div>
             </div>
-          </a>
-        </div>
-     </div>
-     <div class="border-solid border-2 border-gray-200 rounded-2xl p-2">
-      <div class="flex gap-10">
-        <a href="" target="_blank">
-          <div class="item">
-            <div class="flex justify-between items-center">
-              <img class="logosize" src="{% static 'images/logo-2.png' %}" alt="" />
-              <p class="text-4xl font-bold pl-1 py-7 text-right">肯德基炸雞聯盟</p>
-              <!-- 愛心組件 -->
-              <div class="flex">
-                <div class="flex">
-                  <!-- 按鈕容器 -->
-                    <div class="heartframe border-solid border-2 border-gray-200 rounded-2xl pl-1.5 pt-1">
-                      <button id="heartButton" data-active="false" type="button" class="rounded-full transition duration-300 hover:scale-110"> 
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 30 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="w-10 h-10 text-gray-400 transition-colors"
-                    >
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                    </svg>
-                  </div>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="flex gap-5">
-              <img
-                class="recommendcaser"
-                src="{% static 'images/work2.png' %}"
-                alt=""
-              />
-              <ul class="listtype">
-                <li class="max-w-[170px]">
-                  Now this is a story all about how, my life gotflipped-turned
-                  upside down
-                </li>
-                <li class="max-w-[170px]">
-                  And I'd like to take a minute just sit right there
-                </li>
-                <li class="max-w-[170px]">
-                  I'll tell you how I became the prince 
-                </li>
+            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 justify-center py-4 sm:gap-6">
+              <img class="rounded-lg" src="{% static 'images/work1.jpg' %}" alt=""/>
+              <ul class="">
+                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
+                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
+                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
               </ul>
             </div>
-            <p class="text-left">from US$999</p>
           </div>
-        </a>
+        </div>
+        <div class="border-solid border border-gray-300 rounded-2xl p-4">
+          <div class="">
+            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+              <img class="sm:w-1/3 rounded-lg" src="{% static 'images/logo-2.png' %}" alt="" />
+              <div class="sm:text-xl text-gray-800 font-bold self-end pl-1 sm:pl-3">快速網站設計</div>
+              <div></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 justify-center py-4 sm:gap-6">
+              <img class="rounded-lg" src="{% static 'images/work2.png' %}" alt=""/>
+              <ul class="">
+                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
+                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
+                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      </div>
 
-    </div>
-     <!-- 愛心js -->
-    <script>
-      // 取得按鈕元素
-      document.querySelectorAll(".heartframe button").forEach((button) => {
-        button.addEventListener("click", (event) => {
-          event.preventDefault(); // 防止預設行為
-          const isActive = button.getAttribute("data-active") === "true";
-
-          // 更新按鈕的狀態屬性
-          button.setAttribute("data-active", !isActive);
-
-          // 切換樣式
-          if (isActive) {
-            button.querySelector("svg").classList.remove("text-red-500");
-            button.querySelector("svg").classList.add("text-gray-400");
-          } else {
-            button.querySelector("svg").classList.remove("text-gray-400");
-            button.querySelector("svg").classList.add("text-red-500");
-          }
-        });
-      });
-    </script>
-</div>
+  </div>
 
   <!-- 分頁按鈕 -->
-  <div class="pagination justify-center pb-2">
+  {% comment %} <div class="pagination justify-center pb-2">
     {% if page_obj.has_previous %}
     <a class="new" href="?page={{ page_obj.previous_page_number }}">←</a>
     {% endif %}
@@ -301,5 +209,37 @@
     {% if page_obj.has_next %}
     <a class="new" href="?page={{ page_obj.next_page_number }}">→</a>
     {% endif %}
-  </div>
+  </div> {% endcomment %}
+
+  <script>
+    document.querySelectorAll("[id^='toggle-like-btn-']").forEach((button) => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault();  
+            event.stopPropagation(); 
+
+            const serviceId = this.getAttribute("data-service-id");
+            const url = `/services/like/${serviceId}/`;
+            const likeIcons = document.querySelectorAll(`#like-icon-${serviceId}`);
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    const newSrc = data?.is_liked ?
+                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%231C274C' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>" :
+                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%231C274C' stroke-width='2' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>";
+
+                    likeIcons.forEach((likeIcon) => {
+                        likeIcon.setAttribute("src", newSrc);
+                    });
+                })
+                .catch((error) => console.error("Error:", error));
+        });
+    });
+  </script>
+
 {% endblock %}

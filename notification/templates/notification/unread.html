@@ -1,0 +1,25 @@
+<h2>未讀通知</h2>
+<ul>
+  {% for notice in unread_notifications %}
+    <li>
+      <p>{{ notice.actor }} {{ notice.verb }}</p>
+      <small>{{ notice.timestamp }}</small>
+      <a href="#" onclick="markAsRead({{ notice.id }})">標記為已讀</a>
+    </li>
+  {% endfor %}
+</ul>
+<script>
+  function markAsRead(noticeId) {
+    fetch(`/notification/mark-read/${noticeId}/`)
+      .then(response => {
+        if (response.ok) {
+          location.reload(); // 刷新頁面
+        } else {
+          alert("標記失敗，請稍後重試");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
+  }
+</script>
