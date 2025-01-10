@@ -1,29 +1,5 @@
 {% extends "shared/layout.html" %}
 {% block content %}
-<div class="max-w-lg mx-auto flex flex-col items-center pt-20 px-4">
-  <!-- 使用者頭像 -->
-  <img
-    class="w-36 h-36 rounded-full object-cover mb-4"
-    src="{{ service.freelancer_user.profile.photo.url|default:'/static/default-avatar.png' }}"
-    alt="Freelancer Avatar"
-  />
-
-  <div class="text-center">
-    <!-- 使用者名稱 -->
-    {% comment %} <h1>{{ service.freelancer_user.username }}</h1> {% endcomment %}
-
-    <div class="text-gray-400 mb-2 -mt-3">@{{ service.freelancer_user.username }}</div>
-
-    <!-- 顯示個人資訊 -->
-    {% if service.freelancer_user.profile.bio %}
-      <div class="mt-8 hyphens-auto">{{ service.freelancer_user.profile.bio|linebreaksbr }}</div>
-    {% endif %}
-
-
-  </div>
-</div>
-
-
 
 
 <div class="bg-blue-900 font-sans" data-page="switching_tab">
@@ -42,13 +18,14 @@
       <!-- 左側為接案者介紹 -->
       <div class="w-2/3">
         <div class="flex items-center mb-6">
-          <a href="">
+          <a href="{% url 'users:information' service.freelancer_user.username %}">
             <img
-              src="{% if service.freelancer_user.profile.photo %}{{ service.freelancer_user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}"
-              alt="User Avatar"
-              class="w-16 h-16 rounded-full mr-4 border-2 border-gray-300 shadow-sm transition-transform duration-300 hover:scale-125 hover:rotate-6"
+                src="{% if service.freelancer_user.profile.photo %}{{ service.freelancer_user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}"
+                alt="User Avatar"
+                class="w-16 h-16 rounded-full mr-4 border-2 border-gray-300 shadow-sm transition-transform duration-300 hover:scale-125 hover:rotate-6"
             />
           </a>
+        
           <div>
             <p class="text-xl font-bold text-gray-800">{{ service.freelancer_user.username }}</p>
             <!-- 聊天按鈕 -->
