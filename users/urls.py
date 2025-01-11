@@ -15,6 +15,8 @@ from .views import (
     information,
     mark_as_read_and_redirect,
 )
+from django.urls import path, re_path
+from rtchat.views import *
 
 app_name = "users"
 
@@ -24,6 +26,7 @@ urlpatterns = [
     path("logout/", logout, name="logout"),
     path("profile/", profile, name="profile"),
     path("information/<str:username>/", information, name="information"),
+
 
     path("password_reset/", CustomPasswordResetView.as_view(), name="password_reset"),
     path(
@@ -51,3 +54,5 @@ urlpatterns = [
         name="mark_as_read_and_redirect",
     ),
 ]
+
+

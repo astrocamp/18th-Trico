@@ -29,8 +29,9 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     'https://trico.zeabur.app',  
     'http://127.0.0.1:8000',
-    f"https://{env('HOSTNAME')}"
+    # f"https://{env('HOSTNAME')}"
 ]
+
 
 
 # Application definition
@@ -277,7 +278,7 @@ PROTOCOL = os.getenv("PROTOCOL", "http")  # 開發環境使用 http，生產使�
 
 
 
-line_pay_hostname = env('HOSTNAME')
+
 
 # 綠界金流相關配置
 MERCHANT_ID = os.getenv("MERCHANT_ID")
