@@ -4,7 +4,7 @@ from pathlib import Path
 
 import environ
 env = environ.Env()
-environ.Env.read_env()
+environ.Env.read_env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,9 +27,9 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://trico.zeabur.app',  
-    'http://127.0.0.1:8000',
-    f"https://{env('HOSTNAME')}"
+    "https://trico.zeabur.app",
+    "http://127.0.0.1:8000",
+    f"https://{env('HOSTNAME', default='localhost')}",
 ]
 
 
@@ -249,9 +249,6 @@ DEFAULT_FROM_EMAIL = "三合平台 <selinafs880504@gmail.com>"
 # 替換 `DEFAULT_DOMAIN` 和 `PROTOCOL` 為您的開發環境
 DEFAULT_DOMAIN = os.getenv("DEFAULT_DOMAIN")  # 本地開發使用
 PROTOCOL = os.getenv("PROTOCOL", "http")  # 開發環境使用 http，生產使用 https
-
-
-
 
 
 line_pay_hostname = env('HOSTNAME')

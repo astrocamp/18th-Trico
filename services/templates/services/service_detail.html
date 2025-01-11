@@ -1,58 +1,5 @@
 {% extends "shared/layout.html" %}
 {% block content %}
-<script>
-  function markNotificationAsReadAndNavigate(event, notificationId, targetUrl) {
-    event.preventDefault(); 
-    const url = `/notification/mark-as-read/${notificationId}/`;
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRFToken": "{{ csrf_token }}",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-       
-          const badges = document.querySelectorAll(".indicator-item");
-          badges.forEach((badge) => {
-            if (data.unread_count > 0) {
-              badge.textContent = data.unread_count;
-            } else {
-              badge.remove();
-            }
-          });
-
-         
-          const notificationElement = event.target.closest("li");
-          if (notificationElement) {
-            notificationElement.remove();
-          }
-
-          // 如果通知列表清空，顯示 "暫無通知"
-          const notificationsList = document.querySelector(".card-body ul");
-          if (notificationsList && notificationsList.children.length === 0) {
-            notificationsList.innerHTML =
-              "<span class='text-gray-500'>暫無通知</span>";
-          }
-
-          // 跳轉到目標 URL
-          window.location.href = targetUrl;
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        // 即使標記失敗，也跳轉到目標 URL
-        window.location.href = targetUrl;
-      });
-  }
-
-  // 初次載入時同步更新通知數量
-  document.addEventListener("DOMContentLoaded", () => {
-    updateNotificationBadge();
-  });
-</script>
 <div class="bg-blue-900 font-sans" data-page="switching_tab">
   <div class="container mx-auto py-10 px-[10%]">
     <!-- 回上一頁按鈕 -->

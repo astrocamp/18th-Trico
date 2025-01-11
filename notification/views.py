@@ -40,7 +40,7 @@ def mark_notification_as_read(request, notification_id):
 @login_required
 def unread_notifications_count(request):
     count = request.user.notifications.filter(unread=True).count()
-    return HttpResponse(count)  # 返回純數字
+    return HttpResponse(count, content_type="text/plain")  # 返回純數字
 
 
 @login_required
