@@ -112,21 +112,22 @@
         tabindex="0"
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
       >
-
+      {% load custom_tags %}
         <!-- 私人聊天室列表 -->
-        {% for chatroom in user.chat_groups.all %}
-          {% if chatroom.is_private %}
-            {% for member in chatroom.members.all %}
-              {% if member != user %}
-                <li>
-                  <a href="{% url 'chatroom' chatroom.group_name %}">
-                    {{ member.username }}
-                  </a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-        {% endfor %}
+        {% with user|first_chatroom as first_chatroom %}
+        {% if first_chatroom %}
+          <li>
+            <a href="{% url 'chatroom' first_chatroom.group_name %}">
+              {% for member in first_chatroom.members.all %}
+                {% if member != user %}
+                  {{ member.username }}
+                {% endif %}
+              {% endfor %}
+            </a>
+          </li>
+        {% endif %}
+      {% endwith %}
+      
       </ul>
     </div>
     

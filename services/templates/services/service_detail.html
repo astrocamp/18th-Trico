@@ -80,14 +80,7 @@
         
           <div>
             <p class="text-xl font-bold text-gray-800">{{ service.freelancer_user.username }}</p>
-            <!-- 聊天按鈕 -->
-            {% if user != service.freelancer_user %}
-            <a 
-              href="{% url 'start-chat' service.freelancer_user.username %}" 
-              class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold py-1 px-3 rounded">
-              和我聊聊~
-            </a>
-          {% endif %}
+            
             <a href=""></a>
             <div class="flex items-center text-yellow-400">
             </div>
