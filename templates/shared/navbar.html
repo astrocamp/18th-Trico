@@ -3,8 +3,8 @@
 <div class="flex bg-white border-b border-gray-300 navbar custom-xs">
   <div class="flex-1 h-16 item-center sm:px-5">
     <a class="btn btn-ghost" href="{% url 'pages:home' %}">
-      <img src="{% static 'images/logo.png' %}" alt="三合" class="h-10 w-25 xs:hidden sm:block" />
-      <img src="{% static 'images/favicon.png' %}" alt="三合" class="h-12 xs:block sm:hidden" />
+      <img src="{% static 'images/logo.png' %}" alt="三合" class="h-10 w-25 hidden xs:hidden sm:block" />
+      <img src="{% static 'images/favicon.png' %}" alt="三合" class="h-12 block xs:block sm:hidden" />
     </a>
     {% if user.is_authenticated %}
     <span class="hidden">ID:{{ user.id }}</span>
