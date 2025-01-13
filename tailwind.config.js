@@ -11,7 +11,7 @@ module.exports = {
         "custom-xs": "390px", // 自定義最小寬度
       },
       screens: {
-        xs: "40px", // 自定義斷點
+        xs: "400px", // 自定義斷點
         xxs: "380px", // 自定義斷點
         xxxs: "320px", // 自定義斷點
       },
