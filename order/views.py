@@ -17,6 +17,7 @@ import json
 import uuid
 import urllib.parse
 import requests
+from notification.utils import send_notification
 
 # 第三方庫
 import environ
@@ -34,13 +35,11 @@ def generate_check_mac_value(params, hash_key, hash_iv):
     sorted_params = sorted(params.items())
     raw_str = "&".join([f"{key}={value}" for key, value in sorted_params])
     raw_str = f"HashKey={hash_key}&{raw_str}&HashIV={hash_iv}"
-    # 進行 URL 編碼並轉為小寫
     encoded_str = urllib.parse.quote_plus(raw_str).lower()
-    # 計算 MD5 並轉為大寫
     return hashlib.md5(encoded_str.encode("utf-8")).hexdigest().upper()
 
 
-# 建立訂單
+# 建立綠界訂單
 @login_required
 def create_order(request):
     if request.method == "POST":
@@ -48,6 +47,16 @@ def create_order(request):
         selected_plan = request.POST.get("plan")
         payment_method = request.POST.get("payment_method")
         service = get_object_or_404(Service, id=service_id)
+        client_user = request.user
+
+        # 發送通知給接案者
+        send_notification(
+            actor=client_user,
+            recipient=service.freelancer_user,
+            verb="下訂了您的服務",
+            description=f"用戶 {client_user.username} 購買了您的服務：'{service.title}'。",
+            target_service=service,
+        )
 
         # 動態設置金額
         if selected_plan == "standard":
@@ -59,7 +68,6 @@ def create_order(request):
         valid_payment_methods = {
             "credit_card": "Credit",
             "atm": "ATM",
-            # "googlepay": "GooglePay",等上線開通後才可啟用，測試環境不行
             "barcode": "BARCODE",
         }
 
@@ -89,35 +97,50 @@ def create_order(request):
         }
         params["CheckMacValue"] = generate_check_mac_value(params, HASH_KEY, HASH_IV)
 
-        # 傳遞至前端表單
         return render(
             request,
             "order/payment_form.html",
             {"ecpay_url": ECPAY_URL, "params": params},
         )
-    return JsonResponse({"error": "Invalid request method."}, status=405)
+    return JsonResponse(
+        {"error": "Invalid request method.", "message": "訂單已創建並通知接案者"},
+        status=405,
+    )
+
 
 @csrf_exempt
 def ecpay_return(request):
     if request.method == "POST":
         data = request.POST.dict()
-        check_mac = data.pop("CheckMacValue", None)
 
-        if check_mac == generate_check_mac_value(data, HASH_KEY, HASH_IV):
+        # 模擬測試環境返回成功的 RtnCode
+        if settings.DEBUG:  # 僅在測試環境下生效
+            data["RtnCode"] = "1"
+
+        print("Received Data with Mocked RtnCode:", data)
+
+        # 以下保留你的邏輯
+        received_mac = data.get("CheckMacValue")
+        if "CheckMacValue" in data:
+            del data["CheckMacValue"]
+
+        generated_mac = generate_check_mac_value(data, HASH_KEY, HASH_IV)
+        if received_mac == generated_mac:
             merchant_trade_no = data.get("MerchantTradeNo")
-            order_id = int(merchant_trade_no.replace("ORDER", ""))
-            order = get_object_or_404(Order, id=order_id)
-            if data.get("RtnCode") == "1":  # 成功付款
-                order.status = "Paid"
-                order.save()
+            order = get_object_or_404(Order, merchant_trade_no=merchant_trade_no)
+            if data["RtnCode"] == "1":
+                order.mark_as_paid()
                 return HttpResponse("OK")
-        return HttpResponse("CheckMacValue Failed")
+            else:
+                return HttpResponse("Payment Failed")
+        else:
+            return HttpResponse("CheckMacValue Failed")
+    return HttpResponse("Invalid request method.")
 
 
 @csrf_exempt
 def ecpay_result(request):
     return render(request, "order/order_successful.html")
-
 
 
 def failed(request):
@@ -133,13 +156,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 environ.Env.read_env()
 
+
 def create_headers(payload, uri):
     channel_id = env("LINE_PAY_CHANNEL_ID")
     secret_key = env("LINE_PAY_CHANNEL_SECRET_KEY")
 
     nonce = str(uuid.uuid4())
     message = secret_key + uri + json.dumps(payload) + nonce
-    signature = base64.b64encode(hmac.new(secret_key.encode(), message.encode(), hashlib.sha256).digest()).decode()
+    signature = base64.b64encode(
+        hmac.new(secret_key.encode(), message.encode(), hashlib.sha256).digest()
+    ).decode()
 
     return {
         "Content-Type": "application/json",
@@ -148,9 +174,10 @@ def create_headers(payload, uri):
         "X-LINE-Authorization-Nonce": nonce,
     }
 
+
 def payment_form_select(request, service_id):
     service = get_object_or_404(Service, id=service_id)
-    selected_plan = request.GET.get("plan")  
+    selected_plan = request.GET.get("plan")
     initial_data = {
         "selected_plan": selected_plan,
         "payment_method": None,
@@ -194,7 +221,6 @@ def payment_form_select(request, service_id):
     )
 
 
-
 # Line Pay
 def get_linepay_data(request, service_id):
     """
@@ -209,7 +235,9 @@ def get_linepay_data(request, service_id):
     }
     return JsonResponse(data)
 
+
 env = environ.Env()
+
 
 @csrf_exempt
 def request_payment(request, service_id):
@@ -228,7 +256,13 @@ def request_payment(request, service_id):
                 {
                     "id": f"package_{uuid.uuid4()}",
                     "amount": amount,
-                    "products": [{"name": f"{plan.capitalize()} Plan", "quantity": 1, "price": amount}],
+                    "products": [
+                        {
+                            "name": f"{plan.capitalize()} Plan",
+                            "quantity": 1,
+                            "price": amount,
+                        }
+                    ],
                 }
             ],
             "redirectUrls": {
@@ -239,14 +273,26 @@ def request_payment(request, service_id):
 
         uri = env("LINE_PAY_REQUEST_URL")
         headers = create_headers(payload, uri)
-        response = requests.post(f"{env('LINE_PAY_SANDBOX_URL')}{uri}", headers=headers, json=payload)
+        response = requests.post(
+            f"{env('LINE_PAY_SANDBOX_URL')}{uri}", headers=headers, json=payload
+        )
 
         if response.status_code == 200:
             response_data = response.json()
             if response_data["returnCode"] == "0000":
-                return JsonResponse({"success": True, "payment_url": response_data["info"]["paymentUrl"]["web"]})
-            return JsonResponse({"success": False, "message": response_data["returnMessage"]})
-        return JsonResponse({"success": False, "message": f"Error: {response.status_code}"})
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "payment_url": response_data["info"]["paymentUrl"]["web"],
+                    }
+                )
+            return JsonResponse(
+                {"success": False, "message": response_data["returnMessage"]}
+            )
+        return JsonResponse(
+            {"success": False, "message": f"Error: {response.status_code}"}
+        )
+
 
 # 接收 LINE Pay 支付回調並更新訂單狀態
 @csrf_exempt

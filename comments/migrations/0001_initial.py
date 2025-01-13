@@ -10,10 +10,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ("services", "0001_initial"),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
@@ -43,22 +40,6 @@ class Migration(migrations.Migration):
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("deleted_at", models.DateTimeField(blank=True, null=True)),
                 ("is_deleted", models.BooleanField(default=False)),
-                (
-                    "service",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="comments",
-                        to="services.service",
-                    ),
-                ),
-                (
-                    "user",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="comment",
-                        to=settings.AUTH_USER_MODEL,
-                    ),
-                ),
             ],
             options={
                 "constraints": [

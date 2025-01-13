@@ -1,7 +1,6 @@
-<!-- prettier-ignore -->
-{% load static %} 
-{% load socialaccount %}
+{% load static %} {% load socialaccount %}
 <!DOCTYPE html>
+<!-- prettier-ignore -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,11 +8,12 @@
     <title>三合</title>
     <script src="{% static 'scripts/app.js'%}" type="module"></script>
     <link rel="stylesheet" href="{% static 'styles/app.css' %}" />
+    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png"/>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  <body class="flex flex-col min-h-screen custom-xs" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     {% include "shared/navbar.html" %}
-    <main>{% block content %}{% endblock %}</main>
+    <main class="flex-1" >{% block content %}{% endblock %}</main>
     <footer class="flex items-center justify-center py-4 bg-gray-100">
       <p class="text-sm text-gray-500">&copy; 三合</p>
     </footer>

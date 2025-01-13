@@ -2,76 +2,66 @@
 {% block content %}
 <div class="main flex flex-col justify-center items-center min-h-screen bg-gray-100 p-6">
   <div class="search-results w-full max-w-4xl bg-white shadow-lg rounded-lg p-8">
-      {% if query %}
-      <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6">
-          搜尋結果：<span class="text-blue-500 font-bold">{{ query }}</span>
-      </h2>
-      {% if results %}
-      <p class="text-lg text-gray-600 text-center mb-4">
-          找到 {{ results|length }} 筆相關結果：
+    {% if query %}
+    <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6">
+      搜尋結果：<span class="text-blue-500 font-bold">{{ query }}</span>
+    </h2>
+    {% if results %}
+    <p class="text-lg text-gray-600 text-center mb-4">
+      找到 {{ results|length }} 筆相關結果：
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% for result in results %}
+      <!-- 單個服務卡牌 -->
+      <a href="{% url 'services:service_detail' id=result.freelancer_user.id service_id=result.id %}" class="block">
+        <div class="item overflow-hidden transition-transform duration-300 hover:scale-105 rounded-lg">
+          <!-- 服務圖片 -->
+          <div class="w-full aspect-square bg-gray-200 rounded-lg overflow-hidden">
+            <img class="w-full h-full object-cover" 
+                 src="{% if result.photo %}{{ result.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}" 
+                 alt="{{ result.title }}" />
+          </div>
+          <div class="p-4">
+            <!-- 接案者頭像與名稱 -->
+            <div class="flex items-center mb-3">
+              <img class="avatarInpage w-10 h-10 rounded-full border border-gray-300 shadow-sm transition duration-300 hover:scale-110" 
+                   src="{% if result.freelancer_user.profile.photo %}{{ result.freelancer_user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}" 
+                   alt="User Avatar" />
+              <p class="ml-3 text-sm font-semibold text-gray-700">{{ result.freelancer_user.username }}</p>
+            </div>
+            <!-- 服務標題 -->
+            <p class="text-gray-800 font-medium truncate" title="{{ result.title }}">
+              {{ result.title }}
+            </p>
+            <!-- 服務描述 -->
+            <p class="mt-2 text-gray-600 text-sm">
+              {{ result.description|truncatewords:25 }}
+            </p>
+            <!-- 費用 -->
+            <p class="mt-2 text-sm font-semibold text-gray-800">
+              費用 $ {{ result.standard_price|default:"-" }} 起
+            </p>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-results text-center mt-8">
+      <p class="text-lg text-gray-700 font-medium mb-4">
+        很抱歉，沒有找到與「<span class="text-red-500 font-semibold">{{ query }}</span>」相關的結果。
       </p>
-      <ul class="results-list space-y-6">
-        {% for result in results %}
-        <li class="result-item bg-gray-50 p-6 rounded-lg border hover:shadow-md transition">
-            <a href="{% url 'service_detail' pk=result.id %}" class="text-xl font-bold text-blue-600 hover:underline">
-                {{ result.title }}
-            </a>
-            <p class="text-sm text-gray-500 mt-2">發佈日期：{{ result.created_at|date:"Y-m-d" }}</p>
-        </li>
-        {% endfor %}
+      <p class="text-gray-600 mb-4">您可以嘗試以下方法：</p>
+      <ul class="text-left inline-block space-y-2">
+        <li class="text-gray-600"><span class="font-semibold">✔️</span> 檢查關鍵字拼寫是否正確</li>
+        <li class="text-gray-600"><span class="font-semibold">✔️</span> 嘗試使用其他關鍵字</li>
+        <li class="text-gray-600"><span class="font-semibold">✔️</span> 縮短或簡化您的搜尋條件</li>
       </ul>
-      {% else %}
-      <div class="no-results text-center mt-8">
-          <p class="text-lg text-gray-700 font-medium mb-4">
-              很抱歉，沒有找到與「<span class="text-red-500 font-semibold">{{ query }}</span>」相關的結果。
-          </p>
-          <p class="text-gray-600 mb-4">您可以嘗試以下方法：</p>
-          <ul class="text-left inline-block space-y-2">
-              <li class="text-gray-600"><span class="font-semibold">✔️</span> 檢查關鍵字拼寫是否正確</li>
-              <li class="text-gray-600"><span class="font-semibold">✔️</span> 嘗試使用其他關鍵字</li>
-              <li class="text-gray-600"><span class="font-semibold">✔️</span> 縮短或簡化您的搜尋條件</li>
-          </ul>
-      </div>
-      {% endif %}
-      {% else %}
-      <p class="text-center text-gray-600 mt-6">請輸入搜尋關鍵字以查看結果。</p>
-      {% endif %}
+    </div>
+    {% endif %}
+    {% else %}
+    <p class="text-center text-gray-600 mt-6">請輸入搜尋關鍵字以查看結果。</p>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
-
-
-<!-- <div class="search-results">
-  {% if query %}
-  <h2>搜尋結果：<span class="query-highlight">{{ query }}</span></h2>
-  {% if results %}
-  <p>找到 {{ results|length }} 筆相關結果：</p>
-  <ul class="results-list">
-    {% for search in results %}
-    <li class="result-item">
-      <a href="{{ search.get_absolute_url }}" class="result-title"
-        >{{ search.title }}</a
-      >
-      <span class="result-date"
-        >發布日期：{{ search.created_at|date:"Y-m-d" }}</span
-      >
-    </li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <div class="no-results">
-    <p>
-      很抱歉，沒有找到與「<span class="query-highlight">{{ query }}</span
-      >」相關的結果。
-    </p>
-    <p>您可以嘗試以下方法：</p>
-    <ul>
-      <li>檢查關鍵字拼寫是否正確</li>
-      <li>嘗試使用其他關鍵字</li>
-      <li>縮短或簡化您的搜尋條件</li>
-    </ul>
-  </div>
-  {% endif %} {% else %}
-  <p>請輸入搜尋關鍵字以查看結果。</p>
-  {% endif %}
-</div> -->

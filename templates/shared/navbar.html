@@ -114,19 +114,18 @@
       >
       {% load custom_tags %}
         <!-- 私人聊天室列表 -->
-        {% with user|first_chatroom as first_chatroom %}
-        {% if first_chatroom %}
-          <li>
-            <a href="{% url 'chatroom' first_chatroom.group_name %}">
-              {% for member in first_chatroom.members.all %}
-                {% if member != user %}
-                  {{ member.username }}
-                {% endif %}
-              {% endfor %}
-            </a>
-          </li>
-        {% endif %}
-      {% endwith %}
+        {% for chatroom in user|chatrooms_list %}
+        <li>
+          <a href="{% url 'chatroom' chatroom.group_name %}">
+            <!-- 顯示聊天室成員的名稱，排除自己 -->
+            {% for member in chatroom.members.all %}
+              {% if member != user %}
+                {{ member.username }}
+              {% endif %}
+            {% endfor %}
+          </a>
+        </li>
+        {% endfor %}
       
       </ul>
     </div>

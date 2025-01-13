@@ -1,38 +1,39 @@
 <!-- prettier-ignore -->
 <a href="{% url 'services:service_detail' service.freelancer_user.id service.id %}" class="block">
-  <div class="item overflow-hidden transition-transform duration-300 hover:scale-105">
-    <img class="w-full h-48 object-cover rounded-lg" src="{% if service.photo %}{{ service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}" alt="Service Photo"/>
+  <div class="item overflow-hidden transition-transform duration-300 relative">
+    <!-- 圖片 -->
+    <img class="w-full h-48 object-cover rounded-lg" src="{% if service.photo %}{{ service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}" alt="Service Photo" />
+    
+    <!-- 愛心按鈕 -->
+    <div id="like-button-{{ service.id }}" class="absolute top-2 right-2 z-10">
+      <button id="toggle-like-btn-{{ service.id }}" class="transition shadow-sm" data-service-id="{{ service.id }}">
+        {% if service.is_liked %}
+        <img
+          id="like-icon-{{ service.id }}"
+          src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='red' stroke='white' stroke-width='1' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>"
+          alt="Liked"
+          class="w-8 h-8"
+        />
+        {% else %}
+        <img
+          id="like-icon-{{ service.id }}"
+          src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='black' fill-opacity='0.4' stroke='white' stroke-width='1' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>"
+          alt="Not Liked"
+          class="w-8 h-8"
+        />
+        {% endif %}
+      </button>
+    </div>
+    
+    <!-- 其他內容 -->
     <div class="p-4">
       <div class="flex items-center mb-3">
-        <img class="avatarInpage w-10 h-10 rounded-full border border-gray-300 shadow-sm transition duration-300 hover:scale-110" src="{% if service.freelancer_user.profile.photo %}{{ service.freelancer_user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}" alt="User Avatar "/>
+        <img class="avatarInpage w-7 h-7 rounded-full border border-gray-300 shadow-sm transition duration-300 hover:scale-110" src="{% if service.freelancer_user.profile.photo %}{{ service.freelancer_user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}" alt="User Avatar "/>
         <p class="ml-3 text-sm font-semibold text-gray-700">{{ service.freelancer_user.username }}</p>
       </div>
       <p class="text-gray-800 font-medium truncate" title="{{ service.title }}">
         {{ service.title }}
       </p>
-      <div id="like-button-{{ service.id }}" class="flex items-center mt-4">
-        <button
-          id="toggle-like-btn-{{ service.id }}"
-          class="px-4 py-2 rounded-lg shadow transition"
-          data-service-id="{{ service.id }}"
-        >
-          {% if service.is_liked %}
-          <img
-            id="like-icon-{{ service.id }}"
-            src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%231C274C' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>"
-            alt="Liked"
-            class="w-8 h-8"
-          />
-          {% else %}
-          <img
-            id="like-icon-{{ service.id }}"
-            src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%231C274C' stroke-width='2' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>"
-            alt="Not Liked"
-            class="w-8 h-8"
-          />
-          {% endif %}
-        </button>
-      </div>
       <div class="flex items-center mt-2">
         <div class="relative w-5 h-5">
           <div class="absolute w-full h-full bg-black clip-star"></div>
@@ -41,8 +42,8 @@
           {{ service.average_rating|floatformat:1 }}
         </p>
       </div>
-      <p class="mt-2 text-sm font-semibold text-gray-800">
-        費用 $ {{service.standard_price}} 起
+      <p class="text-sm font-semibold text-gray-800">
+        費用 $<span class="text-lg"> {{service.standard_price}} </span>起
       </p>
     </div>
   </div>

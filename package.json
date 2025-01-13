@@ -23,6 +23,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@ckeditor/ckeditor5-media-embed": "^44.1.0",
     "alpinejs": "^3.14.8",
     "axios": "^1.7.9",
     "htmx.org": "^2.0.3",

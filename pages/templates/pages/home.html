@@ -2,224 +2,178 @@
 {% load static %}
 {% block content %}
 
- <div class="bg-white">
+<div class="bg-white"> 
+<!-- 輪播組件 -->
+<!-- prettier-ignore -->
+<div class="flex justify-center">
+  <div x-data="carousel()" class="relative w-full overflow-hidden">
+    <div class="slides flex transition-transform duration-500" :style="`transform: translateX(-${currentSlide * 100}%)`">
+      <div class="slide flex-none w-full h-full">
+        <img src="{% static 'images/banner-01.jpg' %}" alt="Slide 1" class="w-full object-cover hidden sm:block"/>
+        <img src="{% static 'images/banner-01-600.jpg' %}" alt="Slide 1" class="w-full object-cover block sm:hidden"/>
+      </div>
+      <div class="slide flex-none w-full h-full">
+        <img src="{% static 'images/banner-02.jpg' %}" alt="Slide 2" class="w-full object-cover hidden sm:block"/>
+        <img src="{% static 'images/banner-02-600.jpg' %}" alt="Slide 1" class="w-full object-cover block sm:hidden"/>
+      </div>
+      <div class="slide flex-none w-full h-full">
+        <img src="{% static 'images/banner-03.jpg' %}" alt="Slide 2" class="w-full object-cover hidden sm:block"/>
+        <img src="{% static 'images/banner-03-600.jpg' %}" alt="Slide 1" class="w-full object-cover block sm:hidden"/>
+      </div>
+    </div>
+
+    <!-- 控制紐 -->
+    <div class="flex">
+      <button 
+        class="control-btn absolute left-4 inset-y-1/2 transform -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-gray-300 hover:bg-white opacity-75 pointer-events-auto" 
+        @click="prev">
+        <span class="text-lg text-gray-800">&lt;</span>
+      </button>
+      <button 
+        class="control-btn absolute right-4 inset-y-1/2 transform -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-gray-300 hover:bg-white opacity-75 pointer-events-auto" 
+        @click="next">
+        <span class="text-lg text-gray-800">&gt;</span>
+      </button>
+    </div>    
+  </div>
+</div>
+
+<!-- 輪播alpinejs組件 -->
+<script>
+  function carousel() {
+    return {
+      currentSlide: 0,
+      totalSlides: 3,
+
+      next() {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+      },
+
+      prev() {
+        this.currentSlide =
+          (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+      },
+
+      startAutoSlide() {
+        setInterval(() => {
+          this.next();
+        }, 5000);
+      },
+
+      init() {
+        this.startAutoSlide();
+      },
+    };
+  }
+</script>
+
+  <!--分類標籤-->
   <div class="flex flex-wrap justify-center gap-2 p-6">
     {% for category in categories %}
-    <a href="{% url 'categories:service_by_category' category.id %}" class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-300 hover:bg-gray-100">
+    <a href="{% url 'categories:category' category.id %}" class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-300 hover:bg-gray-100">
       <h3 class="w-24 sm:w-32 text-xs sm:text-sm font-light text-gray-800">{{ category.name }}</h3>
     </a>
     {% endfor %}
   </div>
 
-    <!-- 最近新增 -->
-    <div class="main overflow-hidden flex flex-col justify-between bg-white"> 
-      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg hover:shadow-lg">
-        <div class="flex flex-col items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-800 text-center">最近新增</h1>
-        </div>
-        <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {% if services %}
-            {% for service in services %}
-                {% include "pages/service_card.html" %}
-            {% endfor %}
-          {% else %}
-              <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
-          {% endif %}
-          <!-- 顯示填充卡牌 -->
-          {% for _ in placeholders %}
-          <div class="bg-white p-6 border border-gray-200 transition duration-300">
-            <div class="animate-pulse">
-              <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
-              <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-              <div class="h-4 bg-gray-300 rounded w-1/2"></div>
-            </div>
+  <!-- 最近新增 -->
+  <div class="main overflow-hidden flex flex-col justify-between bg-white">
+    <div
+      class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg hover:shadow-lg">
+      <div class="flex flex-col items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 text-center">最近新增</h1>
+      </div>
+      <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {% if services %}
+        {% for service in services %}
+        {% include "pages/service_card.html" %}
+        {% endfor %}
+        {% else %}
+        <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
+        {% endif %}
+        <!-- 顯示填充卡牌 -->
+        {% for _ in placeholders %}
+        <div class="bg-white p-6 border border-gray-200 transition duration-300">
+          <div class="animate-pulse">
+            <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
+            <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+            <div class="h-4 bg-gray-300 rounded w-1/2"></div>
           </div>
-          {% endfor %}
         </div>
+        {% endfor %}
       </div>
     </div>
-
-    <!-- 您可能會感興趣 -->
-    <div class="main overflow-hidden flex flex-col justify-between bg-white"> 
-      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg hover:shadow-lg">
-        <div class="flex flex-col items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-800 text-center">你可能感興趣</h1>
-        </div>
-        <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {% if services %}
-            {% for service in services %}
-                {% include "pages/service_card.html" %}
-            {% endfor %}
-          {% else %}
-              <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
-          {% endif %}
-    
-          <!-- 顯示填充卡牌 -->
-          {% for _ in placeholders %}
-          <div class="bg-white p-6 border border-gray-200 transition duration-300">
-            <div class="animate-pulse">
-              <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
-              <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-              <div class="h-4 bg-gray-300 rounded w-1/2"></div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-
-    <!-- 評分最高 -->
-    <div class="main overflow-hidden flex flex-col justify-between bg-white"> 
-      <div class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg hover:shadow-lg">
-        <div class="flex flex-col items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-800 text-center">評分最高</h1>
-        </div>
-        <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {% if services %}
-            {% for service in services %}
-                {% include "pages/service_card.html" %}
-            {% endfor %}
-          {% else %}
-              <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
-          {% endif %}
-    
-          <!-- 顯示填充卡牌 -->
-          {% for _ in placeholders %}
-          <div class="bg-white p-6 border border-gray-200 transition duration-300">
-            <div class="animate-pulse">
-              <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
-              <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-              <div class="h-4 bg-gray-300 rounded w-1/2"></div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-
-    <!-- 輪播組件 -->
-    <div class="flex justify-center py-3">
-      <div x-data="carousel()" class="banner">
-        <!-- Slides -->
-        <div
-          class="slides"
-          :style="`transform: translateX(-${currentSlide * 1200}px)`"
-        >
-          <div class="slide">
-            <img src="{% static 'images/banner-1.jpg' %}" alt="Slide 1" />
-          </div>
-          <div class="slide">
-            <img src="{% static 'images/banner-2.jpg' %}" alt="Slide 2" />
-          </div>
-          <div class="slide">
-            <img src="{% static 'images/banner-3.jpg' %}" alt="Slide 3" />
-          </div>
-        </div>
-
-        <!-- Controls -->
-        <div class="controls">
-          <button class="control-btn" @click="prev">Prev</button>
-          <button class="control-btn" @click="next">Next</button>
-        </div>
-      </div>
-    </div>
-    <!-- 輪播alpinejs組件 -->
-    <script>
-      function carousel() {
-        return {
-          currentSlide: 0,
-          totalSlides: 3,
-
-          next() {
-            this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-          },
-
-          prev() {
-            this.currentSlide =
-              (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
-          },
-
-          startAutoSlide() {
-            setInterval(() => {
-              this.next();
-            }, 2000);
-          },
-
-          init() {
-            this.startAutoSlide();
-          },
-        };
-      }
-    </script>
-
-    <!-- 接案者廣告區 -->
-    <!-- prettier-ignore -->
-    <div class="py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg">
-      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 justify-center py-3 gap-12">
-        <div class="border-solid border border-gray-300 rounded-2xl p-4">
-          <div class="">
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
-              <img class="sm:w-1/3 rounded-lg" src="{% static 'images/logo-1.jpg' %}" alt="" />
-              <div class="sm:text-xl text-gray-800 font-bold self-end pl-1 sm:pl-3">企業級網站架設</div>
-              <div></div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 justify-center py-4 sm:gap-6">
-              <img class="rounded-lg" src="{% static 'images/work1.jpg' %}" alt=""/>
-              <ul class="">
-                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
-                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
-                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="border-solid border border-gray-300 rounded-2xl p-4">
-          <div class="">
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
-              <img class="sm:w-1/3 rounded-lg" src="{% static 'images/logo-2.png' %}" alt="" />
-              <div class="sm:text-xl text-gray-800 font-bold self-end pl-1 sm:pl-3">快速網站設計</div>
-              <div></div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 justify-center py-4 sm:gap-6">
-              <img class="rounded-lg" src="{% static 'images/work2.png' %}" alt=""/>
-              <ul class="">
-                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
-                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
-                <li class="list-none hover:list-disc hover:text-gray-800">l really like coding that ererything cannot replace it</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
   </div>
 
-  <!-- 分頁按鈕 -->
-  {% comment %} <div class="pagination justify-center pb-2">
-    {% if page_obj.has_previous %}
-    <a class="new" href="?page={{ page_obj.previous_page_number }}">←</a>
-    {% endif %}
+  <!-- 您可能會感興趣 -->
+  <div class="main overflow-hidden flex flex-col justify-between bg-white">
+    <div
+      class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg hover:shadow-lg">
+      <div class="flex flex-col items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 text-center">你可能感興趣</h1>
+      </div>
+      <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {% if services %}
+        {% for service in services %}
+        {% include "pages/service_card.html" %}
+        {% endfor %}
+        {% else %}
+        <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
+        {% endif %}
 
-    {% for num in page_obj.paginator.page_range %}
-    <a class="new page {% if num == page_obj.number %}active{% endif %}" href="?page={{ num }}">
-      {{ num }}
-    </a>
-    {% endfor %}
+        <!-- 顯示填充卡牌 -->
+        {% for _ in placeholders %}
+        <div class="bg-white p-6 border border-gray-200 transition duration-300">
+          <div class="animate-pulse">
+            <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
+            <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+            <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 
-    {% if page_obj.has_next %}
-    <a class="new" href="?page={{ page_obj.next_page_number }}">→</a>
-    {% endif %}
-  </div> {% endcomment %}
+  <!-- 評分最高 -->
+  <div class="main overflow-hidden flex flex-col justify-between bg-white">
+    <div
+      class="visualBox py-6 px-4 my-5 w-full sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto bg-gray-100 rounded-lg hover:shadow-lg">
+      <div class="flex flex-col items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 text-center">評分最高</h1>
+      </div>
+      <div class="services grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {% if services %}
+        {% for service in services %}
+        {% include "pages/service_card.html" %}
+        {% endfor %}
+        {% else %}
+        <p class="text-center text-gray-500 col-span-full">目前沒有服務資料。</p>
+        {% endif %}
 
-  <script>
-    document.querySelectorAll("[id^='toggle-like-btn-']").forEach((button) => {
-        button.addEventListener("click", function (event) {
-            event.preventDefault();  
-            event.stopPropagation(); 
+        <!-- 顯示填充卡牌 -->
+        {% for _ in placeholders %}
+        <div class="bg-white p-6 border border-gray-200 transition duration-300">
+          <div class="animate-pulse">
+            <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
+            <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+            <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.querySelectorAll("[id^='toggle-like-btn-']").forEach((button) => {
+  button.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
 
-            const serviceId = this.getAttribute("data-service-id");
-            const url = `/services/like/${serviceId}/`;
-            const likeIcons = document.querySelectorAll(`#like-icon-${serviceId}`);
+      const serviceId = this.getAttribute("data-service-id");
+      const url = `/services/like/${serviceId}/`;
+      const likeIcons = document.querySelectorAll(`#like-icon-${serviceId}`);
 
             fetch(url, {
                 method: "POST",
@@ -229,17 +183,50 @@
             })
                 .then((response) => response.json())
                 .then((data) => {
+                  if (data?.login_required) {
+                  // 跳轉到登入頁面
+                  window.location.href = "/users/login/";
+              } else {
                     const newSrc = data?.is_liked ?
-                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%231C274C' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>" :
-                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%231C274C' stroke-width='2' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>";
+                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='red' stroke='white' stroke-width='1' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>" :
+                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='black' fill-opacity='0.4' stroke='white' stroke-width='1' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>";
 
-                    likeIcons.forEach((likeIcon) => {
-                        likeIcon.setAttribute("src", newSrc);
-                    });
-                })
-                .catch((error) => console.error("Error:", error));
-        });
-    });
-  </script>
+                  likeIcons.forEach((likeIcon) => {
+                      likeIcon.setAttribute("src", newSrc);
+                  });
+              }
+          })
+          .catch((error) => console.error("Error:", error));
+  });
+});
+</script>
+<!-- 輪播alpinejs組件 -->
+<script>
+  function carousel() {
+    return {
+      currentSlide: 0,
+      totalSlides: 3,
+
+      next() {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+      },
+
+      prev() {
+        this.currentSlide =
+          (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+      },
+
+      startAutoSlide() {
+        setInterval(() => {
+          this.next();
+        }, 2000);
+      },
+
+      init() {
+        this.startAutoSlide();
+      },
+    };
+  }
+</script>
 
 {% endblock %}

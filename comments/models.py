@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment")
     service = models.ForeignKey(
-        Service, on_delete=models.CASCADE, related_name="comments"
+        Service, on_delete=models.CASCADE, related_name="comments", null=True
     )
     rating = models.PositiveSmallIntegerField(
         null=True,

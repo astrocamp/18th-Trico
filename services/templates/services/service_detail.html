@@ -1,75 +1,23 @@
 {% extends "shared/layout.html" %}
 {% load static %}
 {% block content %}
-<script>
-  function markNotificationAsReadAndNavigate(event, notificationId, targetUrl) {
-    event.preventDefault(); 
-    const url = `/notification/mark-as-read/${notificationId}/`;
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "X-CSRFToken": "{{ csrf_token }}",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-       
-          const badges = document.querySelectorAll(".indicator-item");
-          badges.forEach((badge) => {
-            if (data.unread_count > 0) {
-              badge.textContent = data.unread_count;
-            } else {
-              badge.remove();
-            }
-          });
-
-         
-          const notificationElement = event.target.closest("li");
-          if (notificationElement) {
-            notificationElement.remove();
-          }
-
-          // 如果通知列表清空，顯示 "暫無通知"
-          const notificationsList = document.querySelector(".card-body ul");
-          if (notificationsList && notificationsList.children.length === 0) {
-            notificationsList.innerHTML =
-              "<span class='text-gray-500'>暫無通知</span>";
-          }
-
-          // 跳轉到目標 URL
-          window.location.href = targetUrl;
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        // 即使標記失敗，也跳轉到目標 URL
-        window.location.href = targetUrl;
-      });
-  }
-
-  // 初次載入時同步更新通知數量
-  document.addEventListener("DOMContentLoaded", () => {
-    updateNotificationBadge();
-  });
-</script>
+<style>
+  [x-cloak] { display: none !important; }
+</style>
 <div class="bg-blue-900 font-sans" data-page="switching_tab">
   <div class="container mx-auto py-10 px-[10%]">
     <!-- 回上一頁按鈕 -->
     <div class="mb-4">
-      <a
-        class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded"
-        href="javascript:history.back()"
-      >
+      <a class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded" href="javascript:history.back()">
         上一頁
       </a>
     </div>
 
-    <div class="flex bg-white rounded-lg shadow-lg overflow-hidden p-6 gap-x-8">
+    <div class="flex flex-col lg:flex-row bg-white rounded-lg shadow-lg overflow-hidden p-6 lg:gap-x-8 space-y-8 lg:space-y-0">
       <!-- 左側為接案者介紹 -->
-      <div class="w-2/3">
+      <div class="w-full lg:w-2/3">
         <div class="flex items-center mb-6">
+
           <a href="{% url 'users:information' service.freelancer_user.username %}">
             <img
                 src="{% if service.freelancer_user.profile.photo %}{{ service.freelancer_user.profile.photo.url }}{% else %}{% static 'images/alt_user.jpg' %}{% endif %}"
@@ -83,160 +31,144 @@
             
             <a href=""></a>
             <div class="flex items-center text-yellow-400">
+
             </div>
-            <div id="like-button" class="flex items-center mt-4">
-    <button
-        id="toggle-like-btn"
-        class="px-4 py-2 rounded-lg shadow transition"
-        data-service-id="{{ service.id }}"
-    >
-        {% if is_liked %}
-        <img id="like-icon" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%231C274C' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>"
-            alt="Liked"
-            class="w-8 h-8"
-        >
-        {% else %}
-        <img id="like-icon" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%231C274C' stroke-width='2' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>"
-            alt="Not Liked"
-            class="w-8 h-8"
-        >
-        {% endif %}
-    </button>
-</div>
-          </div>
-        </div>
+                <div id="like-button" class="flex items-center mt-4">
+                    <button id="toggle-like-btn" class="px-4 py-2 rounded-lg shadow transition" data-service-id="{{ service.id }}">
+                        {% if is_liked %}
+                        <img
+                            id="like-icon"
+                            src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%231C274C' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>"
+                            alt="Liked"
+                            class="w-8 h-8"
+                        />
+                        {% else %}
+                        <img
+                            id="like-icon"
+                            src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%231C274C' stroke-width='2' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>"
+                            alt="Not Liked"
+                            class="w-8 h-8"
+                        />
+                        {% endif %}
+                    </button>
+                </div>
 
-        <h1 class="text-xl font-bold mb-4 text-gray-800">
-          {{ service.title }}
+            </div>
+        </div>
+    
+        <h1 class="text-lg lg:text-xl font-bold mb-4 text-gray-800">
+            {{ service.title }}
         </h1>
-
+    
         <div class="flex items-center">
-          <img
-            src="{% if service.photo %}{{ service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}"
-            alt="Service Image"
-            class="w-[80%] h-auto rounded-lg border shadow-sm"
-          />
+            <img src="{% if service.photo %}{{ service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}" alt="Service Image" class="w-full lg:w-[80%] h-auto rounded-lg border shadow-sm" />
         </div>
-
+    
         <!-- 接案者介紹:描述 -->
-        <p class="text-gray-700 mb-4 text-lg">
-          {{ service.description }}
+        <p class="text-sm lg:text-lg text-gray-700 mb-4">
+          {{ service.description |safe }}
         </p>
-
-        <div class="flex flex-wrap gap-2">
-          <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-s">Python</span>
-          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-s">Django</span>
-          <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-s">React</span>
-          <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-s">HTML5</span>
-          <span class="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-s">CSS3</span>
-          <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-s">JavaScript</span>
-          <span class="px-5 py-1 bg-teal-100 text-teal-700 rounded-full text-s">Web Development</span>
-        </div>
         
+        <!-- 標籤 -->
+        <div class="flex flex-wrap gap-2 mt-4">
+          {% for tag in tags %}
+              <a href="{% url 'categories:tag' tag.name %}">
+                <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-s flex items-center">
+                    {{ tag.name }}
+                </span>
+              </a>
+          {% endfor %}
+        </div>
+    
         <div class="mt-6">
-          <h2 class="text-lg font-semibold mb-2">分享此服務</h2>
-          <div class="flex space-x-4">
-            <a
-              href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
-              target="_blank"
-              class="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 24 24">
-                <path
-                  d="M22.675 0H1.325C.595 0 0 .6 0 1.35v21.3C0 23.4.595 24 1.325 24h11.49v-9.294H9.691v-3.622h3.123V8.41c0-3.1 1.895-4.788 4.662-4.788 1.325 0 2.462.099 2.793.143v3.24l-1.918.001c-1.504 0-1.795.716-1.795 1.763v2.31h3.587l-.467 3.622h-3.12V24h6.11c.73 0 1.325-.6 1.325-1.35V1.35C24 .6 23.405 0 22.675 0z" />
-              </svg>
-            </a>
-
-            <a
-              href="https://line.me/R/msg/text/?{{ request.build_absolute_uri }}"
-              target="_blank"
-              class="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600">
-              <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
-                <title>LINE</title>
-                <path
-                  d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314" />
-              </svg>
-            </a>
-          </div>
+            <h2 class="text-lg font-semibold mb-2">分享此服務</h2>
+            <div class="flex space-x-4">
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 24 24">
+                        <path
+                            d="M22.675 0H1.325C.595 0 0 .6 0 1.35v21.3C0 23.4.595 24 1.325 24h11.49v-9.294H9.691v-3.622h3.123V8.41c0-3.1 1.895-4.788 4.662-4.788 1.325 0 2.462.099 2.793.143v3.24l-1.918.001c-1.504 0-1.795.716-1.795 1.763v2.31h3.587l-.467 3.622h-3.12V24h6.11c.73 0 1.325-.6 1.325-1.35V1.35C24 .6 23.405 0 22.675 0z"
+                        />
+                    </svg>
+                </a>
+    
+                <a href="https://line.me/R/msg/text/?{{ request.build_absolute_uri }}" target="_blank" class="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600">
+                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
+                        <title>LINE</title>
+                        <path
+                            d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"
+                        />
+                    </svg>
+                </a>
+            </div>
         </div>
-        
+    
         <!-- ✅ 使用 Alpine.js 正確渲染星級分佈 -->
-        <div class="bg-white rounded-lg shadow-xl p-6 mt-8 border border-gray-200" 
-        x-data="{ 
-          averageRating: {{ average_rating|default:'null' }}, 
-          totalReviews: {{ total_reviews|default:0 }},
-          starsCount: {{ stars_count|default:'{}' }},
-          calculatePercentage(count, total) {
-              if (!total || !count) return 0;
-              const percentage = (count / total) * 100;
-              return percentage.toFixed(1);
-          },
-          formatRating(rating) {
-              return rating ? parseFloat(rating).toFixed(1) : '0.0';
-          }
-        }">
-
+        <div class="bg-white rounded-lg shadow-xl p-6 mt-8 border border-gray-200"
+            x-data="{ 
+              averageRating: {{ average_rating|default:'null' }}, 
+              totalReviews: {{ total_reviews|default:0 }},
+              starsCount: {{ stars_count|default:'{}' }},
+              calculatePercentage(count, total) {
+                  if (!total || !count) return 0;
+                  const percentage = (count / total) * 100;
+                  return percentage.toFixed(1);
+              },
+              formatRating(rating) {
+                  return rating ? parseFloat(rating).toFixed(1) : '0.0';
+              }
+            }"
+        >
             <!-- ⭐ 標題 -->
             <h2 class="text-2xl font-bold mb-4">評分摘要</h2>
-
+    
             <!-- ⭐ 平均分數 -->
             <div class="flex items-center mb-4">
-              <span 
-              class="font-bold" 
-              x-text="averageRating.toFixed(1)"
-              style="font-size: 64px;"
-              >0.0</span>
-              <div class="ml-4">
-                  <!-- 渲染星星 -->
-                  <div class="flex text-yellow-400 text-3xl">
-                      <template x-for="n in 5">
-                          <span x-text="n <= Math.round(averageRating) ? '★' : '☆'"></span>
-                      </template>
-                  </div>
-                  <p class="text-gray-600" x-text="`${totalReviews} 則評論`"></p>
-              </div>
+                <span class="font-bold" x-text="averageRating.toFixed(1)" style="font-size: 64px;">0.0</span>
+                <div class="ml-4">
+                    <!-- 渲染星星 -->
+                    <div class="flex text-yellow-400 text-3xl">
+                        <template x-for="n in 5">
+                            <span x-text="n <= Math.round(averageRating) ? '★' : '☆'"></span>
+                        </template>
+                    </div>
+                    <p class="text-gray-600" x-text="`${totalReviews} 則評論`"></p>
+                </div>
             </div>
-
+    
             <!-- ⭐ 評分分佈 (調整進度條寬度和對齊) -->
             <template x-for="i in 5" :key="i">
-              <div class="flex items-center mb-2">
-                  <!-- 星級文字 -->
-                  <span class="text-lg font-semibold w-6 text-right" x-text="6-i"></span>
-                  <span class="text-yellow-400 text-2xl ml-2">★</span>
-
-                  <!-- 進度條 -->
-                  <div class="flex-grow mx-4">
-                    <div class="w-full bg-gray-200 h-4 rounded-lg overflow-hidden">
-                        <div 
-                            class="transition-all duration-300" 
-                            :style="`
-                                width: ${calculatePercentage(starsCount[6-i] || 0, totalReviews)}%; 
-                                height: 16px; 
-                                background-color: #FBBF24;
-                            `"
-                        ></div>
+                <div class="flex items-center mb-2">
+                    <!-- 星級文字 -->
+                    <span class="text-lg font-semibold w-6 text-right" x-text="6-i"></span>
+                    <span class="text-yellow-400 text-2xl ml-2">★</span>
+    
+                    <!-- 進度條 -->
+                    <div class="flex-grow mx-4">
+                        <div class="w-full bg-gray-200 h-4 rounded-lg overflow-hidden">
+                            <div
+                                class="transition-all duration-300"
+                                :style="`
+                                    width: ${calculatePercentage(starsCount[6-i] || 0, totalReviews)}%; 
+                                    height: 16px; 
+                                    background-color: #FBBF24;
+                                `"
+                            ></div>
+                        </div>
                     </div>
                 </div>
-              </div>
             </template>
         </div>
-
-
       </div>
 
       <!-- 右側價格一般&專業方案 -->
-      <div class="w-1/3 bg-gray-50 p-6 border-l">
+      <div class="w-full lg:w-1/3 bg-gray-50 p-6 border-l">
         <div class="mb-4">
           <div class="flex border-b">
-            <button
-              id="standard-tab"
-              class="flex-1 py-2 text-center font-semibold text-gray-700 border-b-2 border-blue-600"
-            >
+            <button id="standard-tab"
+              class="flex-1 py-2 text-center font-semibold text-gray-700 border-b-2 border-blue-600">
               一般方案
             </button>
-            <button
-              id="premium-tab"
-              class="flex-1 py-2 text-center font-semibold text-gray-700 border-b-2"
-            >
+            <button id="premium-tab" class="flex-1 py-2 text-center font-semibold text-gray-700 border-b-2">
               專業方案
             </button>
           </div>
@@ -245,9 +177,9 @@
         <div id="price-section">
           <!-- Standard Plan -->
           <div id="standard" class="block">
-            <p class="text-4xl font-bold text-gray-800 mb-2">${{service.standard_price}}</p>
+            <p class="text-2xl lg:text-4xl font-bold text-gray-800 mb-2">${{service.standard_price}}</p>
             <p class="text-gray-600 mb-4">
-              一般版：{{service.standard_description}} 
+              一般版：{{service.standard_description}}
             </p>
             <p class="text-sm text-red-500 mb-4">交付時間：{{service.standard_delivery_time}} 天</p>
           </div>
@@ -256,7 +188,7 @@
           <div id="premium" class="hidden">
             <p class="text-4xl font-bold text-gray-800 mb-2">${{service.premium_price}}</p>
             <p class="text-gray-600 mb-4">
-              專業版：{{service.premium_description}} 
+              專業版：{{service.premium_description}}
             </p>
             <p class="text-sm text-red-500 mb-4">交付時間：{{service.premium_delivery_time}} 天</p>
           </div>
@@ -265,10 +197,8 @@
         <form method="post" action="{% url 'order:payment_form_select' service.id %}">
           {% csrf_token %}
           <input type="hidden" name="plan" id="plan" value="standard" />
-          <button
-            type="submit"
-            class="w-full bg-blue-800 text-white py-2 rounded-lg text-lg font-semibold hover:bg-blue-700 text-center block"
-          >
+          <button type="submit"
+            class="w-full bg-blue-800 text-white py-2 rounded-lg text-lg font-semibold hover:bg-blue-700">
             選擇支付方式
           </button>
         </form>
@@ -280,123 +210,188 @@
 
       <!-- 顯示留言 -->
       {% for comment in comments %}
-      <div class="border-b pb-4 mb-4" x-data="{ isEditing: false, rating: {{ comment.rating|default:0 }}, content: '{{ comment.content|default:"" }}' }">
-          <!-- 用戶名稱 -->
-          <p class="text-gray-800"><strong>{{ comment.user.username }}</strong></p>
-          
-          <!-- 顯示留言與星星評分 (當不在編輯狀態下) -->
-          <template x-if="!isEditing">
-              <div>
-                  <!-- 星星評分 -->
-                  <div class="flex space-x-2 items-center mt-2">
-                      <template x-for="n in 5">
-                          <span 
-                              class="text-3xl"
-                              :class="n <= rating ? 'text-yellow-400' : 'text-gray-400'">
-                              ★
-                          </span>
-                      </template>
-                      <span class="text-sm text-gray-500 ml-2" x-text="rating > 0 ? `(${rating}/5)` : '未提供評分'"></span>
-                  </div>
-                  <!-- 留言內容 -->
-                  <p class="text-gray-600 mt-2" x-text="content"></p>
-              </div>
-          </template>
-          
-          <!-- 編輯表單 (僅在點擊編輯時顯示) -->
-          <template x-if="isEditing">
-              <form method="POST" class="mt-4">
-                  {% csrf_token %}
-                  <!-- 星星評分 -->
-                  <div class="flex space-x-2 cursor-pointer">
-                      <template x-for="n in 5">
-                          <button 
-                              type="button"
-                              class="star text-3xl focus:outline-none"
-                              :class="n <= rating ? 'text-yellow-400' : 'text-gray-400'"
-                              @click="rating = n"
-                          >
-                              ★
-                          </button>
-                      </template>
-                  </div>
-                  <input type="hidden" name="rating" x-model="rating">
+      <div class="border-b pb-4 mb-4"
+        x-data="{ isEditing: false, rating: {{ comment.rating|default:0 }}, content: '{{ comment.content|default:"" }}' }">
+        <!-- 用戶名稱 -->
+        <p class="text-gray-800"><strong>{{ comment.user.username }}</strong></p>
 
-                  <!-- 留言內容 -->
-                  <div class="mb-4">
-                      <label for="content" class="block text-gray-700 font-medium mb-2">留言內容：</label>
-                      <textarea
-                          name="content"
-                          x-model="content"
-                          class="w-full h-20 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                          placeholder="請輸入您的留言內容"
-                      ></textarea>
-                  </div>
-                  <!-- 保存與取消按鈕 -->
-                  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                      保存
-                  </button>
-                  <button type="button" @click="isEditing = false" class="text-gray-600 px-4 py-2">
-                      取消
-                  </button>
-              </form>
-          </template>
-          
-          <!-- 編輯與刪除按鈕 -->
-          {% if comment.user == user %}
-          <div class="mt-2 flex space-x-4" x-show="!isEditing">
-              <button @click="isEditing = true" class="text-blue-500 text-sm">編輯</button>
-              <form method="POST" action="{% url 'comments:delete_comment' comment.id %}">
-                  {% csrf_token %}
-                  <button type="submit" class="text-red-500 text-sm">刪除</button>
-              </form>
+        <!-- 顯示留言與星星評分 (當不在編輯狀態下) -->
+        <template x-if="!isEditing">
+          <div>
+            <!-- 星星評分 -->
+            <div class="flex space-x-2 items-center mt-2">
+              <template x-for="n in 5">
+                <span class="text-3xl" :class="n <= rating ? 'text-yellow-400' : 'text-gray-400'">
+                  ★
+                </span>
+              </template>
+              <span class="text-sm text-gray-500 ml-2" x-text="rating > 0 ? `(${rating}/5)` : '未提供評分'"></span>
+            </div>
+            <!-- 留言內容 -->
+            <p class="text-gray-600 mt-2" x-text="content"></p>
           </div>
-          {% endif %}
+        </template>
+
+        <!-- 編輯表單 (僅在點擊編輯時顯示) -->
+        <template x-if="isEditing">
+          <form method="POST" class="mt-4">
+            {% csrf_token %}
+            <!-- 星星評分 -->
+            <div class="flex space-x-2 cursor-pointer">
+              <template x-for="n in 5">
+                <button type="button" class="star text-3xl focus:outline-none"
+                  :class="n <= rating ? 'text-yellow-400' : 'text-gray-400'" @click="rating = n">
+                  ★
+                </button>
+              </template>
+            </div>
+            <input type="hidden" name="rating" x-model="rating">
+
+            <!-- 留言內容 -->
+            <div class="mb-4">
+              <label for="content" class="block text-gray-700 font-medium mb-2">留言內容：</label>
+              <textarea name="content" x-model="content"
+                class="w-full h-20 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                placeholder="請輸入您的留言內容"></textarea>
+            </div>
+            <!-- 保存與取消按鈕 -->
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+              保存
+            </button>
+            <button type="button" @click="isEditing = false" class="text-gray-600 px-4 py-2">
+              取消
+            </button>
+          </form>
+        </template>
+
+        <!-- 編輯與刪除按鈕 -->
+        {% if comment.user == user %}
+        <div class="mt-2 flex space-x-4" x-show="!isEditing">
+          <button @click="isEditing = true" class="text-blue-500 text-sm">編輯</button>
+          <form method="POST" action="{% url 'comments:delete_comment' comment.id %}">
+            {% csrf_token %}
+            <button type="submit" class="text-red-500 text-sm">刪除</button>
+          </form>
+        </div>
+        {% endif %}
       </div>
       {% empty %}
       <p class="text-gray-500">目前沒有留言，成為第一個留言者吧！</p>
       {% endfor %}
 
-      <!-- 新增留言表單 (僅在沒有留言時顯示) -->
       {% if not comment or comment.is_deleted %}
-      <form method="POST" class="mt-6" x-data="{ rating: 0, content: '' }">
+      <div x-data="{ rating: 0, content: '', showAlert: false }">
+        <!-- 警告視窗 -->
+        <div x-cloak x-show="showAlert" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          @click.away="showAlert = false">
+          <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+            <p class="text-lg font-semibold text-red-500">請至少選擇一顆星星進行評分！</p>
+            <button @click="showAlert = false" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+              確定
+            </button>
+          </div>
+        </div>
+
+        <!-- 表單部分 -->
+        <form method="POST" class="mt-6" @submit.prevent="if (rating < 1) { showAlert = true; } else { $el.submit(); }">
           {% csrf_token %}
+
           <!-- 星星評分 -->
           <div class="flex space-x-2 cursor-pointer">
-              <template x-for="n in 5">
-                  <button 
-                      type="button"
-                      class="star text-3xl focus:outline-none"
-                      :class="n <= rating ? 'text-yellow-400' : 'text-gray-400'"
-                      @click="rating = n"
-                  >
-                      ★
-                  </button>
-              </template>
+            <template x-for="n in 5">
+              <button type="button" class="star text-3xl focus:outline-none"
+                :class="n <= rating ? 'text-yellow-400' : 'text-gray-400'" @click="rating = n">★</button>
+            </template>
           </div>
           <input type="hidden" name="rating" x-model="rating">
 
           <!-- 留言內容 -->
           <div class="mb-4">
-              <label for="content" class="block text-gray-700 font-medium mb-2">留言內容：</label>
-              <textarea
-                  name="content"
-                  x-model="content"
-                  class="w-full h-20 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                  placeholder="請輸入您的留言內容"
-              ></textarea>
+            <label for="content" class="block text-gray-700 font-medium mb-2">留言內容：</label>
+            <textarea name="content" x-model="content"
+              class="w-full h-20 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              placeholder="請輸入您的留言內容"></textarea>
           </div>
 
           <!-- 提交按鈕 -->
           <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-              提交留言
+            提交留言
           </button>
-      </form>
+        </form>
+      </div>
       {% endif %}
 
     </div>
   </div>
 </div>
+<script>
+  ClassicEditor
+    .create(editorElement, {
+      plugins: [ MediaEmbed, ... ],
+      mediaEmbed: {
+        providers: [
+          {
+            name: "all",
+            url: /^youtube\.com\/media\/(\w+)/,
+            html: match => `
+              <div style="position:relative; padding-bottom:100%; height:0;">
+                <iframe src="..." frameborder="0" 
+                    style="position:absolute; width:100%; height:100%; top:0; left:0;">
+                </iframe>
+              </div>
+            `
+          }
+        ]
+      }
+    })
+    .then(editor => {
+        console.log("Editor was initialized successfully:", editor);
+    })
+    .catch(error => {
+        console.error("An error occurred during editor initialization:", error);
+    });
+</script>
+<script>
+  document.querySelectorAll("oembed").forEach(oembed => {
+    const url = oembed.getAttribute("url");
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("src", url.replace("watch?v=", "embed/"));
+    iframe.setAttribute("width", "100%");
+    iframe.setAttribute("height", "315");
+    iframe.setAttribute("frameborder", "0");
+    iframe.setAttribute("allowfullscreen", true);
+    oembed.parentElement.replaceChild(iframe, oembed);
+  });
+
+</script>
+
+<script>
+  // 切換方案顯示
+  planSelect.addEventListener("change", function () {
+    const isPremiumEmpty =
+      premiumSection === null || premiumSection.querySelectorAll("*").length === 0;
+
+    if (this.value === "standard") {
+      standardSection.classList.remove("hidden");
+      premiumSection.classList.add("hidden");
+      termsSection.classList.add("hidden");
+    } else if (this.value === "premium") {
+      if (!isPremiumEmpty) {
+        // 如果 premiumSection 不是空的，顯示它
+        premiumSection.classList.remove("hidden");
+        standardSection.classList.add("hidden");
+        termsSection.classList.add("hidden");
+      } else {
+        // 如果 premiumSection 是空的，提示用戶或默認顯示 standard
+        alert("Premium section 尚未填寫內容");
+        standardSection.classList.remove("hidden");
+        premiumSection.classList.add("hidden");
+        termsSection.classList.add("hidden");
+      }
+    }
+  });
+
+</script>
 <script>
     document.getElementById("toggle-like-btn").addEventListener("click", function () {
         const serviceId = this.getAttribute("data-service-id");
@@ -404,27 +399,27 @@
         const likeButton = this;
         const likeIcon = document.getElementById("like-icon");
 
-        fetch(url, {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.is_liked) {
-                    likeIcon.setAttribute(
-                        "src",
-                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%231C274C' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>"
-                    );
-                } else {
-                    likeIcon.setAttribute(
-                        "src",
-                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%231C274C' stroke-width='2' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>"
-                    );
-                }
-            })
-            .catch((error) => console.error("Error:", error));
-    });
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.is_liked) {
+          likeIcon.setAttribute(
+            "src",
+            "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%231C274C' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>"
+          );
+        } else {
+          likeIcon.setAttribute(
+            "src",
+            "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%231C274C' stroke-width='2' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>"
+          );
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  });
 </script>
 {% endblock %}

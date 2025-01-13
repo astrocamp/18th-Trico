@@ -18,9 +18,16 @@ def search_view(request):
         if form.is_valid():
             query = form.cleaned_data["keyword"]
             # 過濾標題或內容中包含關鍵字的結果
-            results = Service.objects.filter(
-                Q(title__icontains=query) | Q(description__icontains=query)
-            ).all()  # 確保獲取所有結果
+            results = (
+                Service.objects.filter(
+                    Q(title__icontains=query)
+                    | Q(description__icontains=query)
+                    | Q(standard_description__icontains=query)
+                    | Q(premium_description__icontains=query)
+                )
+                .select_related("freelancer_user")
+                .all()
+            )  # 優化載入關聯用戶
     else:
         form = SearchForm()
 

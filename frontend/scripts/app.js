@@ -32,6 +32,10 @@ if (pageName === "switching_tab") {
   import("./plan_order_form.js").then((module) => {
     module.init();
   });
+} else if (pageName === "like_button") {
+  import("../scripts/like_button.js").then((module) => {
+    module.init();
+  });
 }
 
 // 掛載到 DOM
