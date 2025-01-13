@@ -9,6 +9,7 @@
     <title>三合</title>
     <script src="{% static 'scripts/app.js'%}" type="module"></script>
     <link rel="stylesheet" href="{% static 'styles/app.css' %}" />
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     {% include "shared/navbar.html" %}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["sfc-style:C:\\Users\\NormalUser\\Desktop\\18th-Trico\\frontend\\scripts\\App.vue?type=style&index=0"],
-  "sourcesContent": ["\nh1 {\r\n    color: blue;\n}\r\n  "],
-  "mappings": ";AACA;AACI,SAAO;AACX;",
-  "names": []
-}

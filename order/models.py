@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from services.models import Service
 import uuid
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django_fsm import FSMField, transition
 
 
 class Order(models.Model):
@@ -49,11 +50,12 @@ class Order(models.Model):
         verbose_name="總金額",
         validators=[MinValueValidator(1), MaxValueValidator(9999999999)],
     )
-    status = models.CharField(
-        max_length=50,
-        choices=STATUS_CHOICES,
-        default="pending",
-        verbose_name="訂單狀態",
+    
+    # 有限狀態機
+    status = FSMField(
+        default="pending", 
+        choices=STATUS_CHOICES, 
+        verbose_name="訂單狀態"
     )
 
     # 支付相關
@@ -65,13 +67,11 @@ class Order(models.Model):
     )
 
     selected_plan = models.CharField(
-        max_length=20,
-        choices=[("standard", "Standard"), ("premium", "Premium")],
-        null=True,
-        blank=False,
-        default="standard",
-        verbose_name="選擇方案",
-    )
+        max_length=20, 
+        choices=PLAN_CHOICES, 
+        null=True, 
+        blank=True,
+        verbose_name="選擇方案")
 
     class Meta:
         verbose_name = "訂單"
@@ -83,6 +83,23 @@ class Order(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
+        return f"Order {self.merchant_trade_no} - {self.client_user.username}"
+
+    # 狀態機轉換定義
+    @transition(field=status, source="pending", target="paid")
+    def mark_as_paid(self):
+        #將狀態從 pending 切換為 paid
+        print(f"Order {self.merchant_trade_no} marked as Paid.")
+
+    @transition(field=status, source="paid", target="completed")
+    def mark_as_completed(self):
+        #將狀態從 paid 切換為 completed
+        print(f"Order {self.merchant_trade_no} marked as Completed.")
+
+    @transition(field=status, source=["pending", "paid"], target="cancelled")
+    def cancel_order(self):
+        #將狀態從 pending 或 paid 切換為 cancelled
+        print(f"Order {self.merchant_trade_no} marked as Cancelled.")
         service_title = (
             self.service.title if self.service else "N/A"
         )  # 如果沒有服務，顯示 N/A

@@ -117,7 +117,10 @@ def error_page(request):
 
 @login_required
 def service_detail(request, id, service_id):
-    # 獲取服務詳情（原有邏輯）
+
+    if not request.user.is_authenticated:
+        return redirect('users:login')  # 重導向到登入頁面
+    
     service = get_object_or_404(Service, id=service_id)
     comments = Comment.objects.filter(service=service, is_deleted=False).order_by(
         "-created_at"

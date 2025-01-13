@@ -1,14 +1,25 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from .models import Order
 from datetime import datetime
 import hashlib
 from django.views.decorators.csrf import csrf_exempt
-import urllib.parse
 from django.contrib.auth.decorators import login_required
+from .models import Order
 from .forms import OrderForm
 from services.models import Service
 from django.conf import settings
+from pathlib import Path
+import hmac
+import base64
+import json
+import uuid
+import urllib.parse
+import requests
+
+# 第三方庫
+import environ
 from django.urls import reverse
 
 
@@ -86,7 +97,6 @@ def create_order(request):
         )
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
-
 @csrf_exempt
 def ecpay_return(request):
     if request.method == "POST":
@@ -109,9 +119,6 @@ def ecpay_result(request):
     return render(request, "order/order_successful.html")
 
 
-def order(request):
-    pass
-
 
 def failed(request):
     return render(request, "order/order_failed.html")
@@ -121,11 +128,29 @@ def successful(request):
     return render(request, "order/order_successful.html")
 
 
-@login_required
+# Load environment variables
+BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
+environ.Env.read_env()
+
+def create_headers(payload, uri):
+    channel_id = env("LINE_PAY_CHANNEL_ID")
+    secret_key = env("LINE_PAY_CHANNEL_SECRET_KEY")
+
+    nonce = str(uuid.uuid4())
+    message = secret_key + uri + json.dumps(payload) + nonce
+    signature = base64.b64encode(hmac.new(secret_key.encode(), message.encode(), hashlib.sha256).digest()).decode()
+
+    return {
+        "Content-Type": "application/json",
+        "X-LINE-ChannelId": channel_id,
+        "X-LINE-Authorization": signature,
+        "X-LINE-Authorization-Nonce": nonce,
+    }
+
 def payment_form_select(request, service_id):
     service = get_object_or_404(Service, id=service_id)
-    selected_plan = request.GET.get("plan")
-
+    selected_plan = request.GET.get("plan")  
     initial_data = {
         "selected_plan": selected_plan,
         "payment_method": None,
@@ -137,6 +162,19 @@ def payment_form_select(request, service_id):
             order = form.save(commit=False)
             order.client_user = request.user
             order.service = service
+
+            # 根據方案選擇設置總金額
+            if form.cleaned_data["selected_plan"] == "standard":
+                order.total_price = service.standard_price
+            elif form.cleaned_data["selected_plan"] == "premium":
+                order.total_price = service.premium_price
+            else:
+                form.add_error("selected_plan", "Invalid plan selected.")
+                return render(
+                    request,
+                    "order/payment_form_select.html",
+                    {"form": form, "service": service},
+                )
             order.save()
             return redirect("order:successful", order_id=order.id)
         else:
@@ -154,3 +192,75 @@ def payment_form_select(request, service_id):
         "order/payment_form_select.html",
         {"form": form, "service": service, "selected_plan": selected_plan},
     )
+
+
+
+# Line Pay
+def get_linepay_data(request, service_id):
+    """
+    提供 LINE Pay 支付所需的數據
+    """
+    service = get_object_or_404(Service, id=service_id)
+    data = {
+        "service_id": service.id,
+        "standard_price": service.standard_price,
+        "premium_price": service.premium_price,
+        "currency": "TWD",
+    }
+    return JsonResponse(data)
+
+env = environ.Env()
+
+@csrf_exempt
+def request_payment(request, service_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        plan = data.get("plan")
+
+        service = get_object_or_404(Service, id=service_id)
+        amount = service.standard_price if plan == "standard" else service.premium_price
+
+        payload = {
+            "amount": amount,
+            "currency": "TWD",
+            "orderId": f"order_{uuid.uuid4()}",
+            "packages": [
+                {
+                    "id": f"package_{uuid.uuid4()}",
+                    "amount": amount,
+                    "products": [{"name": f"{plan.capitalize()} Plan", "quantity": 1, "price": amount}],
+                }
+            ],
+            "redirectUrls": {
+                "confirmUrl": f"https://{env('HOSTNAME')}/order/successful",
+                "cancelUrl": f"https://{env('HOSTNAME')}/order/failed",
+            },
+        }
+
+        uri = env("LINE_PAY_REQUEST_URL")
+        headers = create_headers(payload, uri)
+        response = requests.post(f"{env('LINE_PAY_SANDBOX_URL')}{uri}", headers=headers, json=payload)
+
+        if response.status_code == 200:
+            response_data = response.json()
+            if response_data["returnCode"] == "0000":
+                return JsonResponse({"success": True, "payment_url": response_data["info"]["paymentUrl"]["web"]})
+            return JsonResponse({"success": False, "message": response_data["returnMessage"]})
+        return JsonResponse({"success": False, "message": f"Error: {response.status_code}"})
+
+# 接收 LINE Pay 支付回調並更新訂單狀態
+@csrf_exempt
+def linepay_callback(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        merchant_trade_no = data.get("orderId")
+        status = data.get("transactionStatus")
+
+        order = get_object_or_404(Order, merchant_trade_no=merchant_trade_no)
+        if status == "SUCCESS":
+            order.mark_as_paid()  # 使用狀態機改變狀態
+        else:
+            order.cancel_order()  # 使用狀態機改變狀態
+        order.save()
+
+        return JsonResponse({"message": "Payment processed successfully"})

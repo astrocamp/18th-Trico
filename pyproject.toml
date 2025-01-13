@@ -19,6 +19,8 @@ django-simple-captcha = "^0.6.0"
 pyjwt = "^2.10.1"
 cryptography = "^44.0.0"
 whitenoise = "^6.8.2"
+django-fsm = "^3.0.0"
+django-environ = "^0.11.2"
 
 
 [build-system]
