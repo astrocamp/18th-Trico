@@ -70,8 +70,7 @@
   <!--分類標籤-->
   <div class="flex flex-wrap justify-center gap-2 p-6">
     {% for category in categories %}
-    <a href="{% url 'categories:service_by_category' category.id %}"
-      class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-300 hover:bg-gray-100">
+    <a href="{% url 'categories:category' category.id %}" class="block bg-white shadow-md hover:shadow-lg rounded-lg p-4 text-center transition duration-300 border border-gray-300 hover:bg-gray-100">
       <h3 class="w-24 sm:w-32 text-xs sm:text-sm font-light text-gray-800">{{ category.name }}</h3>
     </a>
     {% endfor %}

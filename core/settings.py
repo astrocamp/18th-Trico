@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from ckeditor import *
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -46,9 +47,11 @@ INSTALLED_APPS = [
     "categories",
     "common",
     "comments",
+    "django_ckeditor_5",
     "contact",
     "search",
     "notification",
+    "taggit",
 ]
 INSTALLED_APPS += [
     "django.contrib.sites",
@@ -173,6 +176,7 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -211,6 +215,9 @@ AWS_QUERYSTRING_AUTH = False
 AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
 
 MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+# CKEDITOR_5_CUSTOM_CSS = 'path_to.css' # optional
+
 
 STORAGES = {
     "default": {

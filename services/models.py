@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from categories.models import Category
 from utils.mixins import WebPImageModelMixin
+from django_ckeditor_5.fields import CKEditor5Field
+from taggit.managers import TaggableManager
 
 
 class Service(WebPImageModelMixin, models.Model):
@@ -16,7 +18,7 @@ class Service(WebPImageModelMixin, models.Model):
         related_name="services",
     )
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = CKEditor5Field(config_name="extends")
     photo = models.ImageField(upload_to="service_photos/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -41,6 +43,8 @@ class Service(WebPImageModelMixin, models.Model):
         default=None,
         help_text="Client rating for the service (e.g., 4.5 stars)",
     )
+
+    tags = TaggableManager()    
 
     def __str__(self):
         return self.title
