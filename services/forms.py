@@ -1,8 +1,12 @@
 from django import forms
 from .models import Service
+from django_ckeditor_5.widgets import CKEditor5Widget
 
 
 class ServiceForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+          super().__init__(*args, **kwargs)
+          self.fields["description"].required = False
     class Meta:
         model = Service
         fields = [
@@ -22,7 +26,11 @@ class ServiceForm(forms.ModelForm):
         ]
         widgets = {
             "category": forms.CheckboxSelectMultiple(),
+            "description": CKEditor5Widget(
+                  attrs={"class": "django_ckeditor_5"}, config_name="extends"
+                  )
         }
+        # description = CKEditor5Widget(attrs={"class": "django_ckeditor_5"}, config_name="extends")
 
     def __init__(self, *args, **kwargs):
         self.premium_enabled = kwargs.pop("premium_enabled", False)

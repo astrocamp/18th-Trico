@@ -11,7 +11,7 @@
     <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png"/>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body class="flex flex-col min-h-screen" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  <body class="flex flex-col min-h-screen custom-xs" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     {% include "shared/navbar.html" %}
     <main class="flex-1" >{% block content %}{% endblock %}</main>
     <footer class="flex items-center justify-center py-4 bg-gray-100">

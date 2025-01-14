@@ -17,6 +17,7 @@ urlpatterns = [
     path("categories/", include("categories.urls")),
     path("comments/", include("comments.urls")),
     path("api/", include("common.urls")),
+    path("", include("ckeditor.urls")), 
     path("contact/", include("contact.urls")),
     path("search/", include("search.urls")),
     path("notification/", include("notification.urls")),
@@ -32,3 +33,8 @@ urlpatterns += [
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+

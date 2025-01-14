@@ -1,7 +1,7 @@
 {% extends "shared/layout.html" %} 
 {% block content %} 
 
-<div class="w-4/5 mx-auto my-8 bg-blue-100 p-6 rounded-lg shadow-md" data-page="toggling_buttons">
+<div class="w-4/5  mx-auto my-8 bg-blue-100 p-6 rounded-lg shadow-md" data-page="toggling_buttons">
   <!-- 按鈕區域 -->
   <div class="flex justify-between items-center mb-6">
     <!-- 上一頁 -->
@@ -25,7 +25,7 @@
       <!-- 管理個人服務按鈕 -->
       <button
         id="toggle-management-btn"
-        class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
         管理個人服務
       </button>
@@ -33,7 +33,7 @@
   </div>
 
   <!-- 卡牌區域 -->
-  <div class="services grid grid-cols-1 md:grid-cols-4 gap-6">
+  <div class="services grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 container mx-auto">
     {% if services %}
       {% for service in services %}
       <div
@@ -41,24 +41,15 @@
       >
         <a href="{% url 'services:service_detail' service.freelancer_user.id service.id %}">
           <img
-          class="w-full h-48 object-cover"
-          src="{% if service.photo %}{{ service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}"
-          alt="Service Photo"
-        />
+            class="w-full h-48 object-cover"
+            src="{% if service.photo %}{{ service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}"
+            alt="Service Photo"
+          />
         </a>
-        <div class="p-4 flex-grow">
-          <h2 class="text-m font-bold text-blue-800 truncate">{{ service.title }}</h2>
-          <!-- 限制描述為兩行 -->
-          <p
-            class="text-gray-600 mt-2 text-sm overflow-hidden"
-            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;"
-          >
-            {{ service.description }}
-          </p>
-          <p class="mt-2 text-sm font-semibold text-blue-600">price from $ {{service.standard_price}}</p>
-
+        <div class="p-4 flex">
+          <h2 class="text-xl font-bold text-blue-800 truncate">{{ service.title }}</h2>
         </div>
-        <div class="p-4 border-t border-gray-200">
+        <div class="p-3 text-right">
           <div class="mt-2 flex-auto space-x-4 justify-end management-buttons hidden">
             <!-- 編輯按鈕 -->
             <a
@@ -75,12 +66,54 @@
               刪除
             </a>
           </div>
-          <span class="text-gray-500 text-xs text-right">
-            {{ service.created_at|date:"Y/m/d  H:i"}} 新增完成√
-          </span>
         </div>
+  
+        <div class="relative flex flex-col text-white text-xs font-bold overflow-hidden w-full bg-gray-200 shadow-inner">
+          <!-- 上方標籤 -->
+          <div class="w-full flex px-4 py-1 bg-gray-400 z-10">
+            <span class="flex-none"> 建立日期</span>
+            <span class="ml-auto text-right">{{ service.created_at|date:"Y/m/d H:i" }}</span>
+          </div>
+          <!-- 分隔線 -->
+          <div class="w-full  bg-gray-400"></div>
+
+          <!-- 下方標籤 -->
+          <div class="w-full flex px-4 py-1 bg-gray-400 z-10">
+            <span class="flex-none">最近修改日期</span>
+            <span class="ml-auto text-right">{{ service.updated_at|date:"Y/m/d H:i" }}</span>
+          </div>
         </div>
-   
+  
+        <!-- 評論區域 -->
+        <div class="p-4 border-t border-gray-300">
+          <h4 class="text-blue-700 font-bold">評論:</h4>
+          <ul class="text-gray-700 mt-2">
+            {% for comment in service.comments.all %}
+            <li class="mb-2">
+              <strong>{{ comment.user.username }}</strong>
+              <span class="text-xs text-gray-500">({{ comment.created_at|date:"Y/m/d H:i" }})</span>: 
+              {{ comment.content }}
+              {% if comment.user == request.user %}
+              <a
+                class="text-red-600 text-sm hover:underline"
+                href="{% url 'comments:delete_comment' comment.id %}"
+              >
+                刪除
+              </a>
+              {% endif %}
+            </li>
+            {% empty %}
+            <p class="text-gray-500">目前還沒有評論哦~</p>
+            {% endfor %}
+          </ul>
+          <a
+            class="text-blue-500 hover:underline text-sm"
+            href="{% url 'comments:add_comment' service.id %}"
+          >
+            新增評論
+          </a>
+        </div>
+      </div>
       {% endfor %}
     {% else %}
     <p class="text-center text-gray-700">
@@ -88,6 +121,9 @@
     </p>
     {% endif %}
   </div>
+  
+
+
 </div>
 
 {% endblock %}
