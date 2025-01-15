@@ -1,24 +1,32 @@
+
+
 {% extends "layouts/blank.html" %} 
 
 {% block content %}
 
+
+
 <wrapper class="block max-w-2xl mx-auto my-10 px-6">
+    
 
     <div id="chat_window" class="h-[45rem] flex flex-col bg-gray-800 rounded-2xl shadow-2xl relative p-1">
 
         <!-- 聊天窗口頂部 -->
-<div class=" text-emerald-400 bg-gray-800 p-4 sticky top-0 z-10 flex items-center">
+<div class=" text-emerald-400 bg-gray-800 p-3 sticky top-0 z-10 flex items-center">
     {% if other_user %}
     <!-- 綠點 -->
-    <div id="online-icon" class="gray-dot absolute top-2 left-2"></div>
+    {% comment %} <div id="online-icon" class="gray-dot absolute top-2 left-2"></div> {% endcomment %}
 
     <!-- 返回按鈕 -->
     <div class="absolute top-1/2 left-12 transform -translate-y-1/2">
-        <a href="javascript:history.back();" 
-           class="text-gray-300 text-lg font-bold hover:text-white">
-            ＜上一頁
+        <a 
+        class="font-bold text-white text-lg hover:text-gray-400 transition duration-100"
+        href="{% url 'pages:home' %}">
+        
+       < 回首頁
         </a>
     </div>
+
 
     <!-- 頭像與名稱 -->
     <a href="{% url "users:information" other_user.username %}" class="mx-auto flex items-center gap-2">

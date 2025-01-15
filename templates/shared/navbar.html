@@ -103,6 +103,7 @@
               stroke-linejoin="round"
             ></path>
           </svg>
+          <span id="chat-notification-dot" class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full hidden"></span>
         </div>
       </div>
     
@@ -113,25 +114,53 @@
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
       >
       {% load custom_tags %}
-        <!-- 私人聊天室列表 -->
-        {% for chatroom in user|chatrooms_list %}
-        <li>
-          <a href="{% url 'chatroom' chatroom.group_name %}">
-            <!-- 顯示聊天室成員的名稱，排除自己 -->
-            {% for member in chatroom.members.all %}
-              {% if member != user %}
-                {{ member.username }}
-              {% endif %}
-            {% endfor %}
-          </a>
-        </li>
-        {% endfor %}
+      <ul>
+          <!-- 私人聊天室列表 -->
+          {% for chatroom in user|chatrooms_list %}
+          <li class="relative">
+              <a href="{% url 'rtchat:chatroom' chatroom.group_name %}" class="relative">
+                  {% for member in chatroom.members.all %}
+                      {% if member != user %}
+                          {{ member.username }}
+                      {% endif %}
+                  {% endfor %}
+                  {% with chatroom|unread_count:user as unread_messages %}
+                      {% if unread_messages > 0 %}
+                          <span class="absolute right-2 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+                      {% endif %}
+                  {% endwith %}
+              </a>
+          </li>
+          {% endfor %}
+          
       
       </ul>
     </div>
     
 
+<script>
+  function updateMessageNotificationBadge() {
+    fetch("{% url 'rtchat:unread_notifications_count_chat' %}", {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+        },
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            const messageBadge = document.getElementById("chat-notification-dot");
+            if (messageBadge) {
+                if (data.unread_count > 0) {
+                    messageBadge.classList.remove("hidden");
+                } else {
+                    messageBadge.classList.add("hidden");
+                }
+            }
+        })
+        .catch((error) => console.error("Error:", error));
+}
 
+</script>
 
     <script>
       function markNotificationAsReadAndNavigate(
@@ -190,6 +219,13 @@
         updateNotificationBadge()
       })
     </script>
+
+
+
+
+
+
+
     <!--TODO: 頭像要改 -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
@@ -217,3 +253,27 @@
     {% endif %}
   </div>
 </div>
+
+
+
+<script>
+  document.getElementById("notification-bell").addEventListener("click", function () {
+    // 模擬請求清除通知
+    fetch("/clear-chat-notifications/", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+    }).then(() => {
+      // 隱藏主紅點
+      document.getElementById("chat-notification-dot").classList.add("hidden");
+  
+      // 隱藏下拉列表中的紅點
+      document.querySelectorAll(".menu li span.bg-red-500").forEach((dot) => {
+        dot.classList.add("hidden");
+      });
+    });
+  });
+  
+
+</script>

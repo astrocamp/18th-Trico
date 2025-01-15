@@ -234,9 +234,28 @@ def feedback_view(request):
 
 
 # 個人首頁
+
+
+
+
 def information(request, username):
-    user = get_object_or_404(User, username=username)  
-    return render(request, "users/information.html", {"user": user})
+    # 獲取頁面作者
+    page_user = get_object_or_404(User, username=username)
+
+    # 當前登入用戶（如果未登入則為 None）
+    current_user = request.user if request.user.is_authenticated else None
+
+    # 當前登入用戶的 Profile（如果未登入則為 None）
+    current_user_profile = (
+        current_user.profile if current_user and hasattr(current_user, "profile") else None
+    )
+
+    context = {
+        "page_user": page_user,
+        "current_user": current_user,
+        "current_user_profile": current_user_profile,
+    }
+    return render(request, "users/information.html", context)
 
 
 

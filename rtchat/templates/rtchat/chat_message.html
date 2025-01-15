@@ -19,7 +19,7 @@
 <li>
     <div class="flex items-end">
         <div class="flex items-end mr-2" >
-            <div>
+            {% comment %} <div>
                 {% if other_user.profile.photo %}
                 <img class="w-9 h-9 rounded-full object-cover" 
                         src="{{ other_user.profile.photo.url }}"/>
@@ -28,7 +28,7 @@
                 <img class="w-9 h-9 rounded-full object-cover" 
                         src="https://www.shutterstock.com/image-vector/profile-default-avatar-icon-user-600nw-2463844171.jpg"/>
                 {% endif %}
-            </div>
+            </div> {% endcomment %}
         </div>
 
 

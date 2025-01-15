@@ -39,7 +39,9 @@ class ChatroomConsumer(WebsocketConsumer):
         message = GroupMessage.objects.create(
             body = body,
             author = self.user, 
-            group = self.chatroom 
+            group = self.chatroom,
+            is_unread=True  # 新消息標記為未讀
+ 
         )
         event = {
             "type": "message_handler",
