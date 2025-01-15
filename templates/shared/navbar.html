@@ -84,7 +84,7 @@
           <img alt="Tailwind CSS Navbar component" src="{% if user.profile.photo %}{{ user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}"/>
         </div>
       </div>
-      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1000] mt-3 w-52 p-2 shadow">
         <li><a href="{% url 'users:user_dashboard' %}" class="justify-between">個人資料</a></li>
         <li><a href="{% url 'contact:contact' %}">聯繫客服</a></li>
         <li><a href="{% url 'pages:about' %}">關於我們</a></li>
