@@ -73,9 +73,12 @@
             姓氏：<span class="font-medium">{{user.first_name}}</span><br />
             名字：<span class="font-medium">{{user.last_name}}</span><br />
             用戶名稱：<span class="font-medium">{{user.username}}</span><br />
-            所在地：<span class="font-medium">{{profile.location}}</span><br />
+            所在地：<span class="font-medium">
+              {% if profile.location %} {{ profile.location }} {% endif %}</span
+            ><br />
             信箱：<span class="font-medium">{{user.email}}</span><br />
-            個人簡介：<span class="font-medium">{{profile.bio}}</span><br />
+            個人簡介：<span class="font-medium">{% if profile.bio %} {{ profile.bio }} {% endif %}</span
+              ></span><br />
           </p>
         </div>
       </div>
