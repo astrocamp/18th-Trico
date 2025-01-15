@@ -22,7 +22,9 @@ from notification.utils import send_notification
 # 第三方庫
 import environ
 from django.urls import reverse
+import logging
 
+logger = logging.getLogger(__name__)
 
 MERCHANT_ID = settings.MERCHANT_ID
 HASH_KEY = settings.HASH_KEY
@@ -43,69 +45,101 @@ def generate_check_mac_value(params, hash_key, hash_iv):
 @login_required
 def create_order(request):
     if request.method == "POST":
-        service_id = request.POST.get("service_id")
-        selected_plan = request.POST.get("plan")
-        payment_method = request.POST.get("payment_method")
-        service = get_object_or_404(Service, id=service_id)
-        client_user = request.user
+        try:
+            # 確保必要參數存在
+            service_id = request.POST.get("service_id")
+            selected_plan = request.POST.get("plan")
+            payment_method = request.POST.get("payment_method")
 
-        # 發送通知給接案者
-        send_notification(
-            actor=client_user,
-            recipient=service.freelancer_user,
-            verb="下訂了您的服務",
-            description=f"用戶 {client_user.username} 購買了您的服務：'{service.title}'。",
-            target_service=service,
-        )
+            if not all([service_id, selected_plan, payment_method]):
+                return JsonResponse({"error": "Missing required fields."}, status=400)
 
-        # 動態設置金額
-        if selected_plan == "standard":
-            total_price = service.standard_price
-        elif selected_plan == "premium":
-            total_price = service.premium_price
-        else:
-            return JsonResponse({"error": "Invalid plan selected."}, status=400)
-        valid_payment_methods = {
-            "credit_card": "Credit",
-            "atm": "ATM",
-            "barcode": "BARCODE",
-        }
+            # 驗證服務存在
+            service = get_object_or_404(Service, id=service_id)
+            client_user = request.user
 
-        if payment_method not in valid_payment_methods:
-            return JsonResponse(
-                {"error": "Invalid payment method selected."}, status=400
+            # 驗證計劃和付款方式
+            if selected_plan not in ["standard", "premium"]:
+                return JsonResponse({"error": "Invalid plan selected."}, status=400)
+
+            valid_payment_methods = {
+                "credit_card": "Credit",
+                "atm": "ATM",
+                "barcode": "BARCODE",
+            }
+
+            if payment_method not in valid_payment_methods:
+                return JsonResponse(
+                    {
+                        "error": f"Invalid payment method. Allowed methods: {list(valid_payment_methods.keys())}"
+                    },
+                    status=400,
+                )
+
+            # 設置金額
+            total_price = (
+                service.standard_price
+                if selected_plan == "standard"
+                else service.premium_price
             )
 
-        # 建立訂單
-        order = request.user.orders_as_client.create(
-            service=service,
-            total_price=total_price,
-            payment_method=payment_method,
-        )
-        # 綠界金流參數
-        params = {
-            "MerchantID": MERCHANT_ID,
-            "MerchantTradeNo": order.merchant_trade_no,
-            "MerchantTradeDate": datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
-            "PaymentType": "aio",
-            "TotalAmount": int(order.total_price),
-            "TradeDesc": "Payment for Order",
-            "ItemName": f"Order {order.id}",
-            "ReturnURL": request.build_absolute_uri(reverse("order:ecpay_return")),
-            "OrderResultURL": request.build_absolute_uri(reverse("order:ecpay_result")),
-            "ChoosePayment": valid_payment_methods[payment_method],
-        }
-        params["CheckMacValue"] = generate_check_mac_value(params, HASH_KEY, HASH_IV)
+            if total_price <= 0:
+                return JsonResponse({"error": "Invalid total price."}, status=400)
 
-        return render(
-            request,
-            "order/payment_form.html",
-            {"ecpay_url": ECPAY_URL, "params": params},
-        )
-    return JsonResponse(
-        {"error": "Invalid request method.", "message": "訂單已創建並通知接案者"},
-        status=405,
-    )
+            # 建立訂單
+            order = request.user.orders_as_client.create(
+                service=service,
+                total_price=total_price,
+                payment_method=payment_method,
+            )
+
+            # 發送通知給接案者
+            send_notification(
+                actor=client_user,
+                recipient=service.freelancer_user,
+                verb="下訂了您的服務",
+                description=f"用戶 {client_user.username} 購買了您的服務：'{service.title}'。",
+                target_service=service,
+            )
+
+            # 使用狀態機將狀態更新為 `paid`
+            if order.status == "pending":
+                order.mark_as_paid()  # 狀態機轉換
+                order.save()
+
+            # 綠界金流參數
+            params = {
+                "MerchantID": MERCHANT_ID,
+                "MerchantTradeNo": order.merchant_trade_no,
+                "MerchantTradeDate": datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+                "PaymentType": "aio",
+                "TotalAmount": int(order.total_price),
+                "TradeDesc": "Payment for Order",
+                "ItemName": f"Order {order.id}",
+                "ReturnURL": request.build_absolute_uri(reverse("order:ecpay_return")),
+                "OrderResultURL": request.build_absolute_uri(
+                    reverse("order:ecpay_result")
+                ),
+                "ChoosePayment": valid_payment_methods[payment_method],
+            }
+
+            # 加入檢查碼
+            params["CheckMacValue"] = generate_check_mac_value(
+                params, HASH_KEY, HASH_IV
+            )
+
+            # 回傳前端頁面
+            return render(
+                request,
+                "order/payment_form.html",
+                {"ecpay_url": ECPAY_URL, "params": params},
+            )
+
+        except Exception as e:
+            logger.error(f"Error creating order: {e}")
+            return JsonResponse({"error": "Internal server error."}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
 @csrf_exempt

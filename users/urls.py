@@ -15,6 +15,7 @@ from .views import (
     information,
     mark_as_read_and_redirect,
     freelancer_financial,
+    likes_view,
 )
 from django.urls import path, re_path
 from rtchat.views import *
@@ -55,6 +56,7 @@ urlpatterns = [
         name="mark_as_read_and_redirect",
     ),
     path("freelancer_financial/", freelancer_financial, name="freelancer_financial"),
+    path("likes/", likes_view, name="likes"),
 ]
 
 

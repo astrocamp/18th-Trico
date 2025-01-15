@@ -21,14 +21,27 @@
             <ul class="space-y-6">
                 {% if role == "freelancer" %}
                 {% for comment in comments_received %}
-                <li class="bg-blue-50 p-4 rounded-xl shadow-md border border-[#004fff]">
-                    <div>
-                        <p class="text-lg font-bold text-[#004fff]">服務名稱：{{ comment.service.title }}</p>
-                        <p class="text-sm text-gray-600">評論者：{{ comment.user.username }}</p>
-                        <p class="text-gray-700 mt-2">{{ comment.content }}</p>
-                        <p class="text-xs text-gray-500 mt-2">評論時間：{{ comment.created_at|date:"Y/m/d H:i" }}</p>
-                    </div>
-                </li>
+                    {% if comment.service and comment.service.freelancer_user %}
+                    <a href="{% url 'services:service_detail' comment.service.freelancer_user.id comment.service.id %}" class="block">
+                        <li class="bg-blue-50 p-4 rounded-xl shadow-md border border-[#004fff] hover:bg-blue-100 transition duration-300">
+                            <div>
+                                <p class="text-lg font-bold text-[#004fff]">服務名稱：{{ comment.service.title }}</p>
+                                <p class="text-sm text-gray-600">評論者：{{ comment.user.username }}</p>
+                                <p class="text-gray-700 mt-2">{{ comment.content }}</p>
+                                <p class="text-xs text-gray-500 mt-2">評論時間：{{ comment.created_at|date:"Y/m/d H:i" }}</p>
+                            </div>
+                        </li>
+                    </a>
+                    {% else %}
+                    <li class="bg-blue-50 p-4 rounded-xl shadow-md border border-gray-400">
+                        <div>
+                            <p class="text-lg font-bold text-gray-400">服務名稱缺失</p>
+                            <p class="text-sm text-gray-600">評論者：{{ comment.user.username }}</p>
+                            <p class="text-gray-700 mt-2">{{ comment.content }}</p>
+                            <p class="text-xs text-gray-500 mt-2">評論時間：{{ comment.created_at|date:"Y/m/d H:i" }}</p>
+                        </div>
+                    </li>
+                    {% endif %}
                 {% empty %}
                 <p class="text-gray-500 text-center">目前還沒有收到的評論</p>
                 {% endfor %}
@@ -36,14 +49,27 @@
 
                 {% if role == "client" %}
                 {% for comment in comments_given %}
-                <li class="bg-blue-50 p-4 rounded-xl shadow-md border border-[#004fff]">
-                    <div>
-                        <p class="text-lg font-bold text-[#004fff]">服務名稱：{{ comment.service.title }}</p>
-                        <p class="text-sm text-gray-600">評論對象：{{ comment.service.freelancer_user.username }}</p>
-                        <p class="text-gray-700 mt-2">{{ comment.content }}</p>
-                        <p class="text-xs text-gray-500 mt-2">評論時間：{{ comment.created_at|date:"Y/m/d H:i" }}</p>
-                    </div>
-                </li>
+                    {% if comment.service and comment.service.freelancer_user %}
+                    <a href="{% url 'services:service_detail' comment.service.freelancer_user.id comment.service.id %}" class="block">
+                        <li class="bg-blue-50 p-4 rounded-xl shadow-md border border-[#004fff] hover:bg-blue-100 transition duration-300">
+                            <div>
+                                <p class="text-lg font-bold text-[#004fff]">服務名稱：{{ comment.service.title }}</p>
+                                <p class="text-sm text-gray-600">評論對象：{{ comment.service.freelancer_user.username }}</p>
+                                <p class="text-gray-700 mt-2">{{ comment.content }}</p>
+                                <p class="text-xs text-gray-500 mt-2">評論時間：{{ comment.created_at|date:"Y/m/d H:i" }}</p>
+                            </div>
+                        </li>
+                    </a>
+                    {% else %}
+                    <li class="bg-blue-50 p-4 rounded-xl shadow-md border border-gray-400">
+                        <div>
+                            <p class="text-lg font-bold text-gray-400">服務名稱缺失</p>
+                            <p class="text-sm text-gray-600">評論對象缺失</p>
+                            <p class="text-gray-700 mt-2">{{ comment.content }}</p>
+                            <p class="text-xs text-gray-500 mt-2">評論時間：{{ comment.created_at|date:"Y/m/d H:i" }}</p>
+                        </div>
+                    </li>
+                    {% endif %}
                 {% empty %}
                 <p class="text-gray-500 text-center">目前還沒有給出的評論</p>
                 {% endfor %}
@@ -51,55 +77,12 @@
             </ul>
         </div>
 
-        <!-- 按愛心的服務 (共用區域) -->
-        <div>
-            <h2 class="text-2xl font-bold text-[#004fff] mb-6">我按過的愛心服務</h2>
-            <ul class="grid grid-cols-2 gap-6"> <!-- 兩個並排的設定 -->
-                {% for like in likes_given %}
-                <li class="bg-white rounded-xl shadow-md border border-[#004fff] overflow-hidden">
-                    <!-- 卡牌內容 -->
-                    <a href="{% url 'services:service_detail' like.service.freelancer_user.id like.service.id %}" class="block">
-                        <div class="item overflow-hidden transition-transform duration-300 hover:scale-105">
-                            <img class="w-full h-56 object-cover rounded-t-lg" 
-                                 src="{% if like.service.photo %}{{ like.service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}" 
-                                 alt="Service Photo"/>
-                            <div class="p-4">
-                                <!-- 接案者資訊 -->
-                                <div class="flex items-center mb-3">
-                                    <img class="w-10 h-10 rounded-full border border-gray-300 shadow-sm"
-                                         src="{% if like.service.freelancer_user.profile.photo %}{{ like.service.freelancer_user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}" 
-                                         alt="Freelancer Avatar"/>
-                                    <p class="ml-3 text-sm font-semibold text-gray-700">{{ like.service.freelancer_user.username }}</p>
-                                </div>
-                                <!-- 服務標題 -->
-                                <p class="text-gray-800 font-medium truncate" title="{{ like.service.title }}">
-                                    {{ like.service.title }}
-                                </p>
-                                <!-- 服務描述 -->
-                                <p class="mt-2 text-sm text-gray-500 truncate" title="{{ like.service.description }}">
-                                    {{ like.service.description }}
-                                </p>
-                                <!-- 價格 -->
-                                <p class="mt-2 text-sm font-semibold text-gray-800">
-                                    費用 $ {{ like.service.standard_price }} 起
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                {% empty %}
-                <p class="text-gray-500 text-center col-span-full">您尚未按任何服務愛心</p>
-                {% endfor %}
-            </ul>
+        <div class="mt-16 text-center">
+            <a href="{% url 'users:user_dashboard' %}" 
+               class="px-6 py-2 text-white bg-[#004fff] rounded-full shadow-lg btn btn-primary hover:bg-blue-700">
+                返回主控台
+            </a>
         </div>
     </div>
-
-    <div class="mt-16 text-center">
-        <a href="{% url 'users:user_dashboard' %}" 
-           class="px-6 py-2 text-white bg-[#004fff] rounded-full shadow-lg btn btn-primary hover:bg-blue-700">
-            返回主控台
-        </a>
-    </div>
-
 </div>
 {% endblock %}
