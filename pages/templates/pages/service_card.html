@@ -6,24 +6,24 @@
     
     <!-- 愛心按鈕 -->
     <div id="like-button-{{ service.id }}" class="absolute top-2 right-2 z-10">
-      <button id="toggle-like-btn-{{ service.id }}" class="transition shadow-sm" data-service-id="{{ service.id }}">
-        {% if service.is_liked %}
-        <img
-          id="like-icon-{{ service.id }}"
-          src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='red' stroke='white' stroke-width='1' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>"
-          alt="Liked"
-          class="w-8 h-8"
-        />
-        {% else %}
-        <img
-          id="like-icon-{{ service.id }}"
-          src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='black' fill-opacity='0.4' stroke='white' stroke-width='1' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>"
-          alt="Not Liked"
-          class="w-8 h-8"
-        />
-        {% endif %}
-      </button>
-    </div>
+  <button id="toggle-like-btn-{{ service.id }}" class="transition shadow-sm" data-service-id="{{ service.id }}">
+    {% if service.is_liked %}
+    <img
+      id="like-icon-{{ service.id }}"
+      src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='red' stroke='white' stroke-width='1' viewBox='0 0 24 24'><path d='M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z'/></svg>"
+      alt="Liked"
+      class="w-8 h-8"
+    />
+    {% else %}
+    <img
+      id="like-icon-{{ service.id }}"
+      src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='black' fill-opacity='0.4' stroke='white' stroke-width='1' viewBox='0 0 24 24'><path d='M12 20.5C11 20.5 10 19.7294 8.96173 18.9109C6.01943 16.5914 2 14 2 9.1371C2 4.27416 7.50016 0.825464 12 5.50063C16.4998 0.825464 22 4.27416 22 9.1371C22 14 17.9806 16.5914 15.0383 18.9109C14 19.7294 13 20.5 12 20.5Z'/></svg>"
+      alt="Not Liked"
+      class="w-8 h-8"
+    />
+    {% endif %}
+  </button>
+</div>
     
     <!-- 其他內容 -->
     <div class="p-4">

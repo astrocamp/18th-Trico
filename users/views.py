@@ -20,6 +20,7 @@ from django.http import JsonResponse
 from notification.models import Notification
 from django.core.paginator import Paginator
 from django.db.models import Sum
+from django.contrib.messages.storage.fallback import FallbackStorage
 
 
 def register(request):
@@ -75,7 +76,11 @@ def login(request):
 @require_POST
 @login_required
 def logout(request):
+    if hasattr(request, "_messages"):
+        request._messages = FallbackStorage(request)
+
     logout_user(request)
+
     response = HttpResponse()
     response["HX-Redirect"] = "/"
     return response
@@ -271,33 +276,39 @@ def profile_view(request, username=None):
 
 @login_required
 def feedback_view(request):
+    """
+    顯示用戶的評論（接案者看到收到的評論，業者看到發出的評論）
+    """
     profile = request.user.profile
     if profile.is_freelancer:
         comments_received = Comment.objects.filter(
             service__freelancer_user=request.user, is_deleted=False
         ).select_related("user", "service")
-        likes_received = Like.objects.filter(service__freelancer_user=request.user)
-        likes_given = Like.objects.filter(
-            user=request.user
-        )  
         context = {
             "comments_received": comments_received,
-            "likes_received": likes_received,
-            "likes_given": likes_given,
             "role": "freelancer",
         }
     else:
         comments_given = Comment.objects.filter(
             user=request.user, is_deleted=False
         ).select_related("service", "service__freelancer_user")
-        likes_given = Like.objects.filter(user=request.user)
         context = {
             "comments_given": comments_given,
-            "likes_given": likes_given,
             "role": "client",
         }
 
     return render(request, "users/feedback.html", context)
+
+
+@login_required
+def likes_view(request):
+    """
+    顯示用戶按愛心的服務
+    """
+    likes_given = Like.objects.filter(user=request.user).select_related(
+        "service", "service__freelancer_user"
+    )
+    return render(request, "users/likes.html", {"likes_given": likes_given})
 
 
 def mark_as_read_and_redirect(request, notification_id):

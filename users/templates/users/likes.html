@@ -1,0 +1,54 @@
+{% extends "shared/layout.html" %}
+{% block content %}
+<div class="font-sans bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 py-12">
+    <div class="max-w-4xl p-6 mx-auto bg-white border-2 border-[#004fff] shadow-lg rounded-3xl space-y-12">
+        <div class="text-center">
+            <h1 class="mb-4 text-4xl font-bold text-[#004fff]">愛心收藏</h1>
+            <p class="font-medium text-gray-600">
+                以下是您按愛心的服務
+            </p>
+        </div>
+
+        <!-- 愛心服務列表 -->
+        <ul class="grid grid-cols-2 gap-6">
+            {% for like in likes_given %}
+            <li class="bg-white rounded-xl shadow-md border border-[#004fff] overflow-hidden">
+                <a href="{% url 'services:service_detail' like.service.freelancer_user.id like.service.id %}" class="block">
+                    <div class="item overflow-hidden transition-transform duration-300 hover:scale-105">
+                        <img class="w-full h-56 object-cover rounded-t-lg"
+                             src="{% if like.service.photo %}{{ like.service.photo.url }}{% else %}https://fakeimg.pl/300{% endif %}" 
+                             alt="Service Photo"/>
+                        <div class="p-4">
+                            <div class="flex items-center mb-3">
+                                <img class="w-10 h-10 rounded-full border border-gray-300 shadow-sm"
+                                     src="{% if like.service.freelancer_user.profile.photo %}{{ like.service.freelancer_user.profile.photo.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp{% endif %}" 
+                                     alt="Freelancer Avatar"/>
+                                <p class="ml-3 text-sm font-semibold text-gray-700">{{ like.service.freelancer_user.username }}</p>
+                            </div>
+                            <p class="text-gray-800 font-medium truncate" title="{{ like.service.title }}">
+                                {{ like.service.title }}
+                            </p>
+                            <p class="mt-2 text-sm text-gray-500 truncate" title="{{ like.service.description }}">
+                                {{ like.service.description }}
+                            </p>
+                            <p class="mt-2 text-sm font-semibold text-gray-800">
+                                費用 $ {{ like.service.standard_price }} 起
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {% empty %}
+            <p class="text-gray-500 text-center col-span-full">您尚未按任何服務愛心</p>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="mt-16 text-center">
+        <a href="{% url 'users:user_dashboard' %}" 
+           class="px-6 py-2 text-white bg-[#004fff] rounded-full shadow-lg btn btn-primary hover:bg-blue-700">
+            返回主控台
+        </a>
+    </div>
+</div>
+{% endblock %}
