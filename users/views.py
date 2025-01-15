@@ -20,6 +20,7 @@ from django.http import JsonResponse
 from notification.models import Notification
 from django.core.paginator import Paginator
 from django.db.models import Sum
+from django.contrib.messages.storage.fallback import FallbackStorage
 
 
 def register(request):
@@ -75,7 +76,11 @@ def login(request):
 @require_POST
 @login_required
 def logout(request):
+    if hasattr(request, "_messages"):
+        request._messages = FallbackStorage(request)
+
     logout_user(request)
+
     response = HttpResponse()
     response["HX-Redirect"] = "/"
     return response
@@ -240,9 +245,7 @@ def feedback_view(request):
             service__freelancer_user=request.user, is_deleted=False
         ).select_related("user", "service")
         likes_received = Like.objects.filter(service__freelancer_user=request.user)
-        likes_given = Like.objects.filter(
-            user=request.user
-        )  
+        likes_given = Like.objects.filter(user=request.user)
         context = {
             "comments_received": comments_received,
             "likes_received": likes_received,
