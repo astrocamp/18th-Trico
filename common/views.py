@@ -8,7 +8,7 @@ def custom_404(request, exception):
         return JsonResponse({
             "error": "Not found",
             "status_code": 404,
-            "detail": "The requested resource was not found",
+            "detail": "糟了！你要找的頁面目前不存在...",
             }, status=404)
     else:
         return render(request, "common/404.html", status=404)
@@ -18,5 +18,5 @@ def api_not_found(request):
     return JsonResponse({
         "error": "Not found",
         "status_code": 404,
-        "detail": "The requested resource was not found",
+        "detail": "糟了！你要找的頁面目前不存在...",
     }, status=404)

@@ -1,0 +1,10 @@
+/* sfc-style:C:\Users\User\Desktop\18th-Trico\frontend\scripts\components\NotFoundPage.vue?type=style&index=0 */
+h1[data-v-7bb43aee]::after {
+  content: "|";
+  animation: blink-7bb43aee 0.5s step-end infinite;
+}
+@keyframes blink-7bb43aee {
+  50% {
+    opacity: 0;
+  }
+}
