@@ -31,10 +31,15 @@ customColorPalette = [
 # X_FRAME_OPTIONS = "DENY"
 
 
+
+
+
+
 CKEDITOR_UPLOAD_PATH = "uploads/"  # 圖片上傳後存儲的目錄
+CKEDITOR_BROWSE_PATH = "browse/"   # 瀏覽專用文件夾
 CKEDITOR_5_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 CKEDITOR_5_ALLOW_ALL_FILE_TYPES = True
-CKEDITOR_5_UPLOAD_FILE_TYPES = ["jpeg", "pdf", "png"] 
+CKEDITOR_5_UPLOAD_FILE_TYPES = ["jpeg", "jpg", "png", "gif", "webp", "tiff", "bmp", "svg"] 
 
 CKEDITOR_5_CONFIGS = {
     "default": {
